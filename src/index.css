@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+
+@font-face {
+  font-family: 'MyIrish';
+  /* font-style: normal;
+  font-weight: 400;
+  font-display: swap; */
+  src: url('/fonts/IrishGrover-Regular.woff2') format('woff2');
+
+}
+
+
+/* index.css or globals.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+
+.body{
+  background-color: #3C4044;
+}
+
