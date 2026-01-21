@@ -4,7 +4,7 @@ import ProtectedRoute from "./ProtectedRoutes";
 
 import HomePage from "../pages/HomePage";
 import AuthPage from "../pages/AuthPage";
-import ChatPage from "../pages/Chat/ChatPage";
+import ChatPage from "../pages/chat/ChatPage";
 import NotFound from "../pages/NotFound";
 import PeopleSearch from "../pages/PeopleSearch";
 import Post from "../pages/PostPage";
