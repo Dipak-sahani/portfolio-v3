@@ -19,7 +19,7 @@ import ComingSoonPage from "../pages/CominSoonPage";
 // startup and business idea 
 import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
 
-export const AppRoutes=()=> {
+const AppRoutes=()=> {
   return (
     <Routes>
       {/* Public Layout */}
@@ -67,3 +67,8 @@ export const AppRoutes=()=> {
     </Routes>
   );
 }
+
+
+
+
+export default AppRoutes;
