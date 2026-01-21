@@ -10,7 +10,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const slug = useLocation();
-  console.log(slug.pathname);
+  // console.log(slug.pathname);
   const colors = [
     "text-red-900",
     "text-blue-900",
@@ -42,6 +42,145 @@ const Header = () => {
       .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
 
   const textColor = colors[colorIndex];
+
+
+
+  // more options
+
+  const startupNbusiness=[{
+        id: 1,
+        title: "Startup Ideas",
+        isEnable: true,
+        link: '/startup-idea'
+    },
+    {
+        id: 2,
+        title: "Business Models",
+        isEnable: true,
+        link: '/business-model'
+    },
+    {
+        id: 3,
+        title: "Pitch Decks",
+        isEnable: false,
+        link: '/pitch-decks'
+    },
+    {
+        id: 4,
+        title: "Funding & Investors",
+        isEnable: false,
+        link: '/funding-investors'
+    },
+    {
+        id: 5,
+        title: "Incubators & Accelerators",
+        isEnable: false,
+        link: '/incubators'
+    },
+    {
+        id: 6,
+        title: "Mentorship",
+        isEnable: false,
+        link: '/mentorship'
+    },
+    {
+        id: 7,
+        title: "Case Studies",
+        isEnable: true,
+        link: '/case-study'
+    }]
+
+  const peopleNnetWorking=[
+     {
+        id: 8,
+        title: "Find Co-Founders",
+        isEnable: true,
+        link: '/users'
+    },
+    {
+        id: 9,
+        title: "Developers",
+        isEnable: false,
+        link: '/developers'
+    },
+    {
+        id: 10,
+        title: "Designers",
+        isEnable: false,
+        link: '/designers'
+    },
+    {
+        id: 11,
+        title: "Marketers",
+        isEnable: false,
+        link: '/marketers'
+    },
+    {
+        id: 12,
+        title: "Advisors",
+        isEnable: false,
+        link: '/advisors'
+    },
+    {
+        id: 13,
+        title: "Freelancers",
+        isEnable: false,
+        link: '/freelancers'
+    },
+    {
+        id: 14,
+        title: "Teams",
+        isEnable: false,
+        link: '/team'
+    }
+  ]
+  const toolsNservice = [
+    
+   
+    {
+        id: 15,
+        title: "Website Builder",
+        isEnable: false,
+        link: '/website-builder'
+    },
+    {
+        id: 16,
+        title: "Payment Integration",
+        isEnable: false,
+        link: '/payment'
+    },
+    {
+        id: 17,
+        title: "Legal & Compliance",
+        isEnable: false,
+        link: '/legal-compliance'
+    },
+    {
+        id: 18,
+        title: "Accounting & GST",
+        isEnable: false,
+        link: '/accounting'
+    },
+    {
+        id: 19,
+        title: "Marketing Tools",
+        isEnable: false,
+        link: '/marketing'
+    },
+    {
+        id: 20,
+        title: "Analytics",
+        isEnable: false,
+        link: '/analytics'
+    },
+    {
+        id: 21,
+        title: "AI Tools",
+        isEnable: false,
+        link: '/ai-tool'
+    }
+];
+
 
   const menuItem =
     "block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black transition";
@@ -82,10 +221,10 @@ const Header = () => {
           Event
         </Link>
         <Link
-          to="#"
+          to="create-post"
           className="text-gray-100 hover:text-[#FD7B41] font-medium hover:scale-125 transform transition hover:bg-[#3C4044] hover:rounded-xl hover:p-2"
         >
-          Blog
+          Create
         </Link>
         {/* / edited button */}
 
@@ -112,7 +251,7 @@ const Header = () => {
           pt-3    
           opacity-0 invisible
           group-hover:opacity-100 group-hover:visible
-          transition-opacity duration-300
+          transition-opacity duration-300 z-10
         "
             >
               <div className="flex pt-4 bg-[#3C4044] rounded-xl shadow-xl overflow-hidden text-gray-200 justify-around">
@@ -120,156 +259,49 @@ const Header = () => {
                   <h1 className="font-semibold text-gray-400 uppercase">
                     🚀 Startup & Business
                   </h1>
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
+                  {
+                    startupNbusiness.map((val,id)=>(
+                         <Link key={id}
+                    to={`${val.link}`}
+                    className={`${val.isEnable&& 'border-cyan-200 border rounded '} block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black`}
                   >
-                    Startup Ideas
+                    {val.title}
                   </Link>
-
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Business Models
-                  </Link>
-
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Pitch Decks
-                  </Link>
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Funding & Investors
-                  </Link>
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Incubators & Accelerators
-                  </Link>
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Mentorship
-                  </Link>
-                  <Link
-                    to="/"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black rounded-bl-xl pb-2"
-                  >
-                    Case Studies
-                  </Link>
+                    ))
+                  }
+                 
                 </div>
                 <div>
                   <h1 className="font-semibold text-gray-400 uppercase">
                     👥People & Networking
                   </h1>
-                  <Link
-                    to="/users"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
+                  {
+                    peopleNnetWorking.map((val,id)=>(
+                         <Link key={id}
+                    to={`${val.link}`}
+                    className={`${val.isEnable&& 'border-cyan-200 border rounded '} block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black`}
                   >
-                    Find Co-Founders
+                    {val.title}
                   </Link>
-
-                  <Link
-                    to="/people/developers"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Developers
-                  </Link>
-
-                  <Link
-                    to="/people/designers"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Designers
-                  </Link>
-
-                  <Link
-                    to="/people/marketers"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Marketers
-                  </Link>
-
-                  <Link
-                    to="/people/advisors"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Advisors
-                  </Link>
-
-                  <Link
-                    to="/people/freelancers"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Freelancers
-                  </Link>
-
-                  <Link
-                    to="/people/teams"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black pb-2"
-                  >
-                    Teams
-                  </Link>
+                    ))
+                  }
+                  
                 </div>
                 <div>
                   <h1 className="font-semibold text-gray-400 uppercase">
                     🛠 Tools & Services
                   </h1>
-                  <Link
-                    to="/tools/website-builder"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
+                  {
+                    toolsNservice.map((val,id)=>(
+                         <Link key={id}
+                    to={`${val.link}`}
+                    className={`${val.isEnable&& 'border-cyan-200 border rounded '} block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black`}
                   >
-                    Website Builder
+                    {val.title}
                   </Link>
-
-                  <Link
-                    to="/tools/payment-integration"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Payment Integration
-                  </Link>
-
-                  <Link
-                    to="/tools/legal-compliance"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Legal & Compliance
-                  </Link>
-
-                  <Link
-                    to="/tools/accounting-gst"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Accounting & GST
-                  </Link>
-
-                  <Link
-                    to="/tools/marketing-tools"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Marketing Tools
-                  </Link>
-
-                  <Link
-                    to="/tools/analytics"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black"
-                  >
-                    Analytics
-                  </Link>
-
-                  <Link
-                    to="/tools/ai-tools"
-                    className="block px-4 py-3 text-gray-200 hover:bg-[#FD7B41] hover:text-black rounded-br-xl pb-2"
-                  >
-                    AI Tools
-                  </Link>
+                    ))
+                  }
+                  
                 </div>
               </div>
             </div>
@@ -393,9 +425,9 @@ const Header = () => {
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white shadow-lg md:hidden z-10">
-          <div className="flex flex-col px-6 py-4 space-y-4">
+          <div className="flex flex-col px-6 py-4 space-y-4 text-center">
             <Link
-              to="#"
+              to="/"
               className="text-gray-700 hover:text-blue-600 font-medium py-2"
             >
               Home
@@ -413,13 +445,13 @@ const Header = () => {
               Event
             </Link>
             <Link
-              to="#"
+              to="/create-post"
               className="text-gray-700 hover:text-blue-600 font-medium py-2"
             >
-              Blog
+              Create Post
             </Link>
             <Link
-              to="#"
+              to="/more-option"
               className="text-gray-700 hover:text-blue-600 font-medium py-2"
             >
               More

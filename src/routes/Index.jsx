@@ -10,7 +10,14 @@ import PeopleSearch from "../pages/PeopleSearch";
 import Post from "../pages/PostPage";
 import CreatePostPage from "../components/post/CreatePostPage";
 import Posts from "../pages/Posts";
+import Dashboard from "../pages/Dashboard";
+import EditPostPage from "../components/post/EditPostPage";
+import MoreOption from "../pages/MoreOption";
+import ComingSoonPage from "../pages/CominSoonPage";
 
+
+// startup and business idea 
+import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
 
 export default function AppRoutes() {
   return (
@@ -32,10 +39,23 @@ export default function AppRoutes() {
           <Route path="/chat" element={<ChatPage />} />
 
           <Route path="/users" element={<PeopleSearch />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/post1" element={<Posts />} />
+          {/* <Route path="/post" element={<Post />} /> */}
+          <Route path="/post" element={<Posts />} />
 
           <Route path="/create-post" element={<CreatePostPage />} />
+          <Route path="/edit-post/:postId" element={<EditPostPage />} />
+
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/more-option" element={<MoreOption />} />
+
+
+
+
+
+          <Route path="/startup-idea" element={<IdeaSelectionPage />} />
+
+        
+
 
 
 
@@ -43,7 +63,7 @@ export default function AppRoutes() {
       </Route>
 
       {/* 404 */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<ComingSoonPage />} />
     </Routes>
   );
 }

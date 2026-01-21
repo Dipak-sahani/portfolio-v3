@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
+import Footer from "../components/footer/Footer";
+// import { getDashboardData } from "../services/userDashboard.service";
 
 const HomePage = () => {
      const {user, isAuthenticated, loadUser }= useAuthStore();
@@ -11,9 +13,11 @@ const HomePage = () => {
       
  useEffect(() => {
 
-
+      // getDashboardData();
+      if (isAuthenticated) {
       fetchNotification();
-      
+        
+      }
       loadUser();
     }, []); // only once
   
@@ -21,8 +25,9 @@ const HomePage = () => {
 
 
   return (
+     <div className="mt-30">
     <div className="flex-col justify-self-center w-[80%]">
-      <section className="flex-col  text-center mt-15 mb-15  ">
+      <section className="flex-col  text-center mt-20 mb-15  ">
         <h1 className="text-5xl font-bold font-sans"> { user&& <span>"{user?.fullName}"</span> }  Welcome to</h1>
         <h1 className="text-6xl font-bold font-sans"> <span className="text-red-500">Be</span>rojgar Founder</h1>
         <h1 className="text-3xl font-bold font-myIrish mt-10"> “Find Your Team. Build Your Startup and Business”</h1>
@@ -46,8 +51,11 @@ const HomePage = () => {
 
       <div className="mt-20">
         <hr  className="h-1 bg-[#FD7B41] mb-10"/>
+        <h1 className="my-10 font-semibold text-2xl  text-center">Posts</h1>
         <Posts/>
       </div>
+    </div>
+      <Footer/>
     </div>
   );
 };

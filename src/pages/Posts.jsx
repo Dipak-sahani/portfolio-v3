@@ -1,54 +1,48 @@
-import React, { useEffect } from "react";
-import { usePostStore } from "../store/post.store";
-import PostCard from "../components/post/PostCard";
+import { useEffect, useRef } from 'react';
+import { usePostStore } from '../store/post.store';
+import PostCard from '../components/post/PostCard';
 
-const Posts = () => {
-  const {
-    posts,
-    fetchPosts,
-    loading,
-    error,
-  } = usePostStore();
+const PostsPage = () => {
+  const { posts, fetchPosts, pagination, loading } = usePostStore();
+  const loadMoreRef = useRef(null);
 
+  // initial fetch
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    fetchPosts(false);
+  }, []);
 
-  /* ---------- Loading ---------- */
-  if (loading) {
-    return (
-      <div className="flex justify-center py-10">
-        <p>Loading posts...</p>
-      </div>
+  // infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && pagination.page < pagination.totalPages && !loading) {
+          fetchPosts(true);
+        }
+      },
+      { threshold: 0.7 }
     );
-  }
 
-  /* ---------- Error ---------- */
-  if (error) {
-    return (
-      <div className="flex justify-center py-10 text-red-500">
-        <p>{error || "Failed to load posts"}</p>
-      </div>
-    );
-  }
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [pagination.page, pagination.totalPages, loading]);
 
-  /* ---------- Empty ---------- */
-  if (!posts || posts.length === 0) {
-    return (
-      <div className="flex justify-center py-10">
-        <p>No posts available</p>
-      </div>
-    );
-  }
-
-  /* ---------- Success ---------- */
   return (
     <div className="space-y-4">
       {posts.map((post) => (
-        <PostCard key={post._id} post={post} />
+        <div key={post?._id}>
+        <PostCard  postId={post?._id} />
+
+        </div>
       ))}
+
+      <div ref={loadMoreRef} className="h-12 flex justify-center items-center">
+        {loading && <span className="text-gray-400 text-sm">Loading...</span>}
+        {!loading && pagination.page >= pagination.totalPages && (
+          <span className="text-gray-400 text-xs">No more posts</span>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Posts;
+export default PostsPage;

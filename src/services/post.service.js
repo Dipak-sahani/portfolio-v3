@@ -11,7 +11,7 @@ const handleApiError = (error) => {
 export const createPost = async (postData) => {
   try {
     const res = await API.post('/post', postData);
-    console.log(res);
+    // console.log(res);
     
     return res.data.data;
   } catch (error) {
@@ -23,7 +23,7 @@ export const getPosts = async (params = {}) => {
   try {
     const query = new URLSearchParams(params).toString();
     const res = await API.get(`/post?${query}`);
-    console.log(res);
+    // console.log(res);
     
     return res.data.data;
   } catch (error) {
@@ -33,7 +33,9 @@ export const getPosts = async (params = {}) => {
 
 export const getPostById = async (postId) => {
   try {
-    const res = await API.get(`/posts/${postId}`);
+    const res = await API.get(`/post/${postId}`);
+    console.log(res);
+    
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -42,7 +44,7 @@ export const getPostById = async (postId) => {
 
 export const updatePost = async (postId, updateData) => {
   try {
-    const res = await API.put(`/posts/${postId}`, updateData);
+    const res = await API.patch(`/post/${postId}`, updateData);
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -60,12 +62,37 @@ export const deletePost = async (postId) => {
 
 export const likePost = async (postId) => {
   try {
-    const res = await API.post(`/posts/${postId}/like`);
+    const res = await API.patch(`/post/${postId}/like`);
+    // console.log(res);
+    
     return res.data.data;
   } catch (error) {
     handleApiError(error);
   }
 };
+
+export const unLikePost = async (postId) => {
+  try {
+    const res = await API.patch(`/post/${postId}/unlike`);
+    // console.log(res);
+    
+    return res.data.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const savePost = async (postId) => {
+  try {
+    const res = await API.patch(`/post/${postId}/post-save`);
+    // console.log(res);
+    
+    return res.data.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 
 export const sharePost = async (postId) => {
   try {

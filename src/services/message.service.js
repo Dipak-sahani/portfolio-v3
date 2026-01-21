@@ -5,7 +5,7 @@ export const getContact=async()=>{
     try {
 
         const res= await API.get('/message/my-contact')
-        console.log(res);
+        // console.log(res);
         
         return res.data.data;
         
@@ -16,19 +16,20 @@ export const getContact=async()=>{
 }
 
 
-export const getMessagesByConversation=async(id)=>{
-    try {
-        const res= await API.get(`/message/${id}`)
+export const getMessagesByConversation = async (
+  conversationId,
+  limit = 20,
+  skip = 0
+) => {
+  try {
+    const res = await API.get(`/message/${conversationId}`, {
+      params: { limit, skip },
+    });
 
-        // console.log(res);
-
-        return res?.data?.data?.messages;
-        
-    } catch (error) {
-        console.log(error);
-        
-    }
-}
-
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 

@@ -46,10 +46,8 @@ const PeopleSearch = () => {
   // Debounced search with error handling
   const debouncedSearch = useCallback(
     debounce(async (searchFilters, page) => {
-      console.log("hi i am from search");
 
       if (!isMountedRef.current) return;
-      console.log("hi i am from search 2");
 
       const searchKey = JSON.stringify({ ...searchFilters, page });
       if (lastSearchRef.current === searchKey) return;
@@ -64,7 +62,7 @@ const PeopleSearch = () => {
           page,
           limit: pagination.limit,
         });
-        console.log(response);
+        // console.log(response);
 
         if (!isMountedRef.current) return;
 
@@ -105,7 +103,7 @@ const PeopleSearch = () => {
 
   // Initial load and when filters change
   useEffect(() => {
-    console.log("hi");
+    
 
     debouncedSearch(filters, 1);
 
@@ -208,7 +206,7 @@ const PeopleSearch = () => {
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div className="mb-4 sm:mb-0 flex-1/3">
                 <p className="text-lg font-medium" style={{ color: "#3C4044" }}>
-                  {pagination.totalResults} people found
+                  {pagination?.totalResults-1} people found
                   {filters.query && ` for "${filters.query}"`}
                 </p>
               </div>

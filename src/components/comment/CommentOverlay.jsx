@@ -27,8 +27,11 @@ const CommentOverlay = ({ postId, onClose }) => {
   }
 
   useEffect(() => {
-
+    if (postId) {
     fetchComments()
+      
+    }
+
     
   }, [postId]);
 

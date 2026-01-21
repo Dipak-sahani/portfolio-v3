@@ -44,6 +44,8 @@ const CreatePostPage = () => {
     };
 
     try {
+      console.log(postData);
+      
       await createPost(postData);
       alert('Post created successfully!');
       navigate('/');
@@ -173,33 +175,53 @@ const CreatePostPage = () => {
                   </div>
                   
                   {/* Media Preview */}
+
                   {formData.media.length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-medium text-[#3C4044]">Added Media:</h4>
-                      {formData.media.map((url, index) => (
-                        <div key={index} className="flex items-center justify-between bg-linear-to-br from-[#EDBF9B]/10 to-[#FD7B41]/5 p-4 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-linear-to-br from-[#FD7B41] to-[#EDBF9B] rounded-lg flex items-center justify-center text-white">
-                              <i className="fas fa-link"></i>
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium text-[#3C4044] truncate">
-                                {new URL(url).pathname.split('/').pop() || url}
-                              </p>
-                              <p className="text-xs text-[#3C4044]/60 truncate">{url}</p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveMedia(index)}
-                            className="text-[#3C4044]/40 hover:text-red-500 transition-colors"
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+  <div className="space-y-4">
+    <h4 className="text-sm font-medium text-[#3C4044]">
+      Added Media:
+    </h4>
+
+    {formData.media.map((url, index) => (
+      <div
+        key={index}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                   gap-3 bg-linear-to-br from-[#EDBF9B]/10 to-[#FD7B41]/5
+                   p-3 sm:p-4 rounded-lg w-full"
+      >
+        {/* Left section */}
+        <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0
+                          bg-linear-to-br from-[#FD7B41] to-[#EDBF9B]
+                          rounded-lg flex items-center justify-center text-white">
+            <i className="fas fa-link text-sm sm:text-base"></i>
+          </div>
+
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[#3C4044] truncate">
+              {new URL(url).pathname.split('/').pop() || url}
+            </p>
+            <p className="text-xs text-[#3C4044]/60 truncate max-w-full">
+              {url}
+            </p>
+          </div>
+        </div>
+
+        {/* Remove button */}
+        <button
+          type="button"
+          onClick={() => handleRemoveMedia(index)}
+          className="self-end sm:self-auto text-[#3C4044]/40
+                     hover:text-red-500 transition-colors
+                     p-1"
+        >
+          <i className="fas fa-times text-sm"></i>
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
                 </div>
 
                 {/* Workspace Selection */}

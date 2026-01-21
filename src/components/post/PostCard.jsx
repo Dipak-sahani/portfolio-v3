@@ -7,36 +7,77 @@ import { faComment, faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-ic
 import { postComment } from '../../services/comment.service';
 import CommentOverlay from '../comment/CommentOverlay';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ postId }) => {
+  const post=usePostStore(state => 
+    state.posts.find(p => p?._id === postId)
+  );
+
+  // console.log(postId);
+  
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   
-  const { likePost, sharePost } = usePostStore();
+  const { likePost, sharePost, unLikePost, savePost } = usePostStore();
   
   const contentLimit = 150;
   const showSeeMore = post?.content?.length > contentLimit;
   const displayContent = expanded 
-    ? post.content 
-    : post.content?.substring(0, contentLimit) + (showSeeMore ? '...' : '');
+    ? post?.content 
+    : post?.content?.substring(0, contentLimit) + (showSeeMore ? '...' : '');
+
+
+    // like and dislike handling
 
   const handleLike = async () => {
-    if (liked) return;
+    if (liked || post?.isLikedByMe){
+      try {
+        const res=await unLikePost(post?._id)
+        setLiked(false)
+        
+      } catch (error) {
+        console.error('Error unliking post:', error);
+      }
+
+    }else{
+      
     try {
-      await likePost(post._id);
+      await likePost(post?._id);
       setLiked(true);
     } catch (error) {
       console.error('Error liking post:', error);
     }
+    }
   };
+
+
+  // share handling
 
   const handleShare = async () => {
     try {
-      await sharePost(post._id);
+      await sharePost(post?._id);
     } catch (error) {
       console.error('Error sharing post:', error);
     }
   };
+
+
+  // save handling
+
+  const handleSave= async()=>{
+    try {
+
+      await savePost(post?._id);
+      // setBookmarked(!bookmarked)
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+
+
+
 
   const formatNumber = (num) => {
     if (num >= 1000000) {
@@ -62,7 +103,7 @@ const [comment, setComment] = useState("");
       setCommantLoading(true);
 
       const res = await postComment({
-        postId:post._id,
+        postId:post?._id,
         text:comment
       })
 
@@ -102,14 +143,14 @@ const [open, setOpen] = useState(false);
             {/* Brand Info */}
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-gray-900 text-base">{post.authorId?.fullName || 'Your Brand'}</h3>
+                <h3 className="font-bold text-gray-900 text-base">{post?.authorId?.fullName || 'Your Brand'}</h3>
                 
               </div>
               <div className="flex items-center space-x-3 mt-1">
                 <span className="text-sm text-gray-600">
-                  {formatNumber(post.followers || 0)} followers
+                  {formatNumber(post?.followers || 0)} followers
                 </span>
-                {post.promoted && (
+                {post?.promoted && (
                   <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">
                     Promoted
                   </span>
@@ -140,7 +181,7 @@ const [open, setOpen] = useState(false);
             )}
           </p>
           
-          {post.translationAvailable && (
+          {post?.translationAvailable && (
             <button className="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2">
               See translation
             </button>
@@ -159,46 +200,32 @@ const [open, setOpen] = useState(false);
               <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
-              <span className="ml-1">{formatNumber(post.commentCount || 0)}</span>
+              <span className="ml-1">{formatNumber(post?.commentCount || 0)}</span>
             </div>
             <div className="flex items-center">
               <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
               </svg>
-              <span className="ml-1">{formatNumber(post.shareCount || 0)}</span>
+              <span className="ml-1">{formatNumber(post?.shareCount || 0)}</span>
             </div>
           </div>
         </div>
       </div>
       
-      {/* Media Content (if exists) */}
-      {post.media && post.media.length > 0 && (
-        <div className="border-t border-gray-100">
-          <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-            <div className="relative w-full h-full">
-              <img 
-                src={post.media[0]} 
-                alt="Post media"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML = `
-                    <div class="flex flex-col items-center justify-center w-full h-full">
-                      <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                      </svg>
-                      <span class="mt-2 text-gray-500 text-sm">Media preview</span>
-                    </div>
-                  `;
-                }}
-              />
-              <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                1:25
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {post?.media?.length > 0 && (
+ <div className="border-t border-gray-100">
+  <div className="relative mx-auto w-full max-w-170 bg-gray-100 overflow-hidden aspect-video">
+    <img
+      src={post.media[0]}
+      alt="Post media"
+      className="absolute inset-0 w-full h-full object-contain"
+      loading="lazy"
+    />
+  </div>
+</div>
+)}
+
+
       
       {/* Action Bar */}
       <div className="px-4 py-3 border-t border-gray-100">
@@ -207,7 +234,8 @@ const [open, setOpen] = useState(false);
           <button
             onClick={handleLike}
             className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-              liked 
+              liked || post?.isLikedByMe
+ 
                 ? 'bg-red-50 text-red-600' 
                 : 'text-gray-600 hover:bg-gray-50'
             }`}
@@ -229,7 +257,7 @@ const [open, setOpen] = useState(false);
               {liked ? 'Liked' : 'Like'}
             </span>
             <span className={`text-xs ${liked ? 'text-red-500' : 'text-gray-500'}`}>
-              {formatNumber(post.likeCount || 0)}
+              {formatNumber(post?.likeCount || 0)}
             </span>
           </button>
           
@@ -246,7 +274,7 @@ const [open, setOpen] = useState(false);
       </button>
 
       {open && (
-        <CommentOverlay postId={post._id} onClose={() => setOpen(false)} />
+        <CommentOverlay postId={post?._id} onClose={() => setOpen(false)} />
       )}
     </>
           {/* Share Button */}
@@ -262,11 +290,11 @@ const [open, setOpen] = useState(false);
           
           {/* Bookmark Button */}
           <button
-            onClick={() => setBookmarked(!bookmarked)}
+            onClick={handleSave}
             className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
           >
             <svg 
-              className={`w-5 h-5 ${bookmarked ? 'fill-current text-blue-600' : ''}`} 
+              className={`w-5 h-5 ${post?.isSavedByMe ? 'fill-current text-blue-600' : ''}`} 
               fill={bookmarked ? "currentColor" : "none"} 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -278,7 +306,7 @@ const [open, setOpen] = useState(false);
                 d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" 
               />
             </svg>
-            <span className={`font-medium ${bookmarked ? 'text-blue-600' : 'text-gray-700'}`}>
+            <span className={`font-medium ${post?.isSavedByMe ? 'text-blue-600' : 'text-gray-700'}`}>
               Save
             </span>
           </button>

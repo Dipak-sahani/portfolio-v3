@@ -1,8 +1,8 @@
 // pages/EditPostPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePostStore } from '../store/usePostStore';
-import { useWorkspaceStore } from '../store/useWorkspaceStore';
+import { usePostStore } from '../../store/post.store';
+// import { useWorkspaceStore } from '../store/useWorkspaceStore';
 
 const EditPostPage = () => {
   const { postId } = useParams();
@@ -17,7 +17,7 @@ const EditPostPage = () => {
     deletePost 
   } = usePostStore();
   
-  const { workspaces, fetchWorkspaces } = useWorkspaceStore();
+  // const { workspaces, fetchWorkspaces } = useWorkspaceStore();
   
   const [formData, setFormData] = useState({
     content: '',
@@ -32,8 +32,8 @@ const EditPostPage = () => {
     if (postId) {
       fetchPostById(postId);
     }
-    fetchWorkspaces();
-  }, [postId, fetchPostById, fetchWorkspaces]);
+    // fetchWorkspaces();
+  }, [postId, fetchPostById]);
 
   useEffect(() => {
     if (currentPost) {
@@ -65,7 +65,7 @@ const EditPostPage = () => {
     try {
       await updatePost(postId, updateData);
       alert('Post updated successfully!');
-      navigate(`/posts/${postId}`);
+      navigate(`/dashboard`);
     } catch (error) {
       console.error('Error updating post:', error);
       alert(`Error: ${error.message}`);
@@ -227,32 +227,43 @@ const EditPostPage = () => {
                   </div>
                   
                   {/* Media List */}
-                  {formData.media.length > 0 && (
-                    <div className="space-y-3">
-                      {formData.media.map((url, index) => (
-                        <div key={index} className="flex items-center justify-between bg-linear-to-r from-[#EDBF9B]/10 to-[#FD7B41]/5 p-4 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-linear-to-r from-[#FD7B41] to-[#EDBF9B] rounded-lg flex items-center justify-center text-white">
-                              <i className="fas fa-link"></i>
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium text-[#3C4044] truncate">
-                                {new URL(url).pathname.split('/').pop() || url}
-                              </p>
-                              <p className="text-xs text-[#3C4044]/60 truncate">{url}</p>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveMedia(index)}
-                            className="text-[#3C4044]/40 hover:text-red-500 transition-colors"
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {formData.media.map((url, index) => (
+      <div
+        key={index}
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                   gap-3 bg-linear-to-br from-[#EDBF9B]/10 to-[#FD7B41]/5
+                   p-3 sm:p-4 rounded-lg w-full"
+      >
+        {/* Left section */}
+        <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0
+                          bg-linear-to-br from-[#FD7B41] to-[#EDBF9B]
+                          rounded-lg flex items-center justify-center text-white">
+            <i className="fas fa-link text-sm sm:text-base"></i>
+          </div>
+
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[#3C4044] truncate">
+              {new URL(url).pathname.split('/').pop() || url}
+            </p>
+            <p className="text-xs text-[#3C4044]/60 truncate max-w-full">
+              {url}
+            </p>
+          </div>
+        </div>
+
+        {/* Remove button */}
+        <button
+          type="button"
+          onClick={() => handleRemoveMedia(index)}
+          className="self-end sm:self-auto text-[#3C4044]/40
+                     hover:text-red-500 transition-colors
+                     p-1"
+        >
+          <i className="fas fa-times text-sm"></i>
+        </button>
+      </div>
+    ))}
                 </div>
 
                 {/* Workspace Selection */}
@@ -280,7 +291,7 @@ const EditPostPage = () => {
                       </div>
                     </div>
                     
-                    {workspaces.map(workspace => (
+                    {/* {workspaces.map(workspace => (
                       <div
                         key={workspace._id}
                         onClick={() => setFormData(prev => ({ ...prev, workspaceId: workspace._id }))}
@@ -302,7 +313,7 @@ const EditPostPage = () => {
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
 

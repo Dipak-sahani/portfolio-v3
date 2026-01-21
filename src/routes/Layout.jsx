@@ -5,10 +5,15 @@ import Footer from "../components/footer/Footer";
 function Layout() {
   return (
     <div>
-      <Header />
-      <Outlet />
-      <Footer/>
-    </div>
+  <div className="fixed top-0 left-0 w-full z-50 bg-white h-20">
+    <Header />
+  </div>
+
+  <div className="mt-20">
+    <Outlet />
+  </div>
+</div>
+
   );
 }
 

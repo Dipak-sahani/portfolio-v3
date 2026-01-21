@@ -20,6 +20,9 @@ import { useAuthStore } from "../../store/auth.store";
 import socket from "../../app/socket";
 import { useParams } from "react-router-dom";
 
+
+const LIMIT=10
+
 const ChatArea = ({ activeContact }) => {
   const user = useAuthStore((state) => state.user);
 
@@ -91,18 +94,20 @@ const ChatArea = ({ activeContact }) => {
   useEffect(() => {
     if (!activeContact?.conversationId) return;
 
-    const fetchMessages = async () => {
-      try {
-        const res = await getMessagesByConversation(
-          activeContact.conversationId,
-        );
-        setMessages(res || []);
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
-    fetchMessages();
+    loadMessages(true);
+    // const fetchMessages = async () => {
+    //   try {
+    //     const res = await getMessagesByConversation(
+    //       activeContact.conversationId,
+    //     );
+    //     setMessages(res || []);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // };
+
+    // fetchMessages();
   }, [activeContact]);
 
   /* ---------------- AUTO SCROLL ---------------- */
@@ -231,7 +236,64 @@ const ChatArea = ({ activeContact }) => {
     });
   };
 
-  /* ---------------- UI ---------------- */
+  /* ---------------- auto reload data ---------------- */
+
+const containerRef = useRef(null);
+ const [skip, setSkip] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+
+  // useEffect(() => {
+  //   loadMessages(true);
+  // }, [conversationId]);
+
+  const loadMessages = async (isInitial = false) => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    const conversationId=activeContact.conversationId
+
+    const res = await getMessagesByConversation(
+      conversationId,
+      LIMIT,
+      isInitial ? 0 : skip
+    );
+
+    console.log(res);
+    
+
+    if (res?.messages?.length) {
+      setMessages(prev =>
+        isInitial ? res.messages : [...res.messages, ...prev]
+      );
+
+      setSkip(prev => prev + LIMIT);
+      setHasMore(res.hasMore);
+    }
+
+    setLoading(false);
+  };
+
+  // 🔥 AUTO CALL WHEN TOP REACHED
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (!container || loading || !hasMore) return;
+
+    if (container.scrollTop === 0) {
+      loadMessages();
+    }
+  };
+
+   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (skip > LIMIT) {
+      container.scrollTop = container.scrollHeight * 0.3;
+    }
+  }, [messages]);
+
 
   return (
     <div className=" w-full flex flex-col h-full">
@@ -266,6 +328,18 @@ const ChatArea = ({ activeContact }) => {
           </button>
         </div>
       </div>
+
+      <div
+      ref={containerRef}
+      onScroll={handleScroll}
+      style={{
+        height: "500px",
+        overflowY: "auto",
+        border: "1px solid #ddd",
+        padding: "10px",
+      }}
+    >
+      {loading && <p style={{ textAlign: "center" }}>Loading...</p>}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
@@ -314,6 +388,8 @@ const ChatArea = ({ activeContact }) => {
           );
         })}
         <div ref={messagesEndRef} />
+      </div>
+
       </div>
 
       {/* Input */}

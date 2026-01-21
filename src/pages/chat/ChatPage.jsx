@@ -20,12 +20,12 @@ export default function Chat() {
     const [error, setError] = useState(null);
 
   const user=useAuthStore((state)=>state.user);
-  console.log(user);
+  // console.log(user);
 
   const [selectedUserId, setSelectedUserId]=useState(id||null);
   
   useEffect(()=>{
-    console.log(selectedUserId);
+    // console.log(selectedUserId);
     if (id) {
       setActiveContact(true);
       
@@ -50,7 +50,7 @@ export default function Chat() {
   };
 
   const handleSendMessage = (message, conversationId) => {
-    console.log(`Message sent to contact ${conversationId}: ${message}`);
+    // console.log(`Message sent to contact ${conversationId}: ${message}`);
 
     
 

@@ -1,7 +1,7 @@
 import { API } from "./auth.service";
 export const searchPeople = async (params) => {
   try {
-     console.log("searchUsers called with:", params);
+    //  console.log("searchUsers called with:", params);
     const response = await API.get('/users/search-user', {
       
       params: {
