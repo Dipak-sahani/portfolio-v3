@@ -1,4 +1,4 @@
-import { AppRoutes } from "./routes";
+import { AppRoutes } from "./routes/index.jsx";
 import { ToastProvider } from "./components/toast/ToastProvider";
 function App() {
   return <>
