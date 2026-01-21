@@ -19,7 +19,7 @@ import ComingSoonPage from "../pages/CominSoonPage";
 // startup and business idea 
 import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
 
-export default function AppRoutes() {
+export const AppRoutes=()=> {
   return (
     <Routes>
       {/* Public Layout */}
