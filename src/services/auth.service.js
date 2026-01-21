@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: import.meta.env.VITE_API_BACKEND_URL,
   withCredentials: true, // for cookies
   timeout: 10000,
   headers: {
@@ -10,6 +10,8 @@ export const API = axios.create({
 });
 
 export const loginApi = async (data) => {
+  // console.log(process.env.BACKEND_URL);
+  
   const res = await API.post("/users/login", data);
   // console.log(res);
   

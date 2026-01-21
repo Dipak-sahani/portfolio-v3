@@ -42,7 +42,7 @@ export const usePostStore = create((set, get) => ({
 
       const data = await getPosts({
         page: nextPage,
-        limit: import.meta.env.REACT_APP_LIMIT || 8,
+        limit: import.meta.env.VITE_API_LIMIT || 8,
       });
 
       // console.log(data.postsWithFlags);
