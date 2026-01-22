@@ -27,11 +27,12 @@ const ChatArea = ({ activeContact }) => {
   const user = useAuthStore((state) => state.user);
 
   const [messages, setMessages] = useState([]);
+  const [isOnlineUser, setIsUserOnline]=useState(false);
   const [newMessages, setNewMessages] = useState();
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
 
   const messagesEndRef = useRef(null);
 
@@ -41,13 +42,13 @@ const ChatArea = ({ activeContact }) => {
   /* ---------------- SOCKET CONNECTION ---------------- */
 
   const handleNewMessage = (d) => {
-    console.log("New message:", d);
+    // console.log("New message:", d);
     // console.log("Nww, ", d?.message);
 
     if (d.message.senderId === user._id) return;
 
     setMessages((prevMessages) => [...prevMessages, d?.message]);
-
+    setIsUserOnline(d?.status);
     // Scroll to bottom
     scrollToBottom();
     // console.log(messages);
@@ -59,7 +60,7 @@ const ChatArea = ({ activeContact }) => {
     }
 
     socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
+      // console.log("✅ Socket connected:", socket.id);
       setIsConnected(true);
     });
 
@@ -67,7 +68,7 @@ const ChatArea = ({ activeContact }) => {
     socket.on("new_message", handleNewMessage);
 
     socket.on("disconnect", () => {
-      console.log("❌ Socket disconnected");
+      // console.log("❌ Socket disconnected");
       setIsConnected(false);
     });
 
@@ -113,6 +114,7 @@ const ChatArea = ({ activeContact }) => {
   /* ---------------- AUTO SCROLL ---------------- */
 
   useEffect(() => {
+    if (!isUserNearBottom()) return;
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -123,7 +125,7 @@ const ChatArea = ({ activeContact }) => {
     if (!newMessage.trim() || !activeContact) return;
 
     if (!socket.connected) {
-      console.error("Socket not connected");
+      // console.error("Socket not connected");
       return;
     }
 
@@ -145,6 +147,22 @@ const ChatArea = ({ activeContact }) => {
     socket.emit("send_message", messagePayload);
   };
 
+
+  // ===============================
+  // presence ping 
+  // ===============================
+
+  useEffect(() => {
+  if (!socket || !socket.connected) return;
+
+  const interval = setInterval(() => {
+    socket.emit("presence_ping");
+  }, 25000); // 25s heartbeat
+
+  return () => clearInterval(interval);
+}, [socket.connected]);
+
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -154,16 +172,12 @@ const ChatArea = ({ activeContact }) => {
 
   /* ---------------- STATUS HELPERS ---------------- */
 
-  const getStatusColor = (status) => {
-    if (status === "online") return "bg-green-500";
-    if (status === "away") return "bg-yellow-500";
-    return "bg-gray-400";
+  const getStatusColor = () => {
+    return isOnlineUser?"bg-green-500":"bg-gray-400";
   };
 
-  const getStatusText = (status) => {
-    if (status === "online") return "Online";
-    if (status === "away") return "Away";
-    return "Offline";
+  const getStatusText = () => {
+    return isOnlineUser?"Online": "Offline";
   };
 
   /* ---------------- EMPTY STATE ---------------- */
@@ -260,7 +274,7 @@ const containerRef = useRef(null);
       isInitial ? 0 : skip
     );
 
-    console.log(res);
+    // console.log(res);
     
 
     if (res?.messages?.length) {
@@ -285,14 +299,27 @@ const containerRef = useRef(null);
     }
   };
 
-   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  const isUserNearBottom = () => {
+  const container = containerRef.current;
+  if (!container) return false;
 
-    if (skip > LIMIT) {
-      container.scrollTop = container.scrollHeight * 0.3;
-    }
-  }, [messages]);
+  return (
+    container.scrollHeight -
+      container.scrollTop -
+      container.clientHeight <
+    120 // px threshold
+  );
+};
+
+
+  //  useEffect(() => {
+  //   const container = containerRef.current;
+  //   if (!container) return;
+
+  //   if (skip > LIMIT) {
+  //     container.scrollTop = container.scrollHeight * 0.3;
+  //   }
+  // }, [messages]);
 
 
   return (
@@ -307,11 +334,9 @@ const containerRef = useRef(null);
             <h3 className="font-bold">{activeContact.name}</h3>
             <p className="text-sm text-gray-500">
               <span
-                className={`inline-block w-2 h-2 rounded-full mr-1 ${getStatusColor(
-                  activeContact.status,
-                )}`}
+                className={`inline-block w-2 h-2 rounded-full mr-1 ${getStatusColor()}`}
               />
-              {getStatusText(activeContact.status)}
+              {getStatusText()}
             </p>
           </div>
         </div>

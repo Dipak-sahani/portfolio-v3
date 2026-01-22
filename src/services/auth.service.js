@@ -2,9 +2,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BACKEND_URL,
+  baseURL: `${import.meta.env.VITE_API_BACKEND_URL}/api`,
   withCredentials: true, // for cookies
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },

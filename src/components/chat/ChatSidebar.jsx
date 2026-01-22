@@ -227,10 +227,7 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
               : `${contacts.length} contacts`
             }
           </span>
-          <div className="flex items-center">
-            <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
-            <span>{contacts.filter(c => c.status === 'online').length} online</span>
-          </div>
+          
         </div>
       </div>
       
@@ -294,32 +291,17 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
                     {/* {contact.avatar} */}
                     <FontAwesomeIcon icon={faUser} />
                   </div>
-                  <div 
+                  {/* <div 
                     className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(contact.status)}`}
                     title={getStatusText(contact.status)}
-                  ></div>
+                  ></div> */}
                 </div>
                 <div className="ml-3 flex-1">
                   <div className="flex justify-between items-center">
                     <h3 className="font-semibold text-gray-800 truncate">{contact.name}</h3>
-                    <div className="flex items-center space-x-2">
-                      {contact.unread > 0 && (
-                        <span className="bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                          {contact.unread}
-                        </span>
-                      )}
-                      <span className="text-xs text-gray-500">{contact.lastSeen}</span>
-                    </div>
+                    
                   </div>
-                  <div className="flex justify-between items-center mt-1">
-                    <p className="text-sm text-gray-600 truncate">{contact.email}</p>
-                    {contact.status === 'online' && (
-                      <span className="text-xs text-green-500">
-                        <FontAwesomeIcon icon={faCircle} className="mr-1" style={{fontSize: '8px'}} />
-                        {getStatusText(contact.status)}
-                      </span>
-                    )}
-                  </div>
+                  
                   {contact.company && (
                     <p className="text-xs text-gray-500 mt-1 truncate">
                       <FontAwesomeIcon icon={faBuilding} className="mr-1" />
@@ -333,52 +315,7 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
         )}
       </div>
       
-      {/* Current user profile */}
-      <div className="p-4 border-t border-gray-200">
-        {currentUser ? (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white"
-                style={{ 
-                  backgroundColor: `hsl(${currentUser.id * 137.5 % 360}, 70%, 60%)`
-                }}
-              >
-                {currentUser.avatar}
-              </div>
-              <div className="ml-3">
-                <h4 className="font-semibold text-gray-800">{currentUser.name}</h4>
-                <p className="text-xs text-gray-500 flex items-center">
-                  <span className={`w-2 h-2 rounded-full mr-1 ${getStatusColor(currentUser.status)}`}></span>
-                  {getStatusText(currentUser.status)}
-                </p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <button 
-                className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
-                title="Settings"
-              >
-                <FontAwesomeIcon icon={faCog} />
-              </button>
-              <button 
-                className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
-                title="Log out"
-              >
-                <FontAwesomeIcon icon={faSignOutAlt} />
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center animate-pulse">
-            <div className="w-10 h-10 rounded-full bg-gray-300"></div>
-            <div className="ml-3">
-              <div className="h-4 bg-gray-300 rounded w-20 mb-1"></div>
-              <div className="h-3 bg-gray-200 rounded w-16"></div>
-            </div>
-          </div>
-        )}
-      </div>
+      
     </div>
   );
 };
