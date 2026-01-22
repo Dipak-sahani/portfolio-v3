@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useToast } from "../components/toast/ToastProvider";
+// import { useToast } from "../components/toast/ToastProvider";
 import { SearchFilters } from "../components/component/SearchFilters";
 import { PeopleList } from "../components/component/PeopleList";
 import { Pagination } from "../components/component/Pagination";
@@ -29,7 +29,7 @@ const PeopleSearch = () => {
     limit: 10,
   });
 
-  const toast = useToast();
+  // const toast = useToast();
   const lastSearchRef = useRef("");
   const isMountedRef = useRef(true);
   const errorShownRef = useRef(false);
