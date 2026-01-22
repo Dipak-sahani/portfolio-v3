@@ -28,7 +28,7 @@ const PostsPage = () => {
 
   return (
     <div className="space-y-4">
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <div key={post?._id}>
         <PostCard  postId={post?._id} />
 
