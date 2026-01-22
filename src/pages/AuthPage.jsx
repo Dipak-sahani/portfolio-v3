@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/auth.store";
-import { useToast } from "../components/toast/ToastProvider";
 import { register } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +16,6 @@ const AuthForm = () => {
     username:"",
   });
 
-  const toast = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +47,7 @@ const AuthForm = () => {
       
     } else {
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords don't match!");
+        toast.warn("Passwords don't match!");
         return;
       }
       await register({ formData });
@@ -374,7 +372,7 @@ const AuthForm = () => {
           // style={{ backgroundColor: "#3C4044" }}
         >
           <img
-            src="public/images/Auth.png"
+            src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/Auth.png"
             alt="bg image"
             className="w-fit h-fit bg-no-repeat"
           />

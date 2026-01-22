@@ -23,7 +23,7 @@ export const getPosts = async (params = {}) => {
   try {
     const query = new URLSearchParams(params).toString();
     const res = await API.get(`/post?${query}`);
-    // console.log(res);
+    console.log(res);
     
     return res.data.data;
   } catch (error) {

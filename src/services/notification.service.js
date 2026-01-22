@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { API } from "./auth.service"; 
 
 export const getMyNotifications= async()=>{
@@ -10,7 +11,8 @@ export const getMyNotifications= async()=>{
         } 
      } catch (error) {
         console.log(error);
-        alert(error.response.data.message || "Message service not working")
+        toast.error(error.response.data.message || "Message service not working")
+        
      }
 }
 

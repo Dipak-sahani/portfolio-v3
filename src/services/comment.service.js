@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
 
@@ -11,7 +12,8 @@ export const postComment=async(data)=>{
         
     } catch (error) {
         console.log(error);
-        alert(error?.response?.data?.message || "something error from comment ")
+        toast.error(error?.response?.data?.message || "something error from comment ")
+    
     }
 }
 
@@ -23,6 +25,7 @@ export const getComments=async(postId)=>{
         return res;
     } catch (error) {
         console.log(error);
-        alert(error?.response?.data?.message || "Something error in get all comment ")
+        toast(error?.response?.data?.message || "Something error in get all comment ")
+    
     }
 }

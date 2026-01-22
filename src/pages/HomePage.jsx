@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth.store";
 import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
 import Footer from "../components/footer/Footer";
+// import { toast } from "react-toastify";
 // import { getDashboardData } from "../services/userDashboard.service";
 
 const HomePage = () => {
@@ -12,7 +13,7 @@ const HomePage = () => {
 
       
  useEffect(() => {
-
+    // toast.success("hi")
       // getDashboardData();
       if (isAuthenticated) {
       fetchNotification();
@@ -35,7 +36,7 @@ const HomePage = () => {
       </section>
       <section className="flex mt-20  ">
         <section className="flex-1/2 hidden sm:block">
-        <img src="public/images/HomePage.jpg" className="shadow-2xl shadow-[#FD7B41]"/>
+        <img src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/HomePage.jpg" className="shadow-2xl shadow-[#FD7B41]"/>
 
         </section>
         <section className="flex-1/2 px-2 sm:px-10 sm:pl-20">

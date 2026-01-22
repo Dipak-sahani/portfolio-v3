@@ -6,6 +6,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { getComments, postComment } from "../../services/comment.service";
+import { toast } from "react-toastify";
 
 const CommentOverlay = ({ postId, onClose }) => {
   const [comments, setComments] = useState([]);
@@ -47,7 +48,8 @@ const CommentOverlay = ({ postId, onClose }) => {
       })
 
       if (res.status==201) {
-        alert("you commented on this post")
+        toast.success("you commented on this post")
+        
       }
       
     } finally {

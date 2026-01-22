@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const API = axios.create({
   baseURL: import.meta.env.VITE_API_BACKEND_URL,
@@ -25,13 +26,13 @@ export const register = async (data) => {
    
     if(res.status==201){
     return res.data.data;
-    alert("Register user successfully")
 
     }
   } catch (error) {
     console.log(error);
 
-    alert(error?.response?.data?.message)
+    toast.error(error?.response?.data?.message||"something error")
+    
     
   }
 };

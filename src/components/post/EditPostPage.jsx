@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostStore } from '../../store/post.store';
+import { toast } from 'react-toastify';
 // import { useWorkspaceStore } from '../store/useWorkspaceStore';
 
 const EditPostPage = () => {
@@ -50,7 +51,8 @@ const EditPostPage = () => {
     e.preventDefault();
     
     if (!formData.content.trim() && formData.media.length === 0) {
-      alert('Post must have content or media');
+      toast.warn('Post must have content or media')
+    
       return;
     }
 
@@ -64,11 +66,11 @@ const EditPostPage = () => {
 
     try {
       await updatePost(postId, updateData);
-      alert('Post updated successfully!');
+      toast.success('Post updated successfully!');
       navigate(`/dashboard`);
     } catch (error) {
       console.error('Error updating post:', error);
-      alert(`Error: ${error.message}`);
+      toast.error(`Error: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -78,11 +80,11 @@ const EditPostPage = () => {
     if (window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
       try {
         await deletePost(postId);
-        alert('Post deleted successfully!');
+        toast.success('Post deleted successfully!');
         navigate('/');
       } catch (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post');
+        toast.error('Failed to delete post');
       }
     }
   };

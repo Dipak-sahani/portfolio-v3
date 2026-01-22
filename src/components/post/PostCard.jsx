@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-icons';
 import { postComment } from '../../services/comment.service';
 import CommentOverlay from '../comment/CommentOverlay';
+import { toast } from 'react-toastify';
 
 const PostCard = ({ postId }) => {
   const post=usePostStore(state => 
@@ -109,7 +110,7 @@ const [comment, setComment] = useState("");
 
       if (res.status==201) {
         setComment("");
-        alert("comment added !")
+        toast.success("comment added !")
       }
     } catch (error) {
       console.error("Comment error:", error);

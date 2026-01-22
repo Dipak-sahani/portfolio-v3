@@ -1,26 +1,30 @@
 // pages/CreatePostPage.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePostStore } from '../../store/post.store';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePostStore } from "../../store/post.store";
+import { toast } from "react-toastify";
+import { uploadImage } from "../../services/upload.service";
+import { useAuthStore } from "../../store/auth.store";
+
 // import { useWorkspaceStore } from '../store/useWorkspaceStore';
 
 const CreatePostPage = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const user=useAuthStore((state)=>state.user)
   // Use Zustand stores
   const { createPost } = usePostStore();
-  // const { 
-  //   workspaces, 
-  //   loading: loadingWorkspaces, 
-  //   fetchWorkspaces 
+  // const {
+  //   workspaces,
+  //   loading: loadingWorkspaces,
+  //   fetchWorkspaces
   // } = useWorkspaceStore();
-  
+
   const [formData, setFormData] = useState({
-    content: '',
+    content: "",
     media: [],
-    workspaceId: '',
-    mediaInput: ''
+    workspaceId: "",
+    mediaInput: "",
   });
 
   // useEffect(() => {
@@ -29,9 +33,9 @@ const CreatePostPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.content.trim() && formData.media.length === 0) {
-      alert('Please add content or media to your post');
+      toast.warn("Please add content or media to your post");
       return;
     }
 
@@ -40,18 +44,18 @@ const CreatePostPage = () => {
     const postData = {
       content: formData.content,
       media: formData.media,
-      workspaceId: formData.workspaceId || undefined
+      workspaceId: formData.workspaceId || undefined,
     };
 
     try {
       console.log(postData);
-      
+
       await createPost(postData);
-      alert('Post created successfully!');
-      navigate('/');
+      toast.success("Post created successfully!");
+      navigate("/");
     } catch (error) {
-      console.error('Error creating post:', error);
-      alert(`Error: ${error.message}`);
+      console.error("Error creating post:", error);
+      toast.error(`Error: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -59,27 +63,48 @@ const CreatePostPage = () => {
 
   const handleAddMedia = () => {
     if (formData.mediaInput.trim()) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         media: [...prev.media, prev.mediaInput],
-        mediaInput: ''
+        mediaInput: "",
       }));
     }
   };
 
   const handleRemoveMedia = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      media: prev.media.filter((_, i) => i !== index)
+      media: prev.media.filter((_, i) => i !== index),
     }));
   };
 
-  const handleMediaUpload = (e) => {
-    const files = e.target.files;
-    // In a real app, you would upload files to a storage service
-    // and get back URLs to add to the media array
-    alert('File upload functionality would be implemented here');
+  const getPreviewSrc = (media) => {
+    if (media instanceof File) {
+      return URL.createObjectURL(media);
+    }
+    return media;
   };
+  const handleMediaUpload = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const imageUrl = await uploadImage(file, user._id);
+
+    setFormData((prev) => ({
+      ...prev,
+      media: [...prev.media, imageUrl], // ✅ ONLY URL
+    }));
+
+    toast.success("Image uploaded");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message || "Upload failed");
+  } finally {
+    e.target.value = ""; // reset file input
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#DDDCDB] to-white p-4 md:p-8">
@@ -87,7 +112,7 @@ const CreatePostPage = () => {
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center text-[#3C4044]/60 hover:text-[#FD7B41] transition-colors mb-4"
           >
             <i className="fas fa-arrow-left mr-2"></i>
@@ -108,13 +133,21 @@ const CreatePostPage = () => {
               <form onSubmit={handleSubmit}>
                 {/* Content */}
                 <div className="mb-8">
-                  <label htmlFor="content" className="block text-sm font-medium text-[#3C4044] mb-3">
+                  <label
+                    htmlFor="content"
+                    className="block text-sm font-medium text-[#3C4044] mb-3"
+                  >
                     What would you like to share?
                   </label>
                   <textarea
                     id="content"
                     value={formData.content}
-                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        content: e.target.value,
+                      }))
+                    }
                     maxLength={5000}
                     rows={8}
                     className="w-full px-4 py-3 border border-[#EDBF9B] rounded-lg focus:ring-2 focus:ring-[#FD7B41] focus:border-transparent outline-none transition-all resize-none"
@@ -132,30 +165,48 @@ const CreatePostPage = () => {
 
                 {/* Media Section */}
                 <div className="mb-8">
-                  <div className="flex items-center justify-between mb-4">
-                    <label className="block text-sm font-medium text-[#3C4044]">
-                      Media Attachments
-                    </label>
-                    <label className="px-4 py-2 bg-linear-to-br from-[#FD7B41] to-[#EDBF9B] text-white rounded-lg hover:opacity-90 transition-opacity cursor-pointer">
-                      <i className="fas fa-upload mr-2"></i>
-                      Upload Files
+                  <div className="mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <label
+                        htmlFor="media-upload"
+                        className="block text-sm font-medium text-[#3C4044]"
+                      >
+                        Media Attachments
+                      </label>
+
+                      <label
+                        htmlFor="media-upload"
+                        className="px-4 py-2 bg-gradient-to-br from-[#FD7B41] to-[#EDBF9B]
+                 text-white rounded-lg hover:opacity-90 transition-opacity
+                 cursor-pointer flex items-center"
+                      >
+                        <i className="fas fa-upload mr-2"></i>
+                        Upload Files
+                      </label>
+
                       <input
+                        id="media-upload"
                         type="file"
                         multiple
                         className="hidden"
                         onChange={handleMediaUpload}
                         accept="image/*,video/*,.pdf,.doc,.docx"
                       />
-                    </label>
+                    </div>
                   </div>
-                  
+
                   {/* Media URL Input */}
                   <div className="mb-4">
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={formData.mediaInput}
-                        onChange={(e) => setFormData(prev => ({ ...prev, mediaInput: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            mediaInput: e.target.value,
+                          }))
+                        }
                         placeholder="Enter media URL (image, video, document)"
                         className="flex-1 px-4 py-3 border border-[#EDBF9B] rounded-lg focus:ring-2 focus:ring-[#FD7B41] focus:border-transparent outline-none transition-all"
                       />
@@ -173,55 +224,50 @@ const CreatePostPage = () => {
                       Supported: Images, Videos, PDFs, Documents
                     </p>
                   </div>
-                  
+
                   {/* Media Preview */}
 
                   {formData.media.length > 0 && (
-  <div className="space-y-4">
-    <h4 className="text-sm font-medium text-[#3C4044]">
-      Added Media:
-    </h4>
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-medium text-[#3C4044]">
+                        Added Media:
+                      </h4>
 
-    {formData.media.map((url, index) => (
-      <div
-        key={index}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between
-                   gap-3 bg-linear-to-br from-[#EDBF9B]/10 to-[#FD7B41]/5
-                   p-3 sm:p-4 rounded-lg w-full"
-      >
-        {/* Left section */}
-        <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0
-                          bg-linear-to-br from-[#FD7B41] to-[#EDBF9B]
-                          rounded-lg flex items-center justify-center text-white">
-            <i className="fas fa-link text-sm sm:text-base"></i>
-          </div>
+                      {formData.media.length > 0 && (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                          {formData.media.map((media, index) => (
+                            <div
+                              key={index}
+                              className="relative border rounded-lg p-2 bg-white shadow-sm"
+                            >
+                              {typeof media === "string" ||
+                              media.type?.startsWith("image/") ? (
+                                <img
+                                  src={getPreviewSrc(media)}
+                                  alt="media-preview"
+                                  className="w-full h-32 object-cover rounded"
+                                />
+                              ) : (
+                                <div className="flex items-center justify-center h-32 text-sm text-gray-600 text-center">
+                                  {media.name || "Attachment"}
+                                </div>
+                              )}
 
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-[#3C4044] truncate">
-              {new URL(url).pathname.split('/').pop() || url}
-            </p>
-            <p className="text-xs text-[#3C4044]/60 truncate max-w-full">
-              {url}
-            </p>
-          </div>
-        </div>
-
-        {/* Remove button */}
-        <button
-          type="button"
-          onClick={() => handleRemoveMedia(index)}
-          className="self-end sm:self-auto text-[#3C4044]/40
-                     hover:text-red-500 transition-colors
-                     p-1"
-        >
-          <i className="fas fa-times text-sm"></i>
-        </button>
-      </div>
-    ))}
-  </div>
-)}
-
+                              <button
+                                type="button"
+                                onClick={() => removeMedia(index)}
+                                className="absolute top-1 right-1 bg-red-500 text-white
+                     rounded-full w-6 h-6 flex items-center justify-center
+                     text-xs hover:bg-red-600"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Workspace Selection */}
@@ -291,35 +337,41 @@ const CreatePostPage = () => {
                 <div className="flex items-center justify-between pt-6 border-t border-[#EDBF9B]/30">
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate("/")}
                     className="px-6 py-3 bg-[#DDDCDB] text-[#3C4044] rounded-lg hover:bg-[#DDDCDB]/80 transition-colors font-medium"
                   >
                     Cancel
                   </button>
-                  
+
                   <div className="flex gap-3">
                     <button
                       type="button"
                       onClick={() => {
                         setFormData({
-                          content: '',
+                          content: "",
                           media: [],
-                          workspaceId: '',
-                          mediaInput: ''
+                          workspaceId: "",
+                          mediaInput: "",
                         });
                       }}
                       className="px-6 py-3 border border-[#FD7B41] text-[#FD7B41] rounded-lg hover:bg-[#FD7B41]/10 transition-colors font-medium"
                     >
                       Clear
                     </button>
-                    
+
                     <button
                       type="submit"
-                      disabled={isSubmitting || (!formData.content.trim() && formData.media.length === 0)}
+                      disabled={
+                        isSubmitting ||
+                        (!formData.content.trim() &&
+                          formData.media.length === 0)
+                      }
                       className={`px-8 py-3 rounded-lg font-medium transition-all flex items-center shadow-lg ${
-                        isSubmitting || (!formData.content.trim() && formData.media.length === 0)
-                          ? 'bg-[#DDDCDB] text-[#3C4044]/40 cursor-not-allowed'
-                          : 'bg-linear-to-r from-[#FD7B41] to-[#EDBF9B] text-white hover:opacity-90'
+                        isSubmitting ||
+                        (!formData.content.trim() &&
+                          formData.media.length === 0)
+                          ? "bg-[#DDDCDB] text-[#3C4044]/40 cursor-not-allowed"
+                          : "bg-linear-to-r from-[#FD7B41] to-[#EDBF9B] text-white hover:opacity-90"
                       }`}
                     >
                       {isSubmitting ? (
@@ -347,7 +399,7 @@ const CreatePostPage = () => {
                 <i className="fas fa-lightbulb text-[#FD7B41] mr-2"></i>
                 Posting Tips
               </h3>
-              
+
               <div className="space-y-4">
                 {/* Tips content remains the same */}
               </div>

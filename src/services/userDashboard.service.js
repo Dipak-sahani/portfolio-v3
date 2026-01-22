@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
 export const getDashboardData=async()=>{
@@ -10,6 +11,7 @@ export const getDashboardData=async()=>{
         
     } catch (error) {
         console.log(error);
-        alert(error?.response?.data?.message || "something error from comment ")
+        toast.error(error?.response?.data?.message || "something error from comment ")
+        
     }
 }

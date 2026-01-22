@@ -1,12 +1,13 @@
 
-import { ToastProvider } from "./components/toast/ToastProvider";
-import AppRoutes from "./routes/route";
 
+import AppRoutes from "./routes/route";
+import { ToastContainer, toast } from 'react-toastify';
 function App() {
   return <>
-  <ToastProvider>
+ 
   <AppRoutes />
-  </ToastProvider>
+  <ToastContainer/>
+ 
   
   </>;
 }

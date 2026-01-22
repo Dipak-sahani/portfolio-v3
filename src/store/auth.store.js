@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { useToast } from "../components/toast/ToastProvider";
 import { loginApi, logoutApi, meApi } from "../services/auth.service";
 import { register } from "../services/auth.service";
+import { toast } from "react-toastify";
 
 
 export const useAuthStore = create(
@@ -24,14 +25,14 @@ export const useAuthStore = create(
             loading: false,
           });
 
-          alert("register successful");
+          toast.success("register successful")
+          
         } catch (error) {
           set({ loading: false });
           console.log(err);
 
-          alert(
-            err?.response?.data?.message || err.message || "register failed"
-          );
+          toast.error(err?.response?.data?.message || err.message || "register failed")
+          
         }
       },
 
@@ -49,7 +50,8 @@ export const useAuthStore = create(
             });
           }
 
-          alert("Login successful");
+          toast.success("Login successful")
+          
 
           if (user) {
             return true;
@@ -60,8 +62,8 @@ export const useAuthStore = create(
         } catch (err) {
           set({ loading: false });
           console.log(err);
-
-          alert(err?.response?.data?.message || err.message || "Login failed");
+          toast.error(err?.response?.data?.message || err.message || "Login failed")
+          
         }
       },
 
@@ -69,9 +71,12 @@ export const useAuthStore = create(
         try {
           await logoutApi();
           set({ user: null, isAuthenticated: false });
-          alert("Logged out");
+          toast.success("Logged out")
+          
         } catch {
-          alert("Logout failed");
+
+          toast.error("Logout failed")
+          
         }
       },
 
