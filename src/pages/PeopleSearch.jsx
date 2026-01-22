@@ -4,6 +4,7 @@ import { SearchFilters } from "../components/component/SearchFilters";
 import { PeopleList } from "../components/component/PeopleList";
 import { Pagination } from "../components/component/Pagination";
 import { searchPeople } from "../services/people.service";
+import { toast } from "react-toastify";
 
 const PeopleSearch = () => {
   const [filters, setFilters] = useState({
