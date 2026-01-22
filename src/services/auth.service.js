@@ -14,7 +14,7 @@ export const loginApi = async (data) => {
   // console.log(process.env.BACKEND_URL);
   
   const res = await API.post("/users/login", data);
-  // console.log(res);
+  console.log(res);
   
   return res.data.user;
 };
