@@ -16,6 +16,8 @@ const HomePage = () => {
     // toast.success("hi")
       // getDashboardData();
       if (isAuthenticated) {
+        console.log(user);
+        
       fetchNotification();
         
       }
