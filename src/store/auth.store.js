@@ -42,6 +42,10 @@ export const useAuthStore = create(
           console.log("hi");
 
           const user = await loginApi(credentials);
+
+
+          console.log(user);
+          
           if (user) {
             set({
               user,
