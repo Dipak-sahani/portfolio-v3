@@ -164,7 +164,7 @@ const [open, setOpen] = useState(false);
               </div>
             </div>
           </Link>
-{ post?.authorId?._id!=user._id&&
+{ post?.authorId?._id!=user?._id&&
            <FollowButton
               authorId={post?.authorId?._id}
               isFollowing={post?.authorId?.isFollowing}
