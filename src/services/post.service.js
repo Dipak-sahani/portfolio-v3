@@ -26,7 +26,8 @@ export const getPosts = async (params = {}, isAuthenticated) => {
     let res
     if(isAuthenticated){
      res = await API.get(`/post?${query}`);
-
+      console.log(res);
+      
     }
     else{
     res = await API.get(`/post/unauthorized?${query}`);

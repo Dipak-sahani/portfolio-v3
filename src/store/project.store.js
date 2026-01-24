@@ -9,8 +9,11 @@ export const useProjectStore = create((set) => ({
   createProject: async (data) => {
     try {
       set({ loading: true })
-      await projectService.createProject(data)
-      set({ loading: false })
+      const res=await projectService.createProject(data)
+      set((state) => ({
+  projects: [res.data?.project, ...state.projects],
+  loading: false
+}));
     } catch (err) {
       set({ error: err.message, loading: false })
     }

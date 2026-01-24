@@ -9,6 +9,7 @@ import CommentOverlay from '../comment/CommentOverlay';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import FollowButton from '../../button/FollowBtn';
+import { useAuthStore } from '../../store/auth.store';
 
 const PostCard = ({ postId }) => {
   const post=usePostStore(state => 
@@ -22,7 +23,7 @@ const PostCard = ({ postId }) => {
   const [bookmarked, setBookmarked] = useState(false);
   
   const { likePost, sharePost, unLikePost, savePost } = usePostStore();
-  
+  const user=useAuthStore((state)=>state.user)
   const contentLimit = 150;
   const showSeeMore = post?.content?.length > contentLimit;
   const displayContent = expanded 
@@ -163,11 +164,11 @@ const [open, setOpen] = useState(false);
               </div>
             </div>
           </Link>
-
+{ post?.authorId?._id!=user._id&&
            <FollowButton
               authorId={post?.authorId?._id}
               isFollowing={post?.authorId?.isFollowing}
-            />
+            />}
           
           {/* Menu Button */}
           <button className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100">

@@ -86,7 +86,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
 
   /* ---------- IMAGE UPLOAD ---------- */
   const handleImageUpload = async (file) => {
-    console.log("FILE RECEIVED:", file);
+    // console.log("FILE RECEIVED:", file);
 
     if (!file) {
       console.log("No file selected");
@@ -100,7 +100,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
 
     try {
       const url = await uploadImage(file, user._id);
-      console.log("UPLOAD SUCCESS URL:", url);
+      // console.log("UPLOAD SUCCESS URL:", url);
 
       setImages((prev) => [...prev, url]);
     } catch (error) {
@@ -125,11 +125,27 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
       await createProject(payload);
     }
 
+
+     setFormData({
+        title: "",
+        description:"",
+        domain:  "",
+        githubLink: "",
+        liveLink:  "",
+        completeness:  "idea",
+        startDate:  "",
+        endDate:  "",
+      });
+
+      setTeamMembers( []);
+      setTechStack([]);
+      setImages([]);
+
     onClose();
   };
 
   if (!isProjectAdd) return null;
-  console.log(images);
+  // console.log(images);
 
   return (
     <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">

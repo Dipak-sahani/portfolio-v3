@@ -14,14 +14,16 @@ const OtherPersonProfilePage = () => {
 
   const [info, setInfo] = useState(null);
   const [projets, setProjects] = useState([]);
+  const [followInfo, setFollowInfo]=useState([]);
 
   const fetchUserDetail = async () => {
     try {
       const res = await getUserProfile(id);
-      // console.log(res);
+      console.log(res);
 
       setInfo(res?.user);
       setProjects(res?.projects);
+      setFollowInfo(res?.followStats);
     } catch (error) {
       console.log(error);
     }
@@ -33,7 +35,7 @@ const OtherPersonProfilePage = () => {
 
   return (
     <div>
-      <CommonProfilePage isUser={user._id==id?true:false} info={info} projectList={projets} />
+      <CommonProfilePage isUser={user._id==id?true:false} info={info} follow={followInfo}  projectList={projets} />
     </div>
   );
 };

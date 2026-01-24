@@ -13,7 +13,7 @@ import ProjectDashboard from "../../pages/ProjectShowCase";
 import CreateProjectForm from "../../forms/ProjectCreateForm";
 import ImagePreview from "../ImagePrev/ImagePreview";
 
-const CommonProfilePage = ({ isUser, info, projectList }) => {
+const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAddProject, setIsAddProject] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -89,11 +89,11 @@ const CommonProfilePage = ({ isUser, info, projectList }) => {
 
           <div className="flex flex-col items-end gap-3">
             <div className="text-xs flex items-center gap-1 text-[#EDBF9B]">
-              <FontAwesomeIcon icon={faLocationArrow} /> City, country
+              <FontAwesomeIcon icon={faLocationArrow} /> {info?.city}
             </div>
             <div className="flex gap-2">
               <button className="border border-[#EDBF9B] text-[#EDBF9B] px-6 py-2 rounded text-xs font-bold uppercase">
-                1,043 Connections
+                 {follow?.followersCount} Connections
               </button>
             </div>
           </div>
