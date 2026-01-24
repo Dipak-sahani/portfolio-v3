@@ -7,13 +7,15 @@ import { faComment, faPaperPlane, faPlane } from '@fortawesome/free-solid-svg-ic
 import { postComment } from '../../services/comment.service';
 import CommentOverlay from '../comment/CommentOverlay';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import FollowButton from '../../button/FollowBtn';
 
 const PostCard = ({ postId }) => {
   const post=usePostStore(state => 
     state.posts.find(p => p?._id === postId)
   );
 
-  // console.log(postId);
+  // console.log(post);
   
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -33,6 +35,8 @@ const PostCard = ({ postId }) => {
   const handleLike = async () => {
     if (liked || post?.isLikedByMe){
       try {
+        console.log("1");
+        
         const res=await unLikePost(post?._id)
         setLiked(false)
         
@@ -132,10 +136,10 @@ const [open, setOpen] = useState(false);
       {/* Header */}
       <div className="p-4 pb-3">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-3">
+          <Link to={`/profile/${post?.authorId?._id}`} className="flex items-center space-x-3">
             {/* Brand/Avatar */}
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                 {post?.authorId?.fullName?.charAt(0) || 'B'}
               </div>
               
@@ -149,7 +153,7 @@ const [open, setOpen] = useState(false);
               </div>
               <div className="flex items-center space-x-3 mt-1">
                 <span className="text-sm text-gray-600">
-                  {formatNumber(post?.followers || 0)} followers
+                  {formatNumber(post?.authorId?.followerCount || 0)} followers
                 </span>
                 {post?.promoted && (
                   <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded font-medium">
@@ -158,7 +162,12 @@ const [open, setOpen] = useState(false);
                 )}
               </div>
             </div>
-          </div>
+          </Link>
+
+           <FollowButton
+              authorId={post?.authorId?._id}
+              isFollowing={post?.authorId?.isFollowing}
+            />
           
           {/* Menu Button */}
           <button className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100">

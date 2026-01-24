@@ -1,14 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { usePostStore } from '../store/post.store';
 import PostCard from '../components/post/PostCard';
+import { useAuthStore } from '../store/auth.store';
 
 const PostsPage = () => {
   const { posts, fetchPosts, pagination, loading } = usePostStore();
+  const isAuthenticated=useAuthStore((state)=>state.isAuthenticated)
   const loadMoreRef = useRef(null);
 
   // initial fetch
   useEffect(() => {
-    fetchPosts(false);
+    fetchPosts(false,isAuthenticated);
   }, []);
 
   // infinite scroll

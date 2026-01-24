@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth.store";
 import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
 import Footer from "../components/footer/Footer";
+import { getAuthToken } from "../services/auth.service";
 // import { toast } from "react-toastify";
 // import { getDashboardData } from "../services/userDashboard.service";
 
@@ -10,20 +11,20 @@ const HomePage = () => {
      const {user, isAuthenticated, loadUser }= useAuthStore();
 // console.log(isAuthenticated);
     const {fetchNotification} = useNotificationStore();
+  const token=getAuthToken();
 
-      
+
  useEffect(() => {
-    // toast.success("hi")
-      // getDashboardData();
-      if (isAuthenticated) {
-        console.log(user);
-        
-      fetchNotification();
-        
-      }
-      loadUser();
-    }, []); // only once
-  
+  if (token) {
+    loadUser();
+  }
+}, [token]);
+
+useEffect(() => {
+  if (isAuthenticated) {
+    fetchNotification();
+  }
+}, [isAuthenticated]);
 
 
 
@@ -38,7 +39,7 @@ const HomePage = () => {
       </section>
       <section className="flex mt-20  ">
         <section className="flex-1/2 hidden sm:block">
-        <img src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/HomePage.jpg" className="shadow-2xl shadow-[#FD7B41]"/>
+        <img src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/HomePage.jpg" loading="lazy" className="shadow-2xl shadow-[#FD7B41]"/>
 
         </section>
         <section className="flex-1/2 px-2 sm:px-10 sm:pl-20">
@@ -58,7 +59,7 @@ const HomePage = () => {
         <Posts/>
       </div>
     </div>
-      <Footer/>
+      
     </div>
   );
 };

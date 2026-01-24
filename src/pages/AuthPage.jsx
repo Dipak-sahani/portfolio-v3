@@ -249,11 +249,12 @@ const AuthForm = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
+                        name='remember'
                         className="w-4 h-4 mr-2"
                         style={{ accentColor: "#FD7B41" }}
                       />
                       <span className="text-sm" style={{ color: "#3C4044" }}>
-                        Remember me
+                        Remember me for seven day
                       </span>
                     </label>
                     <button

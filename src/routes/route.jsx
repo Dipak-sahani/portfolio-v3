@@ -14,10 +14,15 @@ import Dashboard from "../pages/Dashboard";
 import EditPostPage from "../components/post/EditPostPage";
 import MoreOption from "../pages/MoreOption";
 import ComingSoonPage from "../pages/CominSoonPage";
+import ProfilePage from "../pages/ProfilePage";
+
+import OtherPersonProfilePage from "../pages/OtherPersonProfilePage";
+
 
 
 // startup and business idea 
 import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
+import ProjectDashboard from "../pages/ProjectShowCase";
 
 const AppRoutes=()=> {
   return (
@@ -47,7 +52,13 @@ const AppRoutes=()=> {
 
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/more-option" element={<MoreOption />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/project" element={<ProjectDashboard />} />
+          <Route path="/profile/:id" element={<OtherPersonProfilePage />} />
 
+
+
+          
 
 
 

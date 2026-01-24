@@ -31,7 +31,7 @@ export const usePostStore = create((set, get) => ({
   setError: (error) => set({ error }),
 
   // Fetch all posts
-  fetchPosts: async (loadMore = false) => {
+  fetchPosts: async (loadMore = false, isAuthenticated) => {
     try {
       const { pagination, posts, loading } = get();
       if (loading) return;
@@ -43,7 +43,7 @@ export const usePostStore = create((set, get) => ({
       const data = await getPosts({
         page: nextPage,
         limit: import.meta.env.VITE_API_LIMIT || 8,
-      });
+      }, isAuthenticated);
 
       // console.log(data.postsWithFlags);
 
@@ -214,6 +214,24 @@ export const usePostStore = create((set, get) => ({
     } catch (err) {
       throw err;
     }
+  },
+
+  updateAuthorFollow: (authorId, isFollowing, followerCount) => {
+    set((state) => ({
+      posts: state.posts.map((post) => {
+        if (post.authorId._id === authorId) {
+          return {
+            ...post,
+            authorId: {
+              ...post.authorId,
+              isFollowing,
+              followerCount,
+            },
+          };
+        }
+        return post;
+      }),
+    }));
   },
 
   // Clear current post

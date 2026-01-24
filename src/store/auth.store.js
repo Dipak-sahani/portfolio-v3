@@ -1,17 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useToast } from "../components/toast/ToastProvider";
-import { loginApi, logoutApi, meApi } from "../services/auth.service";
+import {
+  clearAuth,
+  getAuthToken,
+  loginApi,
+  logoutApi,
+  meApi,
+  saveAuthToken,
+  updateProfileApi,
+} from "../services/auth.service";
 import { register } from "../services/auth.service";
 import { toast } from "react-toastify";
 
-
 export const useAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       loading: false,
+      token: getAuthToken() || null,
 
       register: async (credentials) => {
         try {
@@ -25,14 +33,14 @@ export const useAuthStore = create(
             loading: false,
           });
 
-          toast.success("register successful")
-          
+          toast.success("register successful");
         } catch (error) {
           set({ loading: false });
           console.log(err);
 
-          toast.error(err?.response?.data?.message || err.message || "register failed")
-          
+          toast.error(
+            err?.response?.data?.message || err.message || "register failed",
+          );
         }
       },
 
@@ -41,72 +49,104 @@ export const useAuthStore = create(
           set({ loading: true });
           console.log("hi");
 
-          const user = await loginApi(credentials);
+          const res = await loginApi(credentials);
 
+          console.log(res);
 
-          console.log(user);
-          
-          if (user) {
+          if (res?.user) {
+            // localStorage.setItem("token", res?.token);
+
+            saveAuthToken(res?.token)
+
             set({
-              user,
+              user: res?.user,
               isAuthenticated: true,
               loading: false,
+              token: res?.token,
             });
           }
 
-          toast.success("Login successful")
-          
+          toast.success("Login successful");
 
-          if (user) {
+          if (res?.user) {
             return true;
-          }
-          else{
+          } else {
             return false;
           }
         } catch (err) {
           set({ loading: false });
           console.log(err);
-          toast.error(err?.response?.data?.message || err.message || "Login failed")
-          
+          toast.error(
+            err?.response?.data?.message || err.message || "Login failed",
+          );
         }
+      },
+
+      updateProfileApi: async (data) => {
+        set({ loading: true });
+        const res = await updateProfileApi(data);
+        set({ user: res.user, loading: false });
+      },
+
+      setUser: (data) => {
+        set({
+          user: data,
+        });
       },
 
       logout: async () => {
         try {
           await logoutApi();
+          clearAuth()
           set({ user: null, isAuthenticated: false });
-          toast.success("Logged out")
-          
+          toast.success("Logged out");
         } catch {
-
-          toast.error("Logout failed")
-          
+          toast.error("Logout failed");
         }
       },
 
       loadUser: async () => {
+        const { user, loading } = get();
+
+        // ⛔ Stop duplicate calls
+        if (user || loading) return;
+
         try {
-          const user = await meApi();
-          // console.log(user);
+          set({ loading: true });
 
-          if (user) {
-            set({ user, isAuthenticated: true });
+          const res = await meApi(); // expect user object
+          console.log(res);
+          
+
+          if (res) {
+            set({
+              user: res,
+              isAuthenticated: true,
+              loading: false,
+            });
           } else {
-            set({ user: null, isAuthenticated: false });
+            set({
+              user: null,
+              isAuthenticated: false,
+              loading: false,
+            });
           }
-        } catch {
-          // console.log(user);
-
-          set({ user: null, isAuthenticated: false });
+        } catch (error) {
+          set({
+            user: null,
+            isAuthenticated: false,
+            loading: false,
+          });
         }
       },
     }),
+
     {
       name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

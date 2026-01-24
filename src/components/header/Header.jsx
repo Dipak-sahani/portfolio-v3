@@ -22,6 +22,7 @@ const Header = () => {
   ];
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const logout=useAuthStore((state)=>state.logout)
   const user = useAuthStore((state) => state.user);
   const notifications = useNotificationStore((state) => state.notifications);
 
@@ -379,6 +380,7 @@ const Header = () => {
                   <div className="h-px bg-gray-600 my-1" />
 
                   <button
+                  onClick={async()=> await logout()}
                     className={`${menuItem} text-red-400 hover:bg-red-500 hover:text-white w-full text-left`}
                   >
                     Logout
@@ -456,9 +458,9 @@ const Header = () => {
             >
               More
             </Link>
-            <button className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors w-full">
+            <Link to='/auth' className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors w-full">
               Login
-            </button>
+            </Link>
           </div>
         </div>
       )}

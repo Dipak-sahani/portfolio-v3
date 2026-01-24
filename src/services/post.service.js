@@ -1,4 +1,5 @@
 // services/api.js
+import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
 // Helper function to handle errors
@@ -19,11 +20,20 @@ export const createPost = async (postData) => {
   }
 };
 
-export const getPosts = async (params = {}) => {
+export const getPosts = async (params = {}, isAuthenticated) => {
   try {
     const query = new URLSearchParams(params).toString();
-    const res = await API.get(`/post?${query}`);
-    console.log(res);
+    let res
+    if(isAuthenticated){
+     res = await API.get(`/post?${query}`);
+
+    }
+    else{
+    res = await API.get(`/post/unauthorized?${query}`);
+
+    }
+
+    // console.log(res);
     
     return res.data.data;
   } catch (error) {
@@ -62,8 +72,13 @@ export const deletePost = async (postId) => {
 
 export const likePost = async (postId) => {
   try {
+    console.log("2");
+    
     const res = await API.patch(`/post/${postId}/like`);
-    // console.log(res);
+    console.log(res);
+    if (res.status==200) {
+      toast.success(res.data.message)
+    }
     
     return res.data.data;
   } catch (error) {
@@ -75,6 +90,9 @@ export const unLikePost = async (postId) => {
   try {
     const res = await API.patch(`/post/${postId}/unlike`);
     // console.log(res);
+    if (res.status==200) {
+      toast.success(res.data?.message)
+    }
     
     return res.data.data;
   } catch (error) {

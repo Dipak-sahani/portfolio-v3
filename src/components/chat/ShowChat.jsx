@@ -19,6 +19,8 @@ import { getMessagesByConversation } from "../../services/message.service";
 import { useAuthStore } from "../../store/auth.store";
 import socket from "../../app/socket";
 import { useParams } from "react-router-dom";
+import { useContacts } from "../../store/contactSelection.store";
+import { useCallback } from "react";
 
 
 const LIMIT=10
@@ -33,6 +35,9 @@ const ChatArea = ({ activeContact }) => {
   const [isConnected, setIsConnected] = useState(false);
   const { id } = useParams();
   // console.log(id);
+  const selectedContact=useContacts((state)=>state.selectedContact)
+  // console.log(selectedContact);selectedContact
+  
 
   const messagesEndRef = useRef(null);
 
@@ -68,7 +73,7 @@ const ChatArea = ({ activeContact }) => {
     socket.on("new_message", handleNewMessage);
 
     socket.on("disconnect", () => {
-      // console.log("❌ Socket disconnected");
+      console.log("❌ Socket disconnected");
       setIsConnected(false);
     });
 
@@ -82,34 +87,29 @@ const ChatArea = ({ activeContact }) => {
   }, []);
 
   useEffect(() => {
-    if (!activeContact?.conversationId) return;
+    if (!selectedContact?.conversationId) return;
     if (!socket.connected) return;
 
     socket.emit("join_conversation", {
-      conversationId: activeContact.conversationId,
+      conversationId: selectedContact.conversationId,
     });
-  }, [activeContact, isConnected]);
+  }, [selectedContact, isConnected]);
 
   /* ---------------- FETCH MESSAGES ---------------- */
 
   useEffect(() => {
-    if (!activeContact?.conversationId) return;
+    if (!selectedContact?.conversationId) return;
 
-
-    loadMessages(true);
-    // const fetchMessages = async () => {
-    //   try {
-    //     const res = await getMessagesByConversation(
-    //       activeContact.conversationId,
-    //     );
-    //     setMessages(res || []);
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // };
-
-    // fetchMessages();
-  }, [activeContact]);
+    // console.log(selectedContact);
+    
+      if (selectedContact) {
+    setMessages([]);   // clear old messages
+    setSkip(0);        // reset pagination
+    setHasMore(true);  // reset load more
+    loadMessages(true); // fetch new messages
+  }
+    
+  }, [selectedContact.id]);
 
   /* ---------------- AUTO SCROLL ---------------- */
 
@@ -122,7 +122,7 @@ const ChatArea = ({ activeContact }) => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !activeContact) return;
+    if (!newMessage.trim() || !selectedContact) return;
 
     if (!socket.connected) {
       // console.error("Socket not connected");
@@ -130,7 +130,7 @@ const ChatArea = ({ activeContact }) => {
     }
 
     const messagePayload = {
-      conversationId: activeContact?.conversationId,
+      conversationId: selectedContact?.conversationId,
       receiverId: id,
       content: newMessage,
       senderId: user._id,
@@ -182,7 +182,7 @@ const ChatArea = ({ activeContact }) => {
 
   /* ---------------- EMPTY STATE ---------------- */
 
-  if (!activeContact) {
+  if (!selectedContact) {
     return (
       <div className="hidden md:flex md:w-3/4 flex-col items-center justify-center bg-gray-50">
         <FontAwesomeIcon
@@ -262,32 +262,38 @@ const containerRef = useRef(null);
   //   loadMessages(true);
   // }, [conversationId]);
 
-  const loadMessages = async (isInitial = false) => {
-    if (loading || !hasMore) return;
+  const loadMessages = useCallback(
+  async (isInitial = false) => {
+    if (loading) return;
+
+    const conversationId = selectedContact?.conversationId;
+    if (!conversationId) return;
 
     setLoading(true);
-    const conversationId=activeContact.conversationId
 
-    const res = await getMessagesByConversation(
-      conversationId,
-      LIMIT,
-      isInitial ? 0 : skip
-    );
-
-    // console.log(res);
-    
-
-    if (res?.messages?.length) {
-      setMessages(prev =>
-        isInitial ? res.messages : [...res.messages, ...prev]
+    try {
+      const res = await getMessagesByConversation(
+        conversationId,
+        LIMIT,
+        isInitial ? 0 : skip
       );
 
-      setSkip(prev => prev + LIMIT);
-      setHasMore(res.hasMore);
+      if (res?.messages?.length) {
+        setMessages(prev =>
+          isInitial ? res.messages : [...res.messages, ...prev]
+        );
+        setSkip(prev => prev + LIMIT);
+        setHasMore(res.hasMore);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
+  },
+  [selectedContact, loading, skip, hasMore]
+);
 
-    setLoading(false);
-  };
 
   // 🔥 AUTO CALL WHEN TOP REACHED
   const handleScroll = () => {
@@ -325,13 +331,13 @@ const containerRef = useRef(null);
   return (
     <div className=" w-full flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b bg-white flex justify-between items-center">
+      <div className="p-4 border-b bg-white flex justify-between items-center sticky  sm:mt-20">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
-            {activeContact.avatar}
+            {selectedContact.avatar}
           </div>
           <div className="ml-3">
-            <h3 className="font-bold">{activeContact.name}</h3>
+            <h3 className="font-bold">{selectedContact.name}</h3>
             <p className="text-sm text-gray-500">
               <span
                 className={`inline-block w-2 h-2 rounded-full mr-1 ${getStatusColor()}`}

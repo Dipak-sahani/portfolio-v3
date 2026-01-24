@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import {getContact} from '../../services/message.service.js'
+import { useContacts } from '../../store/contactSelection.store.js';
 
 const ChatSidebar = ({ onContactSelect, activeContactId }) => {
   const [contacts, setContacts] = useState([]);
@@ -23,7 +24,11 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-
+  
+  const {getContactCall, contactLoading,selectedContactPerson}=useContacts()
+  const myContacts=useContacts((state)=>state.myContacts)
+  // console.log(myContacts);
+  
   // Fetch current user info
   const fetchCurrentUser = async () => {
     try {
@@ -50,23 +55,14 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
     }
   };
 
-  // Fetch contacts from API
-  const fetchContacts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await getContact();
-      // console.log(response);
-      
-      // if (!response.ok) {
-      //   throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-      
-      // const data = await response.json();
+useEffect(()=>{
+  formateContact()
+},[myContacts])
 
-      
-      const formattedContacts = response.map(data => ({
+
+  const formateContact=()=>{
+    
+      const formattedContacts = myContacts.map(data => ({
         id: data?.user?._id,
         name: data?.user?.fullName,
         avatar: data?.user?.fullName.split(' ').map(n => n[0]).join(''),
@@ -82,6 +78,29 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
       }));
       
       setContacts(formattedContacts);
+      
+      
+  }
+
+
+  // Fetch contacts from API
+  const fetchContacts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const res= await getContactCall();
+      // console.log(response);
+      
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! status: ${response.status}`);
+      // }
+      
+      // const data = await response.json();
+      // console.log(res);
+      
+      
+        
       
       // REMOVED: No longer automatically select first contact
       // Let the user click to select a contact
@@ -117,6 +136,7 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
   // Handle contact click
   const handleContactClick = (contact) => {
     onContactSelect(contact);
+    selectedContactPerson(contact)
   };
 
   // Refresh contacts
@@ -232,8 +252,9 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
       </div>
       
       {/* Contacts list */}
+     {
       <div className="flex-1 overflow-y-auto">
-        {loading ? (
+        {contactLoading ? (
           <>
             {[1, 2, 3, 4, 5].map(n => (
               <ContactSkeleton key={n} />
@@ -313,7 +334,7 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
             </div>
           ))
         )}
-      </div>
+      </div>}
       
       
     </div>
