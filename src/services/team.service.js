@@ -7,6 +7,16 @@ return data;
 };
 
 
+
+export const updateTeamService = async (payload, param) => {
+    // console.log(param);
+    
+const { data } = await API.patch(`/teams/my-teams/${param}`, payload);
+return data;
+};
+
+
+
 export const addTeamMember = async (payload) => {
 const { data } = await API.post("/teams/add-member", payload);
 return data;

@@ -7,11 +7,12 @@ import {
   faUserPlus,
   faCheckCircle,
   faUser,
+  faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import { useContacts } from "../store/contactSelection.store";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { createTeam, fetchMyTeams } from "../services/team.service";
+import { createTeam, fetchMyTeams, updateTeamService } from "../services/team.service";
 
 const TeamCreationPage = () => {
   // 1. State for Custom Roles
@@ -27,7 +28,10 @@ const TeamCreationPage = () => {
   const [teamName, setTeamName] = useState("");
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  const [isTeamPresent, setIsTeamPresent] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [myTeam, setMyTeam]=useState([]);
 
   // 2. State for Contacts and Search
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,23 +39,20 @@ const TeamCreationPage = () => {
 
   // 3. State for Final Team
   const [team, setTeam] = useState([]);
-  
 
   const addMemberToTeam = (contact, role) => {
     if (!role) return toast.warn("Please select a role first!");
-  
 
     const result = team?.filter(
       (val) => val.id?.toString() === contact.user?._id?.toString(),
     );
-  
-    if (result?.length>0) {
-      toast.warn("user already assigned",{autoClose:2000})
+
+    if (result?.length > 0) {
+      toast.warn("user already assigned", { autoClose: 2000 });
       return;
     }
 
     console.log(contact);
-    
 
     const newMember = {
       id: contact.user?._id,
@@ -79,7 +80,7 @@ const TeamCreationPage = () => {
   const getMyTeam = async () => {
     try {
       const res = await fetchMyTeams();
-      console.log(res.teams[0]);
+      console.log(res?.teams[0]);
 
       const fetchedTeams = res.teams[0]?.members?.map((val) => ({
         id: val?.userId?._id,
@@ -87,9 +88,14 @@ const TeamCreationPage = () => {
         assignedRole: val?.role,
       }));
       // console.log(fetchedTeams);
-      setTeam(fetchedTeams||[]);
-      setTeamName(res.teams[0]?.name)
-      setDescription(res.teams[0]?.description)
+      if (fetchedTeams?.length > 0) {
+        setIsTeamPresent(true);
+      }
+
+      setMyTeam(res?.teams[0]||[])
+      setTeam(fetchedTeams || []);
+      setTeamName(res.teams[0]?.name);
+      setDescription(res.teams[0]?.description);
     } catch (error) {
       console.log(error);
     }
@@ -103,10 +109,10 @@ const TeamCreationPage = () => {
 
   const handleCreateTeam = async () => {
     try {
-      console.log(team);
+      // console.log(team);
 
       const payload = {
-        name: teamName,
+        name: teamName||"",
         description,
         avatar,
         members: team?.map((user) => ({
@@ -117,13 +123,42 @@ const TeamCreationPage = () => {
 
       // console.log(payload);
 
-      const res = await createTeam(payload);
+      if (isEdit) {
+        // console.log(myTeam);
+        
+        const res = await updateTeamService(payload,myTeam._id);
       console.log(res);
+
+      const fetchedTeams = res.members?.map((val) => ({
+        id: val?.userId?._id,
+        username: val?.userId?.username,
+        assignedRole: val?.role,
+      }));
+     
+
+      setMyTeam(res||[])
+      setTeam(fetchedTeams || []);
+      setTeamName(res?.name||"");
+      setDescription(res?.description);
+
+
+
+
       if (res) {
-        toast.success("team created successfully");
+        toast.success("team updated successfully");
       }
 
-      console.log("Team created:", res.team);
+      // console.log("Team created:", res.team);
+
+      } else {
+        const res = await createTeam(payload);
+        console.log(res);
+        if (res) {
+          toast.success("team created successfully");
+        }
+
+        console.log("Team created:", res.team);
+      }
     } catch (err) {
       if (err.response?.data?.message) {
         toast.error(err.response?.data?.message);
@@ -195,7 +230,7 @@ const TeamCreationPage = () => {
 
             <div className="bg-gray-50 rounded-2xl p-4 max-h-60 overflow-y-auto space-y-3">
               {contacts
-                .filter((c) =>
+                ?.filter((c) =>
                   c?.user?.username?.toLowerCase().includes(searchTerm),
                 )
                 .map((contact) => (
@@ -236,9 +271,19 @@ const TeamCreationPage = () => {
 
         {/* Bottom Section: Current Team Grid */}
         <div className="p-10 bg-[#f9f9f9]">
-          <h2 className="text-xl font-black text-[#3C4044] uppercase text-center mb-10">
-            Current Team
-          </h2>
+          <div className="flex justify-between">
+            <h2 className="text-xl font-black text-[#3C4044] uppercase text-center mb-10">
+              Current Team
+            </h2>
+            {isTeamPresent && (
+              <button
+                onClick={() => setIsEdit(true)}
+                className=" cursor-pointer "
+              >
+                <FontAwesomeIcon icon={faEdit} className="px-2" /> {isEdit?"Editing..":"Edit"}
+              </button>
+            )}
+          </div>
 
           <div className="space-y-5 w-full">
             {/* Team Name */}
@@ -247,8 +292,9 @@ const TeamCreationPage = () => {
                 Team Name
               </label>
               <input
+                readOnly={isTeamPresent && !isEdit}
                 type="text"
-                value={teamName}
+                value={teamName||""}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="Enter team name"
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
