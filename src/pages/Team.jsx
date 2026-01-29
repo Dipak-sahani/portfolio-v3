@@ -41,11 +41,11 @@ const TeamCreationPage = () => {
     if (!role) return alert("Please select a role first!");
   
 
-    const result = team.filter(
+    const result = team?.filter(
       (val) => val.id?.toString() === contact.user?._id?.toString(),
     );
   
-    if (result.length>0) {
+    if (result?.length>0) {
       toast.warn("user already assigned",{autoClose:2000})
       return;
     }
@@ -58,7 +58,7 @@ const TeamCreationPage = () => {
     setTeam([...team, newMember]);
   };
 
-  const removeMember = (id) => setTeam(team.filter((m) => m.id !== id));
+  const removeMember = (id) => setTeam(team?.filter((m) => m.id !== id));
 
   const getContactCall = useContacts((state) => state.getContactCall);
 
@@ -266,12 +266,12 @@ const TeamCreationPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {team.length === 0 && (
+            {team?.length === 0 && (
               <p className="col-span-full text-center text-gray-400 italic">
                 No members assigned yet.
               </p>
             )}
-            {team.map((member, index) => (
+            {team?.map((member, index) => (
               <div
                 key={index}
                 className="flex items-center p-4 bg-white rounded-2xl shadow-md border-l-4 border-[#FD7B41] group"

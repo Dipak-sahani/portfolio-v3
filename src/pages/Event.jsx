@@ -36,7 +36,7 @@ const Event = () => {
       ) : (
         <div className="flex flex-col items-center w-full">
           <div className="w-full max-w-5xl px-4">
-            {events.length > 0 ? (
+            {events?.length > 0 ? (
               events.map((event) => (
                 <div key={event._id} className="py-5 flex justify-center">
                   <EventCard event={event} />
