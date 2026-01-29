@@ -58,6 +58,7 @@ const TeamCreationPage = () => {
       username: contact?.user?.username,
       assignedRole: role,
     };
+
     setTeam([...team, newMember]);
   };
 
@@ -86,7 +87,7 @@ const TeamCreationPage = () => {
         assignedRole: val?.role,
       }));
       // console.log(fetchedTeams);
-      setTeam(fetchedTeams);
+      setTeam(fetchedTeams||[]);
       setTeamName(res.teams[0]?.name)
       setDescription(res.teams[0]?.description)
     } catch (error) {
