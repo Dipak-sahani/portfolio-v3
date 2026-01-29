@@ -40,7 +40,6 @@ const TeamCreationPage = () => {
   const addMemberToTeam = (contact, role) => {
     if (!role) return toast.warn("Please select a role first!");
   
-console.log(team);
 
     const result = team?.filter(
       (val) => val.id?.toString() === contact.user?._id?.toString(),
@@ -50,6 +49,9 @@ console.log(team);
       toast.warn("user already assigned",{autoClose:2000})
       return;
     }
+
+    console.log(contact);
+    
 
     const newMember = {
       id: contact.user?._id,
