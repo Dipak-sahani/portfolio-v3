@@ -8,6 +8,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 const AuthForm = () => {
   const { login, loading, isAuthenticated } = useAuthStore();
   const [isLogin, setIsLogin] = useState(true);
+  const [isRemember, setIsRemember]=useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,6 +16,7 @@ const AuthForm = () => {
     fullName: "",
     username:"",
   });
+console.log(isRemember);
 
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const AuthForm = () => {
         password: formData.password,
       });
 
-      await login({ email: formData.email, password: formData.password });
+      await login({ email: formData.email, password: formData.password, }, isRemember);
       
       
       
@@ -57,7 +59,7 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen sm:pt-10 ">
       <div className="flex flex-col lg:flex-row h-screen">
         {/* left Side - Simple Form */}
         <div className="w-full flex-1/2 overflow-scroll no-scrollbar">
@@ -249,8 +251,11 @@ const AuthForm = () => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        name='remember'
+                        name='isRemember'
+                        checked={isRemember}
+  onChange={(e) => setIsRemember(e.target.checked)}
                         className="w-4 h-4 mr-2"
+                    
                         style={{ accentColor: "#FD7B41" }}
                       />
                       <span className="text-sm" style={{ color: "#3C4044" }}>

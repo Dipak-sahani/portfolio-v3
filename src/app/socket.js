@@ -5,13 +5,20 @@ import { getAuthToken } from '../services/auth.service';
 const URL = import.meta.env.NODE_ENV === 'production' ? undefined : import.meta.env.VITE_API_BACKEND_URL;
 const token = getAuthToken();
 
-const socket = io(import.meta.env.VITE_API_BACKEND_URL, {
-  transports: ["websocket"], // IMPORTANT
-  auth: {
-    token, // 🔥 send JWT here
-  },
-  autoConnect: false, // ❗ IMPORTANT
-  withCredentials: true,
-});
+let socket;
+try {
+  
+  socket = io(import.meta.env.VITE_API_BACKEND_URL, {
+    transports: ["websocket"], // IMPORTANT
+    auth: {
+      token, // 🔥 send JWT here
+    },
+    autoConnect: false, // ❗ IMPORTANT
+    withCredentials: true,
+  });
+} catch (error) {
+  console.log(error);
+  
+}
 
 export default socket;

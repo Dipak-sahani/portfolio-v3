@@ -209,14 +209,14 @@ const Header = () => {
         </Link>
         {isAuthenticated && (
           <Link
-            to="#"
+            to="/team"
             className="text-gray-100 hover:text-[#FD7B41] font-medium hover:scale-125 transform transition  hover:bg-[#3C4044] hover:rounded-xl hover:p-2"
           >
             Team
           </Link>
         )}
         <Link
-          to="#"
+          to="/event"
           className="text-gray-100 hover:text-[#FD7B41] font-medium hover:scale-125 transform transition hover:bg-[#3C4044] hover:rounded-xl hover:p-2"
         >
           Event
@@ -355,9 +355,7 @@ const Header = () => {
                   <Link to="/chat" className={`${menuItem}`}>
                     Messages / Chat
                   </Link>
-                  <Link to="/notifications" className={`${menuItem}`}>
-                    Notifications
-                  </Link>
+                 
 
                   <div className="h-px bg-gray-600 my-1" />
 
@@ -435,13 +433,13 @@ const Header = () => {
               Home
             </Link>
             <Link
-              to="#"
+              to="/team"
               className="text-gray-700 hover:text-blue-600 font-medium py-2"
             >
               Team
             </Link>
             <Link
-              to="#"
+              to="/event"
               className="text-gray-700 hover:text-blue-600 font-medium py-2"
             >
               Event

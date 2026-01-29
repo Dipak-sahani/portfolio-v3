@@ -30,6 +30,8 @@ const ChatArea = ({ activeContact }) => {
 
   const [messages, setMessages] = useState([]);
   const [isOnlineUser, setIsUserOnline]=useState(false);
+  const [statusColor, setStatusColor]=useState("bg-gray-400");
+  const [statusText, setStatusText]=useState("Offline");
   const [newMessages, setNewMessages] = useState();
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -54,10 +56,19 @@ const ChatArea = ({ activeContact }) => {
 
     setMessages((prevMessages) => [...prevMessages, d?.message]);
     setIsUserOnline(d?.status);
+    // console.log(isOnlineUser, "hhhhhh");
+    
     // Scroll to bottom
     scrollToBottom();
     // console.log(messages);
   };
+
+
+  const handleOnlineUser=(d)=>{
+// console.log(d);
+setIsUserOnline(d?.status)
+
+  }
 
   useEffect(() => {
     if (!socket.connected) {
@@ -65,12 +76,15 @@ const ChatArea = ({ activeContact }) => {
     }
 
     socket.on("connect", () => {
-      // console.log("✅ Socket connected:", socket.id);
+      console.log("✅ Socket connected:", socket.id);
       setIsConnected(true);
     });
 
     socket.off("new_message", handleNewMessage);
     socket.on("new_message", handleNewMessage);
+
+    socket.off("ReceiverInRoom", handleOnlineUser);
+    socket.on("ReceiverInRoom", handleOnlineUser);
 
     socket.on("disconnect", () => {
       console.log("❌ Socket disconnected");
@@ -81,6 +95,8 @@ const ChatArea = ({ activeContact }) => {
       socket.off("connect");
       socket.off("disconnect");
       socket.off("new_message", handleNewMessage);
+    socket.off("ReceiverInRoom", handleOnlineUser);
+
       // 🔥 disconnect ONLY when chat page unmounts
       socket.disconnect();
     };
@@ -104,6 +120,7 @@ const ChatArea = ({ activeContact }) => {
     
       if (selectedContact) {
     setMessages([]);   // clear old messages
+    setIsUserOnline(false)
     setSkip(0);        // reset pagination
     setHasMore(true);  // reset load more
     loadMessages(true); // fetch new messages
@@ -121,14 +138,20 @@ const ChatArea = ({ activeContact }) => {
   /* ---------------- SEND MESSAGE ---------------- */
 
   const handleSendMessage = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
+    console.log("clicked");
+
     if (!newMessage.trim() || !selectedContact) return;
 
     if (!socket.connected) {
+    console.log("Socket not connected");
+
       // console.error("Socket not connected");
       return;
     }
 
+    console.log("yes show chat");
+    
     const messagePayload = {
       conversationId: selectedContact?.conversationId,
       receiverId: id,
@@ -172,13 +195,25 @@ const ChatArea = ({ activeContact }) => {
 
   /* ---------------- STATUS HELPERS ---------------- */
 
-  const getStatusColor = () => {
-    return isOnlineUser?"bg-green-500":"bg-gray-400";
+  const getStatus = () => {
+
+    if (isOnlineUser) {
+      setStatusColor("bg-green-500")
+      setStatusText("Online")
+    }
+    else{
+      setStatusColor("bg-gray-400")
+      setStatusText("Offline")
+
+    }
+
   };
 
-  const getStatusText = () => {
-    return isOnlineUser?"Online": "Offline";
-  };
+ 
+
+  useEffect(()=>{
+    getStatus()
+  },[isOnlineUser])
 
   /* ---------------- EMPTY STATE ---------------- */
 
@@ -340,9 +375,9 @@ const containerRef = useRef(null);
             <h3 className="font-bold">{selectedContact.name}</h3>
             <p className="text-sm text-gray-500">
               <span
-                className={`inline-block w-2 h-2 rounded-full mr-1 ${getStatusColor()}`}
+                className={`inline-block w-2 h-2 rounded-full mr-1 ${statusColor}`}
               />
-              {getStatusText()}
+              {statusText}
             </p>
           </div>
         </div>
@@ -425,22 +460,24 @@ const containerRef = useRef(null);
 
       {/* Input */}
       <div className="p-4 border-t bg-white">
-        <form onSubmit={handleSendMessage} className="flex items-center">
-          <textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Type a message..."
-            rows={1}
-            className="flex-1 border rounded-lg px-4 py-2 resize-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="ml-2 p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-          >
-            <FontAwesomeIcon icon={faPaperPlane} />
-          </button>
-        </form>
+       <form onSubmit={handleSendMessage} className="flex items-center">
+  <textarea
+    value={newMessage}
+    onChange={(e) => setNewMessage(e.target.value)}
+    onKeyDown={handleKeyPress}
+    placeholder="Type a message..."
+    rows={1}
+    className="flex-1 border rounded-lg px-4 py-2 resize-none focus:ring-2 focus:ring-blue-500"
+  />
+
+  <button
+    type="submit"
+    className="ml-2 p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+  >
+    <FontAwesomeIcon icon={faPaperPlane} />
+  </button>
+</form>
+
       </div>
     </div>
   );

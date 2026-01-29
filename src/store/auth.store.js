@@ -44,10 +44,10 @@ export const useAuthStore = create(
         }
       },
 
-      login: async (credentials) => {
+      login: async (credentials, isRemember) => {
         try {
           set({ loading: true });
-          console.log("hi");
+          // console.log(isRemember);
 
           const res = await loginApi(credentials);
 
@@ -56,7 +56,7 @@ export const useAuthStore = create(
           if (res?.user) {
             // localStorage.setItem("token", res?.token);
 
-            saveAuthToken(res?.token)
+            saveAuthToken(res?.token,false)
 
             set({
               user: res?.user,

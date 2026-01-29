@@ -28,6 +28,7 @@ API.interceptors.response.use(
     if (status === 401 || status === 403) {
       // logout user, redirect, clear state
       clearAuth()
+      toast.warn("Please Login / Register", {autoClose:2000})
     }
 
    if (error?.response?.status === 429) {
@@ -54,13 +55,18 @@ API.interceptors.response.use(
 
 
 const ONE_MINUTE = 1 * 1 * 60 * 1000;
+const TWO_MINUTE = 1 * 2 * 60 * 1000;
+const SEVEN_DAY  = 7* 24 * 60 * 60 * 1000
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 
-export const saveAuthToken = (token) => {
+export const saveAuthToken = (token,isRemember) => {
+  // console.log(isRemember);
+
+  
   const data = {
     token,
-    expiresAt: Date.now() + ONE_DAY,
+    expiresAt: Date.now() + (isRemember?SEVEN_DAY:ONE_DAY),
   };
 
   localStorage.setItem("auth", JSON.stringify(data));
@@ -90,6 +96,7 @@ export const getAuthToken = () => {
 
 export const clearAuth = () => {
   localStorage.removeItem("auth");
+  localStorage.removeItem("auth-storage");
 };
 
 
@@ -97,7 +104,21 @@ export const loginApi = async (data) => {
   // console.log(process.env.BACKEND_URL);
   
   const res = await API.post("/users/login", data);
-  // console.log(res);
+  console.log(res);
+
+  
+  
+  return res.data;
+};
+
+
+
+
+export const mySession = async () => {
+  // console.log(process.env.BACKEND_URL);
+  
+  const res = await API.get("/session/");
+  console.log(res);
 
   
   

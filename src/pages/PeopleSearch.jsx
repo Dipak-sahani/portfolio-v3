@@ -5,6 +5,7 @@ import { PeopleList } from "../components/component/PeopleList";
 import { Pagination } from "../components/component/Pagination";
 import { searchPeople } from "../services/people.service";
 import { toast } from "react-toastify";
+import ModernProfessionalCard from "../card/ContactSelectCard";
 
 const PeopleSearch = () => {
   const [filters, setFilters] = useState({
@@ -44,10 +45,14 @@ const PeopleSearch = () => {
     };
   }, []);
 
+
+
+  
+  
+
   // Debounced search with error handling
   const debouncedSearch = useCallback(
     debounce(async (searchFilters, page) => {
-
       if (!isMountedRef.current) return;
 
       const searchKey = JSON.stringify({ ...searchFilters, page });
@@ -104,8 +109,6 @@ const PeopleSearch = () => {
 
   // Initial load and when filters change
   useEffect(() => {
-    
-
     debouncedSearch(filters, 1);
 
     // Cleanup function
@@ -202,12 +205,12 @@ const PeopleSearch = () => {
           )}
 
           {/* Results Section */}
-          <div className="lg:w-3/4">
+          <div className="">
             {/* Results Header */}
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div className="mb-4 sm:mb-0 flex-1/3">
                 <p className="text-lg font-medium" style={{ color: "#3C4044" }}>
-                  {pagination?.totalResults-1} people found
+                  {(pagination?.totalResults)} people found
                   {filters.query && ` for "${filters.query}"`}
                 </p>
               </div>
@@ -217,7 +220,7 @@ const PeopleSearch = () => {
                   style={{ backgroundColor: "#FD7B41", color: "white" }}
                   onClick={() => setShowSearch(!showSearch)}
                 >
-                  {showSearch?<h1>Hide Filters</h1>:<h1>Show Filters</h1> }
+                  {showSearch ? <h1>Hide Filters</h1> : <h1>Show Filters</h1>}
                 </button>
               </div>
 
@@ -279,7 +282,14 @@ const PeopleSearch = () => {
             {/* Results */}
             {!loading && (
               <>
-                <PeopleList people={people} />
+                {/* <PeopleList people={people} /> */}
+                <div className="flex flex-wrap gap-6 justify-around">
+                  {people?.map((person) => (
+                    <div key={person._id} className="w-full sm:w-[48%]">
+                      <ModernProfessionalCard data={person} />
+                    </div>
+                  ))}
+                </div>
 
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (

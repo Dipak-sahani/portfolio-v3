@@ -17,13 +17,14 @@ import ComingSoonPage from "../pages/CominSoonPage";
 import ProfilePage from "../pages/ProfilePage";
 
 import OtherPersonProfilePage from "../pages/OtherPersonProfilePage";
-
-
+import TeamCreationPage from "../pages/Team";
+import EventPage from "../pages/EventPage";
 
 // startup and business idea 
 import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
 import ProjectDashboard from "../pages/ProjectShowCase";
-
+import ProfessionalCard from "../card/ContactSelectCard";
+import EventCreationForm from "../pages/Event";
 const AppRoutes=()=> {
   return (
     <Routes>
@@ -55,6 +56,14 @@ const AppRoutes=()=> {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/project" element={<ProjectDashboard />} />
           <Route path="/profile/:id" element={<OtherPersonProfilePage />} />
+          <Route path="/card" element={<ProfessionalCard />} />
+          <Route path="/team" element={<TeamCreationPage />} />
+          <Route path="/event" element={<EventCreationForm />} />
+          <Route path="/event/:id" element={<EventPage />} />
+
+
+
+
 
 
 
