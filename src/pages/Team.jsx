@@ -103,14 +103,14 @@ const TeamCreationPage = () => {
 
   const handleCreateTeam = async () => {
     try {
-      // console.log(team);
+      console.log(team);
 
       const payload = {
         name: teamName,
         description,
         avatar,
         members: team?.map((user) => ({
-          userId: user.user?._id,
+          userId: user?.id,
           role: user.assignedRole || "member",
         })),
       };
