@@ -38,8 +38,9 @@ const TeamCreationPage = () => {
   
 
   const addMemberToTeam = (contact, role) => {
-    if (!role) return alert("Please select a role first!");
+    if (!role) return toast.warn("Please select a role first!");
   
+console.log(team);
 
     const result = team?.filter(
       (val) => val.id?.toString() === contact.user?._id?.toString(),
