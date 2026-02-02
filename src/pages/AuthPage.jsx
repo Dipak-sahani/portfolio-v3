@@ -16,7 +16,7 @@ const AuthForm = () => {
     fullName: "",
     username:"",
   });
-console.log(isRemember);
+// console.log(isRemember);
 
   const navigate = useNavigate();
 
@@ -38,10 +38,10 @@ console.log(isRemember);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
-      console.log("Logging in with:", {
-        email: formData.email,
-        password: formData.password,
-      });
+      // console.log("Logging in with:", {
+      //   email: formData.email,
+      //   password: formData.password,
+      // });
 
       await login({ email: formData.email, password: formData.password, }, isRemember);
       

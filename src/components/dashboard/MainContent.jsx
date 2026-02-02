@@ -9,7 +9,7 @@ import SavedPostsSection from './sections/SavedPostsSections';
 function MainContent({ activeTab, data, user, allData }) {
   const sectionTitles = {
     posts: 'My Posts',
-    events: 'My Events',
+    events: 'Participered Events',
     likedPosts: 'Liked Posts',
     comments: 'My Comments',
     savedPosts: 'Saved Posts'
@@ -56,8 +56,8 @@ function MainContent({ activeTab, data, user, allData }) {
             color="bg-[#FD7B41]"
           />
           <StatCard
-            title="Upcoming Events"
-            value={`soon`}
+            title="Total Participated Events"
+            value={`${allData?.registeredEvent?.totalCount}`}
             icon="📅"
             color="bg-[#EDBF9B]"
           />

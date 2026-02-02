@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import projectService from '../services/project.service'
 
-export const useProjectStore = create((set) => ({
+export const useProjectStore = create((set,get) => ({
   loading: false,
   error: null,
   projects:[],
@@ -21,6 +21,17 @@ export const useProjectStore = create((set) => ({
 
    getProjects: async () => {
     try {
+
+      const {projects}=get()
+
+      if (projects?.length>0) {
+      // console.log("present");
+
+        return 
+      }
+      // console.log("not present");
+      
+
       set({ loading: true })
       const res=await projectService.getProjectsService();
     //   console.log(res);

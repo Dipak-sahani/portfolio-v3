@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
-export const getDashboardData=async()=>{
+export const getDashboardDataService=async()=>{
     try {
         const res= await API.get('/users/user-dashboard')
 

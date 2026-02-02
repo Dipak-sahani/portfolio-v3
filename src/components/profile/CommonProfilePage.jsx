@@ -12,12 +12,13 @@ import EditProfileForm from "./EditProfile";
 import ProjectDashboard from "../../pages/ProjectShowCase";
 import CreateProjectForm from "../../forms/ProjectCreateForm";
 import ImagePreview from "../ImagePrev/ImagePreview";
+import { Link } from "react-router-dom";
 
 const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAddProject, setIsAddProject] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  // console.log(info);
+  console.log(info);
   
 
   return (
@@ -122,6 +123,9 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         <button className="bg-[#EDBF9B] text-[#3C4044] px-8 py-3 font-bold uppercase text-xs">
           Activity
         </button>
+        <Link to={`/chat/${info?._id}`} className="bg-[#FD7B41] text-[#3C4044] px-8 py-3 font-bold uppercase text-xs">
+          Message
+        </Link>
       </div>
 
       {/* Sections */}

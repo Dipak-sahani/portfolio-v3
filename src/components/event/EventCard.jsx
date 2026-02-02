@@ -11,19 +11,17 @@ import {
 
 import dayjs from 'dayjs';
 import { Link } from "react-router-dom";
+import ImagePreview from "../ImagePrev/ImagePreview";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event  }) => {
   // console.log(event);
   
   return (
-    <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-zinc-200">
+    <div className="relative w-full max-w-3xl overflow-hidden  bg-white/80 backdrop-blur-xl shadow-xl border border-zinc-200">
       
       {/* Background Image */}
       <div
-        className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${event.coverImage || "/event-placeholder.jpg"})`
-        }}
+        
       />
       <div className="absolute inset-0 -z-10 bg-white/80 backdrop-blur-md" />
 
@@ -31,7 +29,7 @@ const EventCard = ({ event }) => {
       <div className="p-6 md:p-8 flex flex-col gap-4">
 
         {/* Title */}
-        <div className="flex justify-between">
+        <div className="sm:flex justify-between">
 
         
         <h2 className="text-2xl md:text-3xl font-extrabold text-zinc-900">
@@ -45,9 +43,19 @@ const EventCard = ({ event }) => {
         </h2>
         </div>
 
+        <div className="relative mx-auto w-full max-w-170 bg-gray-100 overflow-hidden aspect-video">
+            <ImagePreview
+              src={event?.coverImage}
+              alt="event media"
+              className="absolute inset-0 w-full h-full object-contain"
+              loading="lazy"
+            />
+          </div>
+
+
         {/* Short description */}
         <p className="text-zinc-600 font-medium max-w-2xl">
-          {event.shortDescription}
+          {event?.description?.slice(0, 15)} ....
         </p>
 
         {/* Meta Info */}
@@ -88,12 +96,12 @@ const EventCard = ({ event }) => {
 
         {/* Actions */}
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <Link to={`/event/${event._id}`} className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-6 py-2 text-sm font-bold text-white hover:bg-zinc-800 transition">
+          <Link to={`/event/${event._id}`} className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 px-6 py-2 text-sm font-bold text-white hover:bg-zinc-800 transition">
             Read More
             <FontAwesomeIcon icon={faArrowRight} />
           </Link>
 
-          <button className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-2 text-sm font-bold text-white hover:bg-orange-600 transition">
+          <button className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-2 text-sm font-bold text-white hover:bg-orange-600 transition">
             Save to Calendar
           </button>
         </div>

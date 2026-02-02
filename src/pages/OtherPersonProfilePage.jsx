@@ -19,7 +19,6 @@ const OtherPersonProfilePage = () => {
   const fetchUserDetail = async () => {
     try {
       const res = await getUserProfile(id);
-      console.log(res);
 
       setInfo(res?.user);
       setProjects(res?.projects);

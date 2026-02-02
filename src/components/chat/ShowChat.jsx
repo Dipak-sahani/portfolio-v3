@@ -38,7 +38,7 @@ const ChatArea = ({ activeContact }) => {
   const { id } = useParams();
   // console.log(id);
   const selectedContact=useContacts((state)=>state.selectedContact)
-  // console.log(selectedContact);selectedContact
+  // console.log(selectedContact);
   
 
   const messagesEndRef = useRef(null);
@@ -126,15 +126,9 @@ setIsUserOnline(d?.status)
     loadMessages(true); // fetch new messages
   }
     
-  }, [selectedContact.id]);
+  }, [selectedContact?.id]);
 
-  /* ---------------- AUTO SCROLL ---------------- */
-
-  useEffect(() => {
-    if (!isUserNearBottom()) return;
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
+  
   /* ---------------- SEND MESSAGE ---------------- */
 
   const handleSendMessage = (e) => {
@@ -351,6 +345,15 @@ const containerRef = useRef(null);
     120 // px threshold
   );
 };
+
+
+
+/* ---------------- AUTO SCROLL ---------------- */
+
+  useEffect(() => {
+    if (!isUserNearBottom()) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
 
   //  useEffect(() => {

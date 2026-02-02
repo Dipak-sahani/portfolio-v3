@@ -11,8 +11,31 @@ import {
   faNetworkWired,
   faCreditCard
 } from '@fortawesome/free-solid-svg-icons';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEventStore } from '../store/event.store';
+import { registerEvent } from '../services/event.service';
+import { toast } from 'react-toastify';
+
+
+const defaultEvent=[{
+    category: "",
+    coverImage: "",
+    createdAt: "",
+    createdBy: "",
+    description: "",
+    endTime: "",
+    isPaid: false,
+    maxParticipants: 0,
+    meetingLink: "",
+    price: { amount: 0, currency: 'INR' },
+    shortDescription: "",
+    startTime: "",
+    tags: [''],
+    title: "",
+    type: "",
+    _id: ""
+  }]
+
 
 const EventPage = () => {
   const [event, setEvent] = useState({
@@ -40,6 +63,11 @@ const EventPage = () => {
 
   const events=useEventStore((state)=>state.events)
 
+  const myRegisteredEvents=useEventStore((state)=>state.myRegisteredEvents)
+
+// console.log(myRegisteredEvents);
+
+  const navigate=useNavigate();
   // Format date and time
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -75,14 +103,23 @@ const EventPage = () => {
     return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} minutes`;
   };
 
-  const handleRegister = () => {
-    setIsRegistering(true);
-    // Simulate API call
-    setTimeout(() => {
+  const handleRegister =async () => {
+    try {
+      setIsRegistering(true);
+      // Simulate API call
+  
+  
+        const res=await registerEvent(id);
+  
+        
+        if(res.status==200){
+          setIsRegistering(false);
+          setRegistered(true);
+          toast.success('Successfully registered for the event!');
+        }
+    } catch (error) {
       setIsRegistering(false);
-      setRegistered(true);
-      alert('Successfully registered for the event!');
-    }, 1500);
+    }
   };
 
   const colors = {
@@ -95,19 +132,27 @@ const EventPage = () => {
 
 
 
+
   useEffect(()=>{
     if (id) {
 
-       
-
         const selectedEvent=events.filter((evt)=>{
-        // console.log(evt._id);
             return evt._id==id
         })
-        // console.log(selectedEvent);
         
-        setEvent(selectedEvent[0])
+        if (!selectedEvent.length>0) {
+          navigate('/event')
+        }
+        setEvent(selectedEvent[0]||defaultEvent)
+        
+
+        if (myRegisteredEvents?.includes(selectedEvent[0]?._id)) {
+          setRegistered(true)
+        }
+
+
     }
+
   },[])
 
   return (
@@ -150,14 +195,14 @@ const EventPage = () => {
                 <span 
                   className="px-3 py-1 rounded-full text-sm"
                   style={{ 
-                    backgroundColor: event.type === 'virtual' ? colors.secondary : colors.primary,
+                    backgroundColor: event?.type === 'virtual' ? colors.secondary : colors.primary,
                     color: colors.text
                   }}
                 >
                   <FontAwesomeIcon icon={faGlobe} className="mr-2" />
                   {event?.type?.charAt(0)?.toUpperCase() + event?.type?.slice(1)} Event
                 </span>
-                {event.isPaid && (
+                {event?.isPaid && (
                   <span 
                     className="px-3 py-1 rounded-full text-sm"
                     style={{ 

@@ -285,7 +285,7 @@ const PeopleSearch = () => {
                 {/* <PeopleList people={people} /> */}
                 <div className="flex flex-wrap gap-6 justify-around">
                   {people?.map((person) => (
-                    <div key={person._id} className="w-full sm:w-[48%]">
+                    <div key={person._id} className="w-full ">
                       <ModernProfessionalCard data={person} />
                     </div>
                   ))}

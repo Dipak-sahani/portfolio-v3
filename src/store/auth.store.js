@@ -21,6 +21,10 @@ export const useAuthStore = create(
       loading: false,
       token: getAuthToken() || null,
 
+      setAuthFlase:()=>{
+        set({isAuthenticated:false})
+      },
+
       register: async (credentials) => {
         try {
           set({ loading: true });
@@ -76,9 +80,9 @@ export const useAuthStore = create(
         } catch (err) {
           set({ loading: false });
           console.log(err);
-          toast.error(
-            err?.response?.data?.message || err.message || "Login failed",
-          );
+          // toast.error(
+          //   err?.response?.data?.message || err.message || "Login failed",
+          // );
         }
       },
 
@@ -101,6 +105,8 @@ export const useAuthStore = create(
           set({ user: null, isAuthenticated: false });
           toast.success("Logged out");
         } catch {
+          clearAuth()
+          set({ user: null, isAuthenticated: false });
           toast.error("Logout failed");
         }
       },

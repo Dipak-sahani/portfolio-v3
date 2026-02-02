@@ -27,7 +27,7 @@ export const searchPeople = async (params) => {
 
 export const getPersonById = async (id) => {
   try {
-    const response = await API.get(`/people/${id}`);
+    const response = await API.get(`/users/get-by-id/${id}`);
     return {
       success: true,
       data: response.data

@@ -91,7 +91,7 @@ const handleFinalSubmit = async (e) => {
   } catch (err) {
    
     console.error('Submit Error:', err);
-    alert('Failed to publish event.');
+    toast.error( err?.response?.data?.message ||'Failed to publish event.');
   }
 };
 

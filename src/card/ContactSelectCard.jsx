@@ -1,10 +1,11 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faUserCircle, faClock } from '@fortawesome/free-solid-svg-icons';
-
+import {Link} from 'react-router-dom'
 const ModernProfessionalCard = ({ data }) => {
 
-
+//  console.log(data);
+ 
     
 
   const {
@@ -38,22 +39,22 @@ const ModernProfessionalCard = ({ data }) => {
           {/* Avatar with Custom Border */}
           <div className="relative">
             <div className="w-32 h-32 rounded-full p-1 bg-linear-to-tr from-[#FD7B41] to-[#EDBF9B]">
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+              <Link to={`/profile/${data?._id}`} className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
                 {avatar ? (
                   <img src={avatar} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
                   <FontAwesomeIcon icon={faUserCircle} className="text-[#DDDCDB] text-8xl" />
                 )}
-              </div>
+              </Link>
             </div>
           </div>
 
           {/* User Details */}
           <div className="flex-1">
-            <h2 className="text-2xl font-black text-[#3C4044] tracking-tight uppercase leading-none pt-2">
+            <Link to={`/profile/${data?._id}`} className="block text-2xl font-black text-[#3C4044] tracking-tight uppercase leading-none pt-2">
               {fullName}
-            </h2>
-            <p className="text-[#FD7B41] font-bold text-sm mt-1">@{username}</p>
+            </Link>
+            <Link to={`/profile/${data?._id}`} className=" block text-[#FD7B41] font-bold text-sm mt-1">@{username}</Link>
             <p className="text-[#3C4044]/80 mt-2 text-sm font-medium leading-relaxed">
               {tagline}
             </p>

@@ -11,7 +11,8 @@ export const useContacts = create((set) => ({
 
     try {
       const res = await getContact();
-
+      console.log(res);
+      
       if (res) {
         // ✅ immutable update ensures re-render
         set({ myContacts: [...res] }); 
@@ -32,5 +33,8 @@ export const useContacts = create((set) => ({
   selectedContactPerson:(data)=>{
     set({selectedContact:data})
   }
+
+
+
 
 }));

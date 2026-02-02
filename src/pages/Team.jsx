@@ -52,7 +52,7 @@ const TeamCreationPage = () => {
       return;
     }
 
-    console.log(contact);
+    // console.log(contact);
 
     const newMember = {
       id: contact.user?._id,
@@ -80,7 +80,7 @@ const TeamCreationPage = () => {
   const getMyTeam = async () => {
     try {
       const res = await fetchMyTeams();
-      console.log(res?.teams[0]);
+      // console.log(res?.teams[0]);
 
       const fetchedTeams = res.teams[0]?.members?.map((val) => ({
         id: val?.userId?._id,
@@ -127,7 +127,7 @@ const TeamCreationPage = () => {
         // console.log(myTeam);
         
         const res = await updateTeamService(payload,myTeam._id);
-      console.log(res);
+      // console.log(res);
 
       const fetchedTeams = res.members?.map((val) => ({
         id: val?.userId?._id,
@@ -152,12 +152,12 @@ const TeamCreationPage = () => {
 
       } else {
         const res = await createTeam(payload);
-        console.log(res);
+        // console.log(res);
         if (res) {
           toast.success("team created successfully");
         }
 
-        console.log("Team created:", res.team);
+        // console.log("Team created:", res.team);
       }
     } catch (err) {
       if (err.response?.data?.message) {

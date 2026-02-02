@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../store/auth.store";
 
 export const API = axios.create({
   baseURL: `${import.meta.env.VITE_API_BACKEND_URL}/api`,
@@ -23,12 +24,25 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   (response) => response,
   (error) => {
+
     const status = error?.response?.status;
+    const {setAuthFlase}=useAuthStore.getState()
+    // console.log(error);
+    
 
     if (status === 401 || status === 403) {
       // logout user, redirect, clear state
-      clearAuth()
+      const message =error.response.data?.message 
+      clearAuth();
+      setAuthFlase();
       toast.warn("Please Login / Register", {autoClose:2000})
+
+     
+
+      return Promise.reject({
+        status,
+        message,
+      });
     }
 
    if (error?.response?.status === 429) {
@@ -46,6 +60,10 @@ API.interceptors.response.use(
       });
     }
 
+    if (error?.response?.data?.message) {
+    toast.error(error?.response?.data?.message)
+      
+    }
     return Promise.reject(error);
   }
 );
@@ -95,8 +113,13 @@ export const getAuthToken = () => {
 };
 
 export const clearAuth = () => {
+ 
+  
+  useAuthStore.persist.clearStorage();
   localStorage.removeItem("auth");
   localStorage.removeItem("auth-storage");
+
+
 };
 
 

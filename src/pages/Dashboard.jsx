@@ -5,8 +5,8 @@ import MainContent from '../components/dashboard/MainContent';
 import { posts, events, likedPosts, comments, savedPosts } from '../../public/data/mockData.js';
 import MobileHeader from '../components/dashboard/MobileHeader.jsx';
 import { useEffect } from 'react';
-import { getDashboardData } from '../services/userDashboard.service.js';
 import { useAuthStore } from '../store/auth.store.js';
+import { useDashboardData } from '../store/dashboardData.store.js';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('posts');
@@ -14,6 +14,12 @@ function Dashboard() {
   const [isMobile, setIsMobile] = useState(false);
   const user=useAuthStore((state)=>state.user)
   const [allData, setAllData]=useState([]);
+
+  const dashboardData = useDashboardData((state)=>state.dashboardData)
+  const dashboardLoading = useDashboardData((state)=>state.dashboardLoading)
+  const getDashboardData = useDashboardData((state)=>state.getDashboardData)
+
+
 
   const [tabData, setTableData] = useState ({
     posts,
@@ -31,7 +37,7 @@ function Dashboard() {
 
       // console.log(res);
       setAllData(res)
-      setTableData((prev=> ({...prev,posts:res?.posts?.data,comments:res.comments?.data,savedPosts:res?.savedPosts?.data})))
+      setTableData((prev=> ({...prev,posts:res?.posts?.data,comments:res?.comments?.data,savedPosts:res?.savedPosts?.data,events:res?.registeredEvent?.data})))
 
       
       

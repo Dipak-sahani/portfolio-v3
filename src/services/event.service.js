@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
 /**
@@ -57,3 +58,15 @@ export const deleteEvent = async (id) => {
     throw error;
   }
 };
+
+
+
+// router.post("/register/:eventId", registerEvent);
+// router.get("/my-registered", getMyRegistereEvent);
+// router.get("/participents/:eventId", getParticipents);
+
+export const registerEvent = async (eventId) =>
+   await API.post(`/event/register/${eventId}`);
+
+export const getMyRegisteredEvents = async () =>
+  await API.get("/event/my-registered");

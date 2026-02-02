@@ -4,8 +4,14 @@ import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
 import Footer from "../components/footer/Footer";
 import { getAuthToken, mySession } from "../services/auth.service";
+import Slogan from "../components/component/Slogan";
 // import { toast } from "react-toastify";
 // import { getDashboardData } from "../services/userDashboard.service";
+
+
+
+
+
 
 const HomePage = () => {
      const {user, isAuthenticated, loadUser }= useAuthStore();
@@ -41,11 +47,11 @@ useEffect(() => {
 
   return (
      <div className="mt-30">
-    <div className="flex-col justify-self-center sm:w-[80%]">
+    <div className="flex-col justify-self-center sm:w-[80%] w-[95%]">
       <section className="flex-col  text-center mt-20 mb-15  ">
-        <h1 className="text-5xl font-bold font-sans"> { user&& <span>"{user?.fullName}"</span> }  Welcome to</h1>
-        <h1 className="text-6xl font-bold font-sans"> <span className="text-red-500">Be</span>rojgar Founder</h1>
-        <h1 className="text-3xl font-bold font-myIrish mt-10 ">
+        <h1 className="text-3xl sm:text-5xl font-bold font-sans"> { user&& <span>"{user?.fullName}"</span> }  Welcome to</h1>
+        <h1 className="text-4xl sm:text-6xl font-bold font-sans"> <span className="text-red-500">Be</span>rojgar Founder</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold font-myIrish mt-10 ">
            {['" Find ', "Your ", "Team. ", "Build ", "Your ", "Startup ", "and ", 'Business "'].map(
   (word, i) => (
     <span
@@ -66,8 +72,8 @@ useEffect(() => {
         <section className="flex-1/2 hidden sm:block">
         <img src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/HomePage.jpg" loading="lazy" className="shadow-2xl shadow-[#FD7B41] hover:scale-110 transition"/>
 
-        </section>
-       <section className="flex-1/2 flex flex-col items-center px-2 sm:px-10 sm:pl-20 text-center">
+        </section>{user? <Slogan/>
+       :<section className="flex-1/2 flex flex-col items-center px-2 sm:px-10 sm:pl-20 text-center">
   <h1 className="text-2xl font-semibold mb-5">
     Introduction
   </h1>
@@ -75,7 +81,7 @@ useEffect(() => {
   <p className="w-[80%] sm:text-justify text-xl">
     BEROJGAR FOUNDER is designed to support startup enthusiasts by helping them find co-founders, partners, and team members. This platform makes it easy to turn ideas into real businesses.
   </p>
-</section>
+</section>}
 
 
       </section>
