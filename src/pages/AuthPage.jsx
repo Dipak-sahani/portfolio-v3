@@ -8,15 +8,15 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 const AuthForm = () => {
   const { login, loading, isAuthenticated } = useAuthStore();
   const [isLogin, setIsLogin] = useState(true);
-  const [isRemember, setIsRemember]=useState(false)
+  const [isRemember, setIsRemember] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     fullName: "",
-    username:"",
+    username: "",
   });
-// console.log(isRemember);
+  // console.log(isRemember);
 
   const navigate = useNavigate();
 
@@ -44,16 +44,16 @@ const AuthForm = () => {
       // });
 
       await login({ email: formData.email, password: formData.password, }, isRemember);
-      
-      
-      
+
+
+
     } else {
       if (formData.password !== formData.confirmPassword) {
         toast.warn("Passwords don't match!");
         return;
       }
       await register({ formData });
-      console.log("Registering with:", formData);
+
       navigate("/");
     }
   };
@@ -97,9 +97,8 @@ const AuthForm = () => {
                 <button
                   onClick={() => setIsLogin(true)}
                   disabled={loading}
-                  className={`flex-1 py-3 text-center font-medium rounded-l-xl transition-colors flex justify-center items-center ${
-                    isLogin ? "text-white" : ""
-                  }`}
+                  className={`flex-1 py-3 text-center font-medium rounded-l-xl transition-colors flex justify-center items-center ${isLogin ? "text-white" : ""
+                    }`}
                   style={{
                     backgroundColor: isLogin ? "#FD7B41" : "#F5F5F5",
                     color: isLogin ? "white" : "#3C4044",
@@ -111,9 +110,8 @@ const AuthForm = () => {
                 <button
                   onClick={() => setIsLogin(false)}
                   disabled={loading}
-                  className={`flex-1 py-3 text-center font-medium rounded-r-xl transition-colors flex justify-center items-center ${
-                    !isLogin ? "text-white" : ""
-                  }`}
+                  className={`flex-1 py-3 text-center font-medium rounded-r-xl transition-colors flex justify-center items-center ${!isLogin ? "text-white" : ""
+                    }`}
                   style={{
                     backgroundColor: !isLogin ? "#FD7B41" : "#F5F5F5",
                     color: !isLogin ? "white" : "#3C4044",
@@ -253,9 +251,9 @@ const AuthForm = () => {
                         type="checkbox"
                         name='isRemember'
                         checked={isRemember}
-  onChange={(e) => setIsRemember(e.target.checked)}
+                        onChange={(e) => setIsRemember(e.target.checked)}
                         className="w-4 h-4 mr-2"
-                    
+
                         style={{ accentColor: "#FD7B41" }}
                       />
                       <span className="text-sm" style={{ color: "#3C4044" }}>
@@ -375,7 +373,7 @@ const AuthForm = () => {
         {/* right Side - Pattern Section */}
         <div
           className="hidden flex-1/2 lg:flex lg:w-1/2 relative overflow-hidden justify-center items-center"
-          // style={{ backgroundColor: "#3C4044" }}
+        // style={{ backgroundColor: "#3C4044" }}
         >
           <img
             src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/Auth.png"
@@ -384,13 +382,13 @@ const AuthForm = () => {
           />
           <div className="absolute inset-0 mt-10">
             <h1 className="text-3xl font-bold font-sans text-center text-[#3C4044]">
-              {isLogin ? <p>Welcome back</p> : <p>Join us</p> }
+              {isLogin ? <p>Welcome back</p> : <p>Join us</p>}
             </h1>
             <h1 className="text-6xl font-bold font-sans text-center text-shadow-[#FD7B41] text-shadow-lg/30">
               {" "}
               <span className="text-red-500">Be</span>rojgar Founder
             </h1>
-            
+
           </div>
         </div>
       </div>

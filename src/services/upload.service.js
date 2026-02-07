@@ -14,14 +14,10 @@ const ALLOWED_TYPES = [
 const generateUUID = () =>
   crypto?.randomUUID?.() || Date.now().toString();
 
-export const uploadImage = async (file, userId) => {
+export const uploadImage = async (file, folder = "general") => {
   try {
     if (!file) {
       throw new Error("No file provided");
-    }
-
-    if (!userId) {
-      throw new Error("User not authenticated");
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -34,7 +30,7 @@ export const uploadImage = async (file, userId) => {
 
     const ext = file.name.split(".").pop();
     const fileName = `${generateUUID()}.${ext}`;
-    const filePath = `${userId}/${fileName}`;
+    const filePath = `${folder}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("user-images")

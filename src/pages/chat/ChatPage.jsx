@@ -76,31 +76,33 @@ export default function Chat() {
         selectedContactPerson(formattedContacts);
       }
 
-      else{formattedContacts = {
-        id: isUserPresentInContact?.user?._id,
-        name: isUserPresentInContact?.user?.fullName,
-        avatar: isUserPresentInContact?.user?.fullName
-          .split(" ")
-          .map((n) => n[0])
-          .join(""),
-        email: isUserPresentInContact?.user?.email?.toLowerCase(),
-        status: ["online", "away", "offline"][Math.floor(Math.random() * 3)],
-        lastSeen: [
-          "Just now",
-          "2 min ago",
-          "5 min ago",
-          "30 min ago",
-          "2 hours ago",
-        ][Math.floor(Math.random() * 5)],
-        unread: Math.floor(Math.random() * 4),
-        phone: isUserPresentInContact?.user?.phone,
-        website: isUserPresentInContact?.user?.website,
-        company: isUserPresentInContact?.user?.company?.name,
-        conversationId: isUserPresentInContact?.conversationId,
-      };
+      else {
+        formattedContacts = {
+          id: isUserPresentInContact?.user?._id,
+          name: isUserPresentInContact?.user?.fullName,
+          avatar: isUserPresentInContact?.user?.fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join(""),
+          email: isUserPresentInContact?.user?.email?.toLowerCase(),
+          status: ["online", "away", "offline"][Math.floor(Math.random() * 3)],
+          lastSeen: [
+            "Just now",
+            "2 min ago",
+            "5 min ago",
+            "30 min ago",
+            "2 hours ago",
+          ][Math.floor(Math.random() * 5)],
+          unread: Math.floor(Math.random() * 4),
+          phone: isUserPresentInContact?.user?.phone,
+          website: isUserPresentInContact?.user?.website,
+          company: isUserPresentInContact?.user?.company?.name,
+          conversationId: isUserPresentInContact?.conversationId,
+        };
 
-      setActiveContact(formattedContacts);
-        selectedContactPerson(formattedContacts);}
+        setActiveContact(formattedContacts);
+        selectedContactPerson(formattedContacts);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -114,7 +116,7 @@ export default function Chat() {
   }, [selectedUserId]);
 
   const onSelect = (data) => {
-    console.log("hello from chat", data);
+
     setSelectedUserId(data);
   };
 
@@ -140,10 +142,10 @@ export default function Chat() {
         selectedUserId&& <>  <ChatDisplayPage selectedUserId={selectedUserId} currentUserId={user._id} /></>
       } */}
 
-      <div className="flex flex-col md:flex-row h-screen bg-gray-50">
+      <div className="flex flex-col md:flex-row h-screen bg-gray-50 dark:bg-gray-900">
         {/* Sidebar - always visible */}
         <div
-          className={`${activeContact ? "md:w-1/4" : "w-full"} md:w-1/4 md:block`}
+          className={`${activeContact ? "md:w-1/4" : "w-full"} md:w-1/4 md:block border-r border-gray-200 dark:border-gray-700`}
         >
           <ChatSidebar
             onContactSelect={handleContactSelect}
@@ -153,7 +155,7 @@ export default function Chat() {
 
         {/* Chat area - hidden on mobile when no contact selected */}
         {activeContact && (
-          <div className="flex-1 w-full">
+          <div className="flex-1 w-full bg-white dark:bg-gray-900">
             <ChatArea
               activeContact={activeContact}
               onSendMessage={handleSendMessage}
@@ -163,12 +165,12 @@ export default function Chat() {
 
         {/* Mobile overlay when chat is active */}
         {activeContact && (
-          <div className="md:hidden fixed inset-0 bg-white z-50">
+          <div className="md:hidden fixed inset-0 bg-white dark:bg-gray-900 z-50">
             <div className="h-full flex flex-col">
-              <div className="p-4 border-b border-gray-200 flex items-center">
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100">
                 <button
                   onClick={() => setActiveContact(null)}
-                  className="mr-3 text-gray-500"
+                  className="mr-3 text-gray-500 dark:text-gray-400"
                 >
                   <svg
                     className="w-6 h-6"

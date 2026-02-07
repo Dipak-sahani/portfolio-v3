@@ -4,37 +4,37 @@ import { useEventStore } from "./event.store";
 
 
 
-export const useDashboardData=create((set, get)=>({
-    dashboardData:[],
-    dashboardLoading:false,
+export const useDashboardData = create((set, get) => ({
+    dashboardData: [],
+    dashboardLoading: false,
 
 
-    getDashboardData:async()=>{
+    getDashboardData: async () => {
         try {
-            console.log("hhh");
-            
-            const {setEventsFromDashboard}=useEventStore.getState()
-            const {dashboardData,dashboardLoading}= get()
 
-            if (dashboardData.length>0 || dashboardLoading) return;
 
-            set({dashboardLoading:true})
-            const res= await getDashboardDataService();
+            const { setEventsFromDashboard } = useEventStore.getState()
+            const { dashboardData, dashboardLoading } = get()
+
+            if (dashboardData.length > 0 || dashboardLoading) return;
+
+            set({ dashboardLoading: true })
+            const res = await getDashboardDataService();
 
             // console.log(res);
             set({
-                dashboardData:res,
-                dashboardLoading:false
+                dashboardData: res,
+                dashboardLoading: false
             })
 
             setEventsFromDashboard(res?.registeredEvent?.data)
             return res;
-            
+
         } catch (error) {
 
-            set({dashboardLoading:false})
+            set({ dashboardLoading: false })
             console.log(error);
-            
+
         }
     }
 }))

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ProjectCard from '../card/ProjectShowCaseCard';
-import CreateProjectForm from '../forms/ProjectCreateForm';
+import CommentOverlay from '../components/comment/CommentOverlay';
 
-const ProjectDashboard = ({projectList}) => {
+const ProjectDashboard = ({ projectList }) => {
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -34,8 +32,31 @@ const ProjectDashboard = ({projectList}) => {
     setFormData({ title: '', description: '', category: '', deadline: '', status: 'Active' });
   };
 
+
+
+  const [commentDisplay, setCommentDisplay] = useState({
+    isOpen: false,
+    id: null,
+  });
+
+  const openCommentOverlay = (id) => {
+    // console.log(id);
+
+    setCommentDisplay({
+      isOpen: true,
+      id,
+    });
+  };
+
+  const closeCommentOverlay = () => {
+    setCommentDisplay({
+      isOpen: false,
+      id: null,
+    });
+  };
+
   return (
-    <div className="">
+    <div className="bg-[#DDDCDB] dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <div className="">
 
         {/* Input Form Section */}
@@ -70,14 +91,26 @@ const ProjectDashboard = ({projectList}) => {
           </button>
         </form> */}
 
-       
+
 
         {/* Display Grid */}
-        <div className="">
+        <div className="p-4">
           {projectList?.map((project, id) => (
-            <ProjectCard key={id} project={project} />
+            <ProjectCard key={id} project={project} callBack={openCommentOverlay} />
           ))}
         </div>
+
+
+
+        <>
+          {commentDisplay.isOpen && (
+            <CommentOverlay
+              targetType="project"
+              Id={commentDisplay.id}
+              onClose={closeCommentOverlay}
+            />
+          )}
+        </>
       </div>
     </div>
   );

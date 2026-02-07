@@ -7,34 +7,29 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getComments, postComment } from "../../services/comment.service";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
-const CommentOverlay = ({ postId, onClose }) => {
+const CommentOverlay = ({ targetType, Id, onClose }) => {
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const fetchComments=async ()=>{
+  const fetchComments = async () => {
     try {
+      const res = await getComments(Id);
 
-        const res= await getComments(postId)
-
-        console.log(res);
-        setComments(res?.data?.comments || [])
-        
+      // console.log(res);
+      setComments(res?.data?.comments || []);
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    if (postId) {
-    fetchComments()
-      
+    if (Id) {
+      fetchComments();
     }
-
-    
-  }, [postId]);
+  }, [Id]);
 
   const submitComment = async () => {
     if (!text.trim()) return;
@@ -43,15 +38,14 @@ const CommentOverlay = ({ postId, onClose }) => {
       setLoading(true);
 
       const res = await postComment({
-        postId,
-        text
-      })
+        targetType,
+        targetId: Id,
+        text,
+      });
 
-      if (res.status==201) {
-        toast.success("you commented on this post")
-        
+      if (res.status == 201) {
+        toast.success("Your Comment Added");
       }
-      
     } finally {
       setLoading(false);
     }
@@ -59,10 +53,8 @@ const CommentOverlay = ({ postId, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-end md:items-center">
-      
       {/* Modal */}
       <div className="bg-white w-full md:max-w-xl h-[85%] md:h-[70%] rounded-t-2xl md:rounded-2xl flex flex-col shadow-xl">
-
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Comments</h2>
@@ -74,28 +66,48 @@ const CommentOverlay = ({ postId, onClose }) => {
         {/* Comments List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {comments.length === 0 && (
-            <p className="text-gray-500 text-sm text-center">
-              No comments yet
+            <p className="text-gray-400 text-sm text-center">
+              No comments yet 💬
             </p>
           )}
 
           {comments.map((c) => (
-            <div key={c._id} className="flex gap-3">{
-                c?.userId?.avatar?
-              <img
-                src={c.userId?.avatar || "/avatar.png"}
-                className="w-8 h-8 rounded-full"
-                alt=""
-              />: <FontAwesomeIcon icon={faUser} className="rounded-full bg-gray-400 h-24 w-24"/> }
+            <div
+              key={c._id}
+              className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 transition"
+            >
+              {/* Avatar */}
+              {c?.userId?.avatar ? (
+                <img
+                  src={c.userId.avatar}
+                  alt={c.userId.fullName}
+                  className="w-9 h-9 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-200">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="text-gray-500 text-sm"
+                  />
+                </div>
+              )}
 
-              <div>
-                <p className="text-sm font-medium">
-                  {c.userId?.fullName}
+              {/* Content */}
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-gray-800">
+                    {c.userId?.fullName || "Unknown User"}
+                  </p>
+
+                  <span className="text-xs text-gray-400">
+                    {dayjs(c.createdAt).format("DD MMM YYYY • hh:mm A")}
+                  </span>
+                </div>
+
+                <p className="text-sm text-gray-700 mt-1 leading-relaxed">
+                  {c.text}
                 </p>
-                <p className="text-sm text-gray-700">{c.text}</p>
-                <hr className="bg-gray-400 h-0.5" />
               </div>
-              
             </div>
           ))}
         </div>

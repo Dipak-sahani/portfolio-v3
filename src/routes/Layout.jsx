@@ -4,24 +4,25 @@ import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 function Layout() {
 
-  const location=useLocation();
+  const location = useLocation();
 
   const hideFooter = location.pathname.startsWith("/chat");
 
   return (
-    <div>
-  <div className="fixed top-0 left-0 w-full z-50 bg-white h-20">
-    <Header />
-  </div>
+    <div className="flex flex-col min-h-screen">
+      <div className="fixed top-0 left-0 w-full z-50 bg-white h-20">
+        <Header />
+      </div>
 
-  <div className="mt-20">
-    <Outlet />
+      <div className="mt-20 flex-grow">
+        <Outlet />
+      </div>
 
-    {!hideFooter && <Footer />}
-  </div>
-</div>
-
+      {!hideFooter && <Footer />}
+    </div>
   );
 }
+
+
 
 export default Layout;

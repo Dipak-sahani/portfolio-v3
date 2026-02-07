@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import socket from "../../app/socket";
+import { getAuthToken } from "../../services/auth.service";
 
 // Assumptions:
 // - Parent passes `selectedUserId`
@@ -17,6 +18,12 @@ export default function ChatDisplayPage({ selectedUserId, currentUserId }) {
 
   // Connect socket once
   useEffect(() => {
+    // 🔄 Update token before connecting (in case user just logged in)
+    const token = getAuthToken();
+    if (token) {
+      socket.auth = { token };
+    }
+
     if (!socket.connected) socket.connect();
 
     socket.on("message", (msg) => {
@@ -100,11 +107,10 @@ export default function ChatDisplayPage({ selectedUserId, currentUserId }) {
         {messages.map((m, idx) => (
           <div
             key={idx}
-            className={`max-w-[70%] rounded px-3 py-2 text-sm ${
-              m.from === currentUserId
+            className={`max-w-[70%] rounded px-3 py-2 text-sm ${m.from === currentUserId
                 ? "ml-auto bg-blue-500 text-white"
                 : "mr-auto bg-gray-200 text-gray-900"
-            }`}
+              }`}
           >
             {m.text}
           </div>

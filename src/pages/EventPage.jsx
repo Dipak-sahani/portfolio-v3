@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faCalendarAlt, 
-  faClock, 
-  faTag, 
-  faUsers, 
-  faLink, 
-  faMoneyBill, 
+import {
+  faCalendarAlt,
+  faClock,
+  faTag,
+  faUsers,
+  faLink,
+  faMoneyBill,
   faGlobe,
   faNetworkWired,
   faCreditCard
@@ -15,26 +15,29 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEventStore } from '../store/event.store';
 import { registerEvent } from '../services/event.service';
 import { toast } from 'react-toastify';
+import ShareModal from '../components/common/ShareModal';
+import ReportModal from '../components/common/ReportModal';
+import { faShareAlt, faFlag } from '@fortawesome/free-solid-svg-icons';
 
 
-const defaultEvent=[{
-    category: "",
-    coverImage: "",
-    createdAt: "",
-    createdBy: "",
-    description: "",
-    endTime: "",
-    isPaid: false,
-    maxParticipants: 0,
-    meetingLink: "",
-    price: { amount: 0, currency: 'INR' },
-    shortDescription: "",
-    startTime: "",
-    tags: [''],
-    title: "",
-    type: "",
-    _id: ""
-  }]
+const defaultEvent = [{
+  category: "",
+  coverImage: "",
+  createdAt: "",
+  createdBy: "",
+  description: "",
+  endTime: "",
+  isPaid: false,
+  maxParticipants: 0,
+  meetingLink: "",
+  price: { amount: 0, currency: 'INR' },
+  shortDescription: "",
+  startTime: "",
+  tags: [''],
+  title: "",
+  type: "",
+  _id: ""
+}]
 
 
 const EventPage = () => {
@@ -56,18 +59,20 @@ const EventPage = () => {
     type: "virtual",
     _id: "6979ef9d015892f9ea3c24ae"
   });
-  const {id}=useParams()
+  const { id } = useParams()
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [registered, setRegistered] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
-  const events=useEventStore((state)=>state.events)
+  const events = useEventStore((state) => state.events)
 
-  const myRegisteredEvents=useEventStore((state)=>state.myRegisteredEvents)
+  const myRegisteredEvents = useEventStore((state) => state.myRegisteredEvents)
 
-// console.log(myRegisteredEvents);
+  // console.log(myRegisteredEvents);
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   // Format date and time
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -97,26 +102,26 @@ const EventPage = () => {
     const durationMs = end - start;
     const hours = Math.floor(durationMs / (1000 * 60 * 60));
     const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (hours === 0) return `${minutes} minutes`;
     if (minutes === 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
     return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} minutes`;
   };
 
-  const handleRegister =async () => {
+  const handleRegister = async () => {
     try {
       setIsRegistering(true);
       // Simulate API call
-  
-  
-        const res=await registerEvent(id);
-  
-        
-        if(res.status==200){
-          setIsRegistering(false);
-          setRegistered(true);
-          toast.success('Successfully registered for the event!');
-        }
+
+
+      const res = await registerEvent(id);
+
+
+      if (res.status == 200) {
+        setIsRegistering(false);
+        setRegistered(true);
+        toast.success('Successfully registered for the event!');
+      }
     } catch (error) {
       setIsRegistering(false);
     }
@@ -133,30 +138,30 @@ const EventPage = () => {
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (id) {
 
-        const selectedEvent=events.filter((evt)=>{
-            return evt._id==id
-        })
-        
-        if (!selectedEvent.length>0) {
-          navigate('/event')
-        }
-        setEvent(selectedEvent[0]||defaultEvent)
-        
+      const selectedEvent = events.filter((evt) => {
+        return evt._id == id
+      })
 
-        if (myRegisteredEvents?.includes(selectedEvent[0]?._id)) {
-          setRegistered(true)
-        }
+      if (!selectedEvent.length > 0) {
+        navigate('/event')
+      }
+      setEvent(selectedEvent[0] || defaultEvent)
+
+
+      if (myRegisteredEvents?.includes(selectedEvent[0]?._id)) {
+        setRegistered(true)
+      }
 
 
     }
 
-  },[])
+  }, [])
 
   return (
-    <div 
+    <div
       className="min-h-screen py-8 px-4 md:px-8"
       style={{ backgroundColor: colors.background }}
     >
@@ -167,9 +172,9 @@ const EventPage = () => {
             <h1 className="text-3xl md:text-4xl font-bold" style={{ color: colors.text }}>
               Event Details
             </h1>
-            <span 
+            <span
               className="px-4 py-2 rounded-full text-sm font-semibold"
-              style={{ 
+              style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
               }}
@@ -185,16 +190,16 @@ const EventPage = () => {
           <div className="lg:w-2/3">
             {/* Event Title and Type */}
             <div className="mb-8">
-              <h2 
+              <h2
                 className="text-2xl md:text-3xl font-bold mb-4"
                 style={{ color: colors.text }}
               >
                 {event?.title}
               </h2>
               <div className="flex items-center gap-4">
-                <span 
+                <span
                   className="px-3 py-1 rounded-full text-sm"
-                  style={{ 
+                  style={{
                     backgroundColor: event?.type === 'virtual' ? colors.secondary : colors.primary,
                     color: colors.text
                   }}
@@ -203,9 +208,9 @@ const EventPage = () => {
                   {event?.type?.charAt(0)?.toUpperCase() + event?.type?.slice(1)} Event
                 </span>
                 {event?.isPaid && (
-                  <span 
+                  <span
                     className="px-3 py-1 rounded-full text-sm"
-                    style={{ 
+                    style={{
                       backgroundColor: colors.secondary,
                       color: colors.text
                     }}
@@ -218,9 +223,9 @@ const EventPage = () => {
             </div>
 
             {/* Event Date and Time */}
-            <div 
+            <div
               className="rounded-xl p-6 mb-8"
-              style={{ 
+              style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
               }}
@@ -261,15 +266,15 @@ const EventPage = () => {
 
             {/* Event Description */}
             <div className="mb-8">
-              <h3 
+              <h3
                 className="text-xl font-bold mb-4"
                 style={{ color: colors.text }}
               >
                 Description
               </h3>
-              <div 
+              <div
                 className="rounded-lg p-6"
-                style={{ 
+                style={{
                   backgroundColor: colors.secondary + '80',
                   color: colors.text
                 }}
@@ -281,7 +286,7 @@ const EventPage = () => {
             {/* Tags */}
             {event.tags && event.tags.length > 0 && (
               <div className="mb-8">
-                <h3 
+                <h3
                   className="text-xl font-bold mb-4"
                   style={{ color: colors.text }}
                 >
@@ -290,10 +295,10 @@ const EventPage = () => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {event.tags.map((tag, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-4 py-2 rounded-full text-sm"
-                      style={{ 
+                      style={{
                         backgroundColor: colors.primary,
                         color: '#FFFFFF'
                       }}
@@ -308,14 +313,14 @@ const EventPage = () => {
             {/* Meeting Link */}
             {event?.meetingLink && (
               <div className="mb-8">
-                <h3 
+                <h3
                   className="text-xl font-bold mb-4"
                   style={{ color: colors.text }}
                 >
                   <FontAwesomeIcon icon={faLink} className="mr-2" />
                   Meeting Link
                 </h3>
-                <a 
+                <a
                   href={event.meetingLink}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -330,9 +335,9 @@ const EventPage = () => {
 
           {/* Sidebar */}
           <div className="lg:w-1/3">
-            <div 
+            <div
               className="rounded-xl p-6 sticky top-8"
-              style={{ 
+              style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
               }}
@@ -356,25 +361,33 @@ const EventPage = () => {
 
               {/* Register Button */}
               <div className="mb-6">
-                <button
-                  onClick={handleRegister}
-                  disabled={isRegistering || registered}
-                  className={`w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 ${
-                    registered ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
-                  }`}
-                  style={{ 
-                    backgroundColor: registered ? colors.lightText : colors.primary,
-                    color: '#FFFFFF'
-                  }}
-                >
-                  {isRegistering ? (
-                    <span>Processing...</span>
-                  ) : registered ? (
-                    <span>✓ Registered</span>
-                  ) : (
-                    <span>Register Now</span>
-                  )}
-                </button>
+                {new Date() > new Date(event.endTime) ? (
+                  <button
+                    disabled
+                    className="w-full py-3 rounded-lg font-bold text-lg bg-gray-400 text-white cursor-not-allowed"
+                  >
+                    Event Ended
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleRegister}
+                    disabled={isRegistering || registered}
+                    className={`w-full py-3 rounded-lg font-bold text-lg transition-all duration-300 ${registered ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
+                      }`}
+                    style={{
+                      backgroundColor: registered ? colors.lightText : colors.primary,
+                      color: '#FFFFFF'
+                    }}
+                  >
+                    {isRegistering ? (
+                      <span>Processing...</span>
+                    ) : registered ? (
+                      <span>✓ Registered</span>
+                    ) : (
+                      <span>Register Now</span>
+                    )}
+                  </button>
+                )}
                 {event.maxParticipants > 0 && (
                   <p className="text-sm mt-2 text-center" style={{ color: colors.lightText }}>
                     Limited to {event.maxParticipants} participants
@@ -401,7 +414,7 @@ const EventPage = () => {
               {/* Category */}
               <div>
                 <h3 className="font-semibold mb-3">Category</h3>
-                <div 
+                <div
                   className="p-3 rounded-lg text-center"
                   style={{ backgroundColor: colors.primary + '20' }}
                 >
@@ -416,9 +429,50 @@ const EventPage = () => {
               <p>Event created on {formatDate(event.createdAt)}</p>
               <p>Event ID: {event._id?.slice(-8)}</p>
             </div>
+
+            {/* Share Button */}
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => setIsShareModalOpen(true)}
+                className="w-full py-3 rounded-lg font-bold text-lg border-2 transition-all duration-300 hover:bg-opacity-10"
+                style={{
+                  borderColor: colors.primary,
+                  color: colors.primary
+                }}
+              >
+                <FontAwesomeIcon icon={faShareAlt} className="mr-2" />
+                Share Event
+              </button>
+
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:bg-opacity-10 flex items-center justify-center"
+                style={{
+                  color: colors.lightText
+                }}
+              >
+                <FontAwesomeIcon icon={faFlag} className="mr-2" />
+                Report Event
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        title={`Check out this event: ${event?.title}`}
+        url={window.location.href}
+        content={event?.description}
+      />
+
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        targetId={event._id}
+        targetType="Event"
+      />
     </div>
   );
 };

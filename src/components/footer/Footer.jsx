@@ -1,11 +1,11 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 ">
+    <footer className="bg-gray-900 text-gray-300 relative z-10">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        
+
         {/* Top Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          
+
           {/* About */}
           <div>
             <h2 className="text-xl font-semibold text-white mb-4">
@@ -50,12 +50,23 @@ const Footer = () => {
 
             <div className="flex items-center gap-3 mb-3 text-sm">
               <i className="fa-solid fa-envelope"></i>
-              <span>support@berojgarfounder.com</span>
+              <a href="mailto:contact@berojgarfounder.com" className="hover:text-white transition-colors">
+                contact@berojgarfounder.com
+              </a>
             </div>
 
             <div className="flex items-center gap-3 mb-4 text-sm">
               <i className="fa-solid fa-location-dot"></i>
               <span>India</span>
+            </div>
+
+            <div className="mb-4">
+              <a
+                href="/contact"
+                className="inline-block px-4 py-2 bg-[#FD7B41] hover:bg-[#e06a35] text-white text-sm font-semibold rounded-lg transition-colors"
+              >
+                Contact Us
+              </a>
             </div>
 
             <div className="flex gap-4 text-lg">
@@ -77,7 +88,7 @@ const Footer = () => {
 
         {/* Divider */}
         <div className="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          
+
           {/* Trust badges */}
           <div className="flex gap-6 text-sm">
             <span className="flex items-center gap-2">

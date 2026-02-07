@@ -11,7 +11,11 @@ const handleApiError = (error) => {
 // Posts API
 export const createPost = async (postData) => {
   try {
-    const res = await API.post('/post', postData);
+    const res = await API.post('/post', postData,{
+    headers: {
+      'Content-Type': 'multipart/form-data' // Browser usually sets this automatically with FormData
+    }
+  });
     // console.log(res);
     
     return res.data.data;

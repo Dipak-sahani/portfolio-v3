@@ -5,6 +5,7 @@ export const useProjectStore = create((set,get) => ({
   loading: false,
   error: null,
   projects:[],
+  followStats:[],
 
   createProject: async (data) => {
     try {
@@ -34,9 +35,9 @@ export const useProjectStore = create((set,get) => ({
 
       set({ loading: true })
       const res=await projectService.getProjectsService();
-    //   console.log(res);
+      // console.log(res.data);
       
-      set({ projects:res.data ,loading: false })
+      set({ projects:res.data.projects , followStats:res?.data?.followStats,loading: false })
     } catch (err) {
       set({ error: err.message, loading: false })
     }

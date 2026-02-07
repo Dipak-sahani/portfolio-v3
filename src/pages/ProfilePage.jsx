@@ -12,7 +12,9 @@ const ProfilePage = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const user=useAuthStore((state)=>state.user)
   const [projectList, setProjects]=useState();
-  const {getProjects, projects}=useProjectStore()
+  const [stats, setStats]=useState();
+
+  const {getProjects, projects,followStats}=useProjectStore()
   
 
   const fetchProjects=async()=>{
@@ -32,8 +34,12 @@ const ProfilePage = () => {
     setProjects(projects)
   },[projects])
 
+   useEffect(()=>{
+    setStats(followStats)
+  },[followStats])
+
   return (
-    <CommonProfilePage isUser={true} info={user}  projectList={projectList}/>
+    <CommonProfilePage isUser={true} info={user} follow={stats} projectList={projectList}/>
   );
 };
 

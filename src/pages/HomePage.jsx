@@ -2,97 +2,148 @@ import React, { useEffect } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
-import Footer from "../components/footer/Footer";
-import { getAuthToken, mySession } from "../services/auth.service";
-import Slogan from "../components/component/Slogan";
-// import { toast } from "react-toastify";
-// import { getDashboardData } from "../services/userDashboard.service";
-
-
-
-
-
+import HoverPauseScroll from "../components/component/AutoScroll";
+import CTASection from "../components/component/CTASection";
+import { motion } from "framer-motion";
+import { getAuthToken } from "../services/auth.service";
 
 const HomePage = () => {
-     const {user, isAuthenticated, loadUser }= useAuthStore();
-// console.log(isAuthenticated);
-    const {fetchNotification} = useNotificationStore();
-  const token=getAuthToken();
+  const { user, isAuthenticated, loadUser } = useAuthStore();
+  const { fetchNotification } = useNotificationStore();
+  const token = getAuthToken();
 
+  useEffect(() => {
+    if (token) {
+      loadUser();
+    }
+  }, [token, loadUser]);
 
- useEffect(() => {
-  if (token) {
-    loadUser();
-  }
-}, [token]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchNotification();
+    }
+  }, [isAuthenticated, fetchNotification]);
 
-const fetchSession=async ()=>{
-  const res=await mySession()
-  console.log(res);
-  
-}
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2
+      }
+    }
+  };
 
-// useEffect(() => {
-//   fetchSession()
-// }, []);
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100
+      }
+    }
+  };
 
-useEffect(() => {
-  if (isAuthenticated) {
-    fetchNotification();
+  const wordAnimation = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        type: "spring",
+        stiffness: 120
+      }
+    })
+  };
 
-  }
-}, [isAuthenticated]);
-
-
+  const sloganWords = ['" Find ', "Your ", "Team. ", "Build ", "Your ", "Startup ", "and ", 'Business "'];
 
   return (
-     <div className="mt-30">
-    <div className="flex-col justify-self-center sm:w-[80%] w-[95%]">
-      <section className="flex-col  text-center mt-20 mb-15  ">
-        <h1 className="text-3xl sm:text-5xl font-bold font-sans"> { user&& <span>"{user?.fullName}"</span> }  Welcome to</h1>
-        <h1 className="text-4xl sm:text-6xl font-bold font-sans"> <span className="text-red-500">Be</span>rojgar Founder</h1>
-        <h1 className="text-2xl sm:text-3xl font-bold font-myIrish mt-10 ">
-           {['" Find ', "Your ", "Team. ", "Build ", "Your ", "Startup ", "and ", 'Business "'].map(
-  (word, i) => (
-    <span
-      key={i}
-      className="inline-block transition-transform duration-300 ease-out hover:scale-125 hover:text-[#FD7B41] px-2 cursor-pointer"
-    >
-      {word}
-    </span>
-  )
-)}
-
-
-           
-           </h1>
-        {/* <h1 className="text-3xl font-bold font-myIrish"> or Business”</h1> */}
-      </section>
-      <section className="flex mt-20  ">
-        <section className="flex-1/2 hidden sm:block">
-        <img src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/HomePage.jpg" loading="lazy" className="shadow-2xl shadow-[#FD7B41] hover:scale-110 transition"/>
-
-        </section>{user? <Slogan/>
-       :<section className="flex-1/2 flex flex-col items-center px-2 sm:px-10 sm:pl-20 text-center">
-  <h1 className="text-2xl font-semibold mb-5">
-    Introduction
-  </h1>
-
-  <p className="w-[80%] sm:text-justify text-xl">
-    BEROJGAR FOUNDER is designed to support startup enthusiasts by helping them find co-founders, partners, and team members. This platform makes it easy to turn ideas into real businesses.
-  </p>
-</section>}
-
-
-      </section>
-<div className="mt-20 flex-col sm:justify-self-center sm:w-[80%]">
-        <hr  className="h-1 bg-[#FD7B41] mb-10"/>
-        <h1 className="my-10 font-semibold text-2xl  text-center">Posts</h1>
-        <Posts/>
+    <div className="relative min-h-screen w-full overflow-x-hidden font-sans">
+      {/* Background with Overlay */}
+      <div className="fixed inset-0 z-0">
+        <div
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-in-out hover:scale-105"
+          style={{
+            backgroundImage: "url('https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/bgIMG.png')",
+          }}
+        ></div>
+        {/* Darker Overlay for better contrast */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
       </div>
-      
-    </div>
-      
+
+      <div className="relative z-10 flex flex-col items-center">
+        <motion.div
+          className="
+            w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
+            pt-32 pb-16
+            flex flex-col items-center text-center
+          "
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.h1
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-4 drop-shadow-lg"
+            variants={itemVariants}
+          >
+            {user && <span className="block text-2xl sm:text-3xl font-medium text-gray-300 mb-2">Welcome back, {user?.fullName}</span>}
+            Welcome to <span className="text-[#FD7B41] inline-block relative after:content-[''] after:absolute after:bottom-2 after:left-0 after:w-full after:h-4 after:bg-[#FD7B41]/20 after:-z-10 transform hover:scale-105 transition-transform cursor-default">Berojgar Founder</span>
+          </motion.h1>
+
+          <motion.div
+            className="text-xl sm:text-3xl font-semibold text-gray-200 mt-6 max-w-4xl leading-relaxed font-myIrish italic drop-shadow-md"
+            variants={itemVariants}
+          >
+            {sloganWords.map((word, i) => (
+              <motion.span
+                key={i}
+                custom={i}
+                variants={wordAnimation}
+                className="inline-block px-1 cursor-default hover:text-[#FD7B41] transition-colors duration-300"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="mt-16 w-full"
+            variants={itemVariants}
+          >
+            <HoverPauseScroll />
+          </motion.div>
+
+          <motion.div
+            className="mt-16 w-full max-w-5xl"
+            variants={itemVariants}
+          >
+            <CTASection />
+          </motion.div>
+
+          <motion.div
+            className="mt-20 w-full max-w-5xl"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent flex-1"></div>
+              <h2 className="font-bold text-3xl text-white tracking-wide uppercase drop-shadow-md">Latest Community Posts</h2>
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent flex-1"></div>
+            </div>
+
+            <Posts isHome={true} />
+          </motion.div>
+
+        </motion.div>
+      </div>
     </div>
   );
 };

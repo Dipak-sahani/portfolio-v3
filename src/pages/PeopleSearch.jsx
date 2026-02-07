@@ -47,8 +47,8 @@ const PeopleSearch = () => {
 
 
 
-  
-  
+
+
 
   // Debounced search with error handling
   const debouncedSearch = useCallback(
@@ -152,14 +152,14 @@ const PeopleSearch = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#DDDCDB" }}>
+    <div className="min-h-screen bg-[#DDDCDB] dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "#3C4044" }}>
+          <h1 className="text-3xl font-bold mb-2 text-[#3C4044] dark:text-white">
             Find Talented People
           </h1>
-          <p className="text-lg" style={{ color: "#3C4044" }}>
+          <p className="text-lg text-[#3C4044] dark:text-gray-300">
             Search and filter through our talented community
           </p>
         </div>
@@ -173,12 +173,7 @@ const PeopleSearch = () => {
               onChange={handleSearchChange}
               disabled={loading}
               placeholder="Search by name, title, or skills..."
-              className="w-full px-6 py-4 rounded-xl border-2 focus:outline-none focus:ring-2 shadow-lg disabled:opacity-50"
-              style={{
-                backgroundColor: "white",
-                borderColor: "#EDBF9B",
-                color: "#3C4044",
-              }}
+              className="w-full px-6 py-4 rounded-xl border-2 focus:outline-none focus:ring-2 shadow-lg disabled:opacity-50 bg-white dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white"
             />
             <div className="absolute right-3 top-3">
               {loading && (
@@ -209,15 +204,14 @@ const PeopleSearch = () => {
             {/* Results Header */}
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div className="mb-4 sm:mb-0 flex-1/3">
-                <p className="text-lg font-medium" style={{ color: "#3C4044" }}>
+                <p className="text-lg font-medium text-[#3C4044] dark:text-gray-300">
                   {(pagination?.totalResults)} people found
                   {filters.query && ` for "${filters.query}"`}
                 </p>
               </div>
               <div className="w-full flex items-center flex-1/3">
                 <button
-                  className="flex-1 py-2 px-4 rounded-lg font-medium text-center transition-colors w-fit mx-4"
-                  style={{ backgroundColor: "#FD7B41", color: "white" }}
+                  className="flex-1 py-2 px-4 rounded-lg font-medium text-center transition-colors w-fit mx-4 bg-[#FD7B41] text-white hover:bg-orange-600"
                   onClick={() => setShowSearch(!showSearch)}
                 >
                   {showSearch ? <h1>Hide Filters</h1> : <h1>Show Filters</h1>}
@@ -226,7 +220,7 @@ const PeopleSearch = () => {
 
               {/* Sort Options */}
               <div className="flex-1/3 items-center space-x-2">
-                <span className="text-sm" style={{ color: "#3C4044" }}>
+                <span className="text-sm text-[#3C4044] dark:text-gray-300">
                   Sort by:
                 </span>
                 <select
@@ -235,12 +229,7 @@ const PeopleSearch = () => {
                     handleFilterChange({ sortBy: e.target.value })
                   }
                   disabled={loading}
-                  className="px-3 py-2 rounded-lg border focus:outline-none focus:ring-1 disabled:opacity-50"
-                  style={{
-                    backgroundColor: "white",
-                    borderColor: "#EDBF9B",
-                    color: "#3C4044",
-                  }}
+                  className="px-3 py-2 rounded-lg border focus:outline-none focus:ring-1 disabled:opacity-50 bg-white dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white"
                 >
                   <option value="relevance">Relevance</option>
                   <option value="experience">Experience</option>
@@ -254,12 +243,7 @@ const PeopleSearch = () => {
                     })
                   }
                   disabled={loading}
-                  className="px-3 py-2 rounded-lg border disabled:opacity-50"
-                  style={{
-                    backgroundColor: "white",
-                    borderColor: "#EDBF9B",
-                    color: "#3C4044",
-                  }}
+                  className="px-3 py-2 rounded-lg border disabled:opacity-50 bg-white dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white"
                 >
                   {filters.sortOrder === "asc" ? "↑" : "↓"}
                 </button>
@@ -274,7 +258,7 @@ const PeopleSearch = () => {
                     className="w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-4"
                     style={{ borderTopColor: "#FD7B41" }}
                   ></div>
-                  <p style={{ color: "#3C4044" }}>Loading people...</p>
+                  <p className="text-[#3C4044] dark:text-gray-300">Loading people...</p>
                 </div>
               </div>
             )}
@@ -306,23 +290,21 @@ const PeopleSearch = () => {
             {/* No Results */}
             {!loading && people.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4" style={{ color: "#EDBF9B" }}>
+                <div className="text-6xl mb-4 text-[#EDBF9B]">
                   👥
                 </div>
                 <h3
-                  className="text-xl font-semibold mb-2"
-                  style={{ color: "#3C4044" }}
+                  className="text-xl font-semibold mb-2 text-[#3C4044] dark:text-white"
                 >
                   No people found
                 </h3>
-                <p className="mb-4" style={{ color: "#3C4044" }}>
+                <p className="mb-4 text-[#3C4044] dark:text-gray-300">
                   Try adjusting your search filters
                 </p>
                 <button
                   onClick={clearFilters}
                   disabled={loading}
-                  className="px-6 py-2 rounded-lg font-medium disabled:opacity-50"
-                  style={{ backgroundColor: "#FD7B41", color: "white" }}
+                  className="px-6 py-2 rounded-lg font-medium disabled:opacity-50 bg-[#FD7B41] text-white hover:bg-orange-600"
                 >
                   Clear All Filters
                 </button>

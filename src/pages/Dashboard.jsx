@@ -7,49 +7,60 @@ import MobileHeader from '../components/dashboard/MobileHeader.jsx';
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/auth.store.js';
 import { useDashboardData } from '../store/dashboardData.store.js';
+import PostDetailModal from '../components/post/PostDetailModal.jsx';
+import ProjectDetailModal from '../components/project/ProjectDetailModal.jsx';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('posts');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const user=useAuthStore((state)=>state.user)
-  const [allData, setAllData]=useState([]);
+  const user = useAuthStore((state) => state.user)
+  const [allData, setAllData] = useState([]);
 
-  const dashboardData = useDashboardData((state)=>state.dashboardData)
-  const dashboardLoading = useDashboardData((state)=>state.dashboardLoading)
-  const getDashboardData = useDashboardData((state)=>state.getDashboardData)
+  const dashboardData = useDashboardData((state) => state.dashboardData)
+  const dashboardLoading = useDashboardData((state) => state.dashboardLoading)
+  const getDashboardData = useDashboardData((state) => state.getDashboardData)
 
 
 
-  const [tabData, setTableData] = useState ({
+  const [tabData, setTableData] = useState({
     posts,
     events,
     likedPosts,
+    likedProjects: [],
+    likedEvents: [],
     comments,
     savedPosts
   })
 
 
   // fetch dashboard data
-  const fetchDashboardData=async()=>{
+  const fetchDashboardData = async () => {
     try {
-      const res=await getDashboardData();
+      const res = await getDashboardData();
 
       // console.log(res);
       setAllData(res)
-      setTableData((prev=> ({...prev,posts:res?.posts?.data,comments:res?.comments?.data,savedPosts:res?.savedPosts?.data,events:res?.registeredEvent?.data})))
+      setTableData((prev => ({
+        ...prev,
+        posts: res?.posts?.data,
+        comments: res?.comments?.data,
+        savedPosts: res?.savedPosts?.data,
+        events: res?.registeredEvent?.data,
+        likedPosts: res?.likedData?.posts,
+        likedProjects: res?.likedData?.projects,
+        likedEvents: res?.likedData?.events
+      })))
 
-      
-      
     } catch (error) {
-      console.log(error);
-      
+
+
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchDashboardData();
-  },[])
+  }, [])
 
 
 
@@ -76,17 +87,40 @@ function Dashboard() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMobile, isSidebarOpen]);
 
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
+  const handlePostClick = (postId) => {
+    setSelectedPostId(postId);
+  };
+
+  const closePostModal = () => {
+    setSelectedPostId(null);
+  };
+
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(project);
+    setSelectedProjectId(project._id);
+  };
+
+  const closeProjectModal = () => {
+    setSelectedProjectId(null);
+    setSelectedProject(null);
+  };
+
   return (
-    <div className="min-h-screen bg-[#DDDCDB]">
+    <div className="min-h-screen bg-[#DDDCDB] dark:bg-gray-900 transition-colors duration-300">
       {/* Mobile Header */}
-      <MobileHeader 
+      <MobileHeader
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         user={user}
         activeTab={activeTab}
       />
 
-      <div className="flex">
+      <div className="flex min-h-screen">
         {/* Sidebar for Desktop, Drawer for Mobile */}
         <div className={`
           sidebar
@@ -94,8 +128,8 @@ function Dashboard() {
           ${isMobile && !isSidebarOpen ? '-translate-x-full' : ''}
           ${!isMobile ? 'relative w-64' : 'w-64'}
         `}>
-          <Sidebar 
-            activeTab={activeTab} 
+          <Sidebar
+            activeTab={activeTab}
             setActiveTab={setActiveTab}
             user={user}
             isMobile={isMobile}
@@ -114,15 +148,32 @@ function Dashboard() {
           ${isMobile && isSidebarOpen ? 'ml-0' : 'ml-0'}
           ${!isMobile ? 'ml-0' : ''}
         `}>
-          <MainContent 
-            activeTab={activeTab} 
-            data={tabData[activeTab]} 
+          <MainContent
+            activeTab={activeTab}
+            data={tabData[activeTab]}
             user={user}
             isMobile={isMobile}
             allData={allData}
+            onPostClick={handlePostClick}
+            onProjectClick={handleProjectClick}
           />
         </div>
       </div>
+
+      {selectedPostId && (
+        <PostDetailModal
+          postId={selectedPostId}
+          onClose={closePostModal}
+        />
+      )}
+
+      {selectedProjectId && (
+        <ProjectDetailModal
+          project={selectedProject}
+          postId={selectedProjectId}
+          onClose={closeProjectModal}
+        />
+      )}
     </div>
   );
 }

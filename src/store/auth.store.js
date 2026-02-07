@@ -21,8 +21,8 @@ export const useAuthStore = create(
       loading: false,
       token: getAuthToken() || null,
 
-      setAuthFlase:()=>{
-        set({isAuthenticated:false})
+      setAuthFlase: () => {
+        set({ isAuthenticated: false })
       },
 
       register: async (credentials) => {
@@ -55,12 +55,12 @@ export const useAuthStore = create(
 
           const res = await loginApi(credentials);
 
-          console.log(res);
+
 
           if (res?.user) {
             // localStorage.setItem("token", res?.token);
 
-            saveAuthToken(res?.token,false)
+            saveAuthToken(res?.token, false)
 
             set({
               user: res?.user,
@@ -80,9 +80,9 @@ export const useAuthStore = create(
         } catch (err) {
           set({ loading: false });
           console.log(err);
-          // toast.error(
-          //   err?.response?.data?.message || err.message || "Login failed",
-          // );
+          toast.error(
+            err?.response?.data?.message || err.message || "Login failed",
+          );
         }
       },
 
@@ -121,8 +121,8 @@ export const useAuthStore = create(
           set({ loading: true });
 
           const res = await meApi(); // expect user object
-          console.log(res);
-          
+
+
 
           if (res) {
             set({

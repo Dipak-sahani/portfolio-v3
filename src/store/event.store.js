@@ -20,7 +20,7 @@ export const useEventStore = create((set, get) => ({
         set((state) => ({ events: res.events, loading: false }));
       }
     } catch (error) {
-      console.log(error);
+
     }
   },
 
@@ -30,7 +30,7 @@ export const useEventStore = create((set, get) => ({
 
       set({ myRegisteredEvents: res?.data?.events || [] });
     } catch (error) {
-      console.log(error);
+
     }
   },
 

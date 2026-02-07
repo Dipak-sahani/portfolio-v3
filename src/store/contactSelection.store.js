@@ -11,7 +11,7 @@ export const useContacts = create((set) => ({
 
     try {
       const res = await getContact();
-      console.log(res);
+      // console.log(res);
       
       if (res) {
         // ✅ immutable update ensures re-render

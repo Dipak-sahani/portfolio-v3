@@ -35,6 +35,7 @@ export const usePostStore = create((set, get) => ({
     try {
       const { pagination, posts, loading } = get();
       if (loading) return;
+      if (!loadMore && posts?.length > 0) return;
 
       const nextPage = loadMore ? pagination.page + 1 : 1;
 
@@ -124,19 +125,19 @@ export const usePostStore = create((set, get) => ({
         posts: state.posts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                isLikedByMe: true, // mark as liked
-                likeCount: post.likeCount + 1, // increment like count locally
-              }
+              ...post,
+              isLikedByMe: true, // mark as liked
+              likeCount: post.likeCount + 1, // increment like count locally
+            }
             : post,
         ),
         currentPost:
           state.currentPost?._id === postId
             ? {
-                ...state.currentPost,
-                isLikedByMe: true,
-                likeCount: state.currentPost.likeCount + 1,
-              }
+              ...state.currentPost,
+              isLikedByMe: true,
+              likeCount: state.currentPost.likeCount + 1,
+            }
             : state.currentPost,
       }));
 
@@ -152,19 +153,19 @@ export const usePostStore = create((set, get) => ({
         posts: state.posts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                isLikedByMe: false, // mark as liked
-                likeCount: post.likeCount - 1, // increment like count locally
-              }
+              ...post,
+              isLikedByMe: false, // mark as liked
+              likeCount: post.likeCount - 1, // increment like count locally
+            }
             : post,
         ),
         currentPost:
           state.currentPost?._id === postId
             ? {
-                ...state.currentPost,
-                isLikedByMe: true,
-                likeCount: state.currentPost.likeCount + 1,
-              }
+              ...state.currentPost,
+              isLikedByMe: true,
+              likeCount: state.currentPost.likeCount + 1,
+            }
             : state.currentPost,
       }));
       return updatedPost;
@@ -179,18 +180,18 @@ export const usePostStore = create((set, get) => ({
         posts: state.posts.map((post) =>
           post._id === postId
             ? {
-                ...post,
-                isSavedByMe: true,
-              }
+              ...post,
+              isSavedByMe: true,
+            }
             : post,
         ),
         currentPost:
           state.currentPost?._id === postId
             ? {
-                ...state.currentPost,
-                isLikedByMe: true,
-                likeCount: state.currentPost.likeCount + 1,
-              }
+              ...state.currentPost,
+              isLikedByMe: true,
+              likeCount: state.currentPost.likeCount + 1,
+            }
             : state.currentPost,
       }));
       return updatedPost;

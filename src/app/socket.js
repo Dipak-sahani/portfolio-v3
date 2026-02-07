@@ -7,7 +7,7 @@ const token = getAuthToken();
 
 let socket;
 try {
-  
+
   socket = io(import.meta.env.VITE_API_BACKEND_URL, {
     transports: ["websocket"], // IMPORTANT
     auth: {
@@ -17,8 +17,8 @@ try {
     withCredentials: true,
   });
 } catch (error) {
-  console.log(error);
-  
+
+
 }
 
 export default socket;

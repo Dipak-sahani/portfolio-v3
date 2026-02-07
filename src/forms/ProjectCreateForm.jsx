@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faProjectDiagram,
   faCloudUploadAlt,
-  faCodeBranch,
   faPlus,
   faTimes,
   faTasks,
@@ -14,9 +13,10 @@ import { useAuthStore } from "../store/auth.store";
 import { useEffect } from "react";
 import ImagePreview from "../components/ImagePrev/ImagePreview";
 import dayjs from "dayjs";
+import { toast } from 'react-toastify';
 
 const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
-  const { createProject, loading ,updateProject} = useProjectStore();
+  const { createProject, loading, updateProject } = useProjectStore();
   const user = useAuthStore((state) => state.user);
   const [formData, setFormData] = useState({
     title: "",
@@ -43,8 +43,8 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
 
   useEffect(() => {
     if (initialData) {
-        // console.log(initialData);
-        
+      // console.log(initialData);
+
       setFormData({
         title: initialData.title || "",
         description: initialData.description || "",
@@ -89,7 +89,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
     // console.log("FILE RECEIVED:", file);
 
     if (!file) {
-      console.log("No file selected");
+
       return;
     }
 
@@ -113,11 +113,11 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
     e.preventDefault();
 
     const payload = {
-  ...formData,
-  techStack,
-  teamMembers,
-  images
-};
+      ...formData,
+      techStack,
+      teamMembers,
+      images
+    };
 
     if (initialData?._id) {
       await updateProject(initialData._id, payload);
@@ -126,20 +126,20 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
     }
 
 
-     setFormData({
-        title: "",
-        description:"",
-        domain:  "",
-        githubLink: "",
-        liveLink:  "",
-        completeness:  "idea",
-        startDate:  "",
-        endDate:  "",
-      });
+    setFormData({
+      title: "",
+      description: "",
+      domain: "",
+      githubLink: "",
+      liveLink: "",
+      completeness: "idea",
+      startDate: "",
+      endDate: "",
+    });
 
-      setTeamMembers( []);
-      setTechStack([]);
-      setImages([]);
+    setTeamMembers([]);
+    setTechStack([]);
+    setImages([]);
 
     onClose();
   };
@@ -149,9 +149,9 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
 
   return (
     <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+      <div className="bg-white dark:bg-gray-800 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-2xl transition-colors duration-300 custom-scrollbar">
         {/* Header */}
-        <div className="p-8 bg-[#3C4044] text-white flex justify-between">
+        <div className="p-8 bg-[#3C4044] dark:bg-gray-900 text-white flex justify-between rounded-t-lg">
           <h2 className="text-2xl font-bold flex items-center gap-3">
             <FontAwesomeIcon
               icon={faProjectDiagram}
@@ -172,7 +172,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
             name="description"
             placeholder="Project Description"
             value={formData.description}
-            className="border-2 border-[#FD7B41] w-full rounded-xl p-2"
+            className="border-2 border-[#FD7B41] dark:border-[#FD7B41]/50 w-full rounded-xl p-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
             rows={3}
             onChange={handleChange}
           />
@@ -181,33 +181,33 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
             name="title"
             value={formData.title}
             placeholder="Project Title"
-            className="border border-[#3C4044] rounded-xl p-2 mt-3"
+            className="border border-[#3C4044] dark:border-gray-600 rounded-xl p-2 mt-3 w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
             onChange={handleChange}
           />
 
           {/* TECH STACK */}
           <div>
-            <label className="font-bold text-sm">Tech Stack</label>
+            <label className="font-bold text-sm text-[#3C4044] dark:text-gray-300">Tech Stack</label>
             <div className="flex gap-2 mt-2">
               <input
                 value={techInput}
                 onChange={(e) => setTechInput(e.target.value)}
-                className="input flex-1 border-2 rounded-2xl py-2 px-4"
+                className="input flex-1 border-2 dark:border-gray-600 rounded-2xl py-2 px-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
                 placeholder="React, Node, AWS"
               />
-              <button type="button" onClick={addTech} className="btn-icon">
+              <button type="button" onClick={addTech} className="btn-icon bg-[#FD7B41] text-white p-2 rounded-full hover:bg-orange-600 transition">
                 <FontAwesomeIcon icon={faPlus} />
               </button>
             </div>
 
             <div className="flex flex-wrap gap-2 mt-3">
               {techStack.map((tech, i) => (
-                <span key={i} className="tag">
+                <span key={i} className="tag bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded-full text-sm flex items-center gap-2 dark:text-gray-200">
                   {tech}
                   <FontAwesomeIcon
                     icon={faTimes}
                     onClick={() => removeTech(i)}
-                    className="cursor-pointer ml-2"
+                    className="cursor-pointer ml-2 text-red-500 hover:text-red-700"
                   />
                 </span>
               ))}
@@ -215,7 +215,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
           </div>
 
           {/* IMAGE UPLOAD */}
-          <div className="border-dashed border-2 p-6 rounded-xl text-center">
+          <div className="border-dashed border-2 border-gray-300 dark:border-gray-600 p-6 rounded-xl text-center hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
             <input
               type="file"
               hidden
@@ -232,7 +232,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
                 icon={faCloudUploadAlt}
                 className="text-3xl text-[#FD7B41]"
               />
-              <p className="mt-2 text-sm">Upload Screenshot</p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Upload Screenshot</p>
             </label>
 
             <div className="grid grid-cols-3 gap-3 mt-4">
@@ -241,7 +241,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
                   <ImagePreview
                     src={img}
                     alt="project"
-                    className="rounded-lg object-cover h-24 w-full"
+                    className="rounded-lg object-cover h-24 w-full border dark:border-gray-600"
                   />
                 </div>
               ))}
@@ -249,14 +249,14 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2">
+            <label className="block text-sm font-bold mb-2 text-[#3C4044] dark:text-gray-300">
               Project Status
             </label>
             <select
               name="completeness"
               value={formData.completeness}
               onChange={handleChange}
-              className="w-full p-3 rounded-xl border-2"
+              className="w-full p-3 rounded-xl border-2 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
             >
               <option value="idea">Idea</option>
               <option value="planning">Planning</option>
@@ -265,43 +265,45 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
               <option value="launched">Launched</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-bold mb-2">Start Date {initialData&&`: ${dayjs(initialData.startDate).format("DD/MM/YYYY")}`}</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full p-3 rounded-xl border-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-bold mb-2">End Date {initialData&&`: ${dayjs(initialData.endDate).format("DD/MM/YYYY")}`}</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full p-3 rounded-xl border-2"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-bold mb-2 text-[#3C4044] dark:text-gray-300">Start Date {initialData && `: ${dayjs(initialData.startDate).format("DD/MM/YYYY")}`}</label>
+              <input
+                type="date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl border-2 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-2 text-[#3C4044] dark:text-gray-300">End Date {initialData && `: ${dayjs(initialData.endDate).format("DD/MM/YYYY")}`}</label>
+              <input
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl border-2 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
+              />
+            </div>
           </div>
 
           {/* // team member */}
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-bold mb-2">Team Members</label>
+            <label className="block text-sm font-bold mb-2 text-[#3C4044] dark:text-gray-300">Team Members</label>
 
             <div className="flex gap-2">
               <input
                 value={memberInput}
                 onChange={(e) => setMemberInput(e.target.value)}
                 placeholder="Username / Email / Role"
-                className="flex-1 p-3 rounded-xl border-2"
+                className="flex-1 p-3 rounded-xl border-2 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FD7B41]"
               />
               <button
                 type="button"
                 onClick={addTeamMember}
-                className="px-4 rounded-xl bg-[#FD7B41] text-white font-bold"
+                className="px-4 rounded-xl bg-[#FD7B41] text-white font-bold hover:bg-orange-600 transition"
               >
                 Add
               </button>
@@ -311,13 +313,13 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
               {teamMembers.map((member, i) => (
                 <span
                   key={i}
-                  className="bg-gray-200 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                  className="bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded-full text-sm flex items-center gap-2 dark:text-gray-200"
                 >
                   {member}
                   <button
                     type="button"
                     onClick={() => removeTeamMember(i)}
-                    className="text-red-500 font-bold"
+                    className="text-red-500 font-bold hover:text-red-700"
                   >
                     ×
                   </button>
@@ -329,7 +331,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary bg-green-400 rounded-2xl cursor-pointer w-fit h-fit px-4 py-2 hover:scale-110 transition"
+            className="btn-primary bg-green-500 text-white font-bold rounded-2xl cursor-pointer w-fit h-fit px-6 py-3 hover:scale-105 transition shadow-lg flex items-center gap-2"
           >
             <FontAwesomeIcon icon={faTasks} />
             {initialData ? "Update Project" : "Create Project"}
