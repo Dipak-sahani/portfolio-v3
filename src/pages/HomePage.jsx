@@ -119,12 +119,14 @@ const HomePage = () => {
             <HoverPauseScroll />
           </motion.div>
 
-          <motion.div
-            className="mt-16 w-full max-w-5xl"
-            variants={itemVariants}
-          >
-            <CTASection />
-          </motion.div>
+          {!isAuthenticated && (
+            <motion.div
+              className="mt-16 w-full max-w-5xl"
+              variants={itemVariants}
+            >
+              <CTASection />
+            </motion.div>
+          )}
 
           <motion.div
             className="mt-20 w-full max-w-5xl"

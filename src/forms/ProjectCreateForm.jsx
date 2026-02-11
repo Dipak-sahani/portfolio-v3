@@ -85,63 +85,58 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
   };
 
   /* ---------- IMAGE UPLOAD ---------- */
-  const handleImageUpload = async (file) => {
-    // console.log("FILE RECEIVED:", file);
-
-    if (!file) {
-
-      return;
-    }
-
-    if (!user?._id) {
-      toast.error("Please login to upload images");
-      return;
-    }
-
-    try {
-      const url = await uploadImage(file, user._id);
-      // console.log("UPLOAD SUCCESS URL:", url);
-
-      setImages((prev) => [...prev, url]);
-    } catch (error) {
-      console.error("UPLOAD FAILED:", error);
-    }
+  const handleImageUpload = (file) => {
+    if (!file) return;
+    setImages((prev) => [...prev, file]);
   };
 
   /* ---------- SUBMIT ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      ...formData,
-      techStack,
-      teamMembers,
-      images
-    };
+    const payload = new FormData();
 
-    if (initialData?._id) {
-      await updateProject(initialData._id, payload);
-    } else {
-      await createProject(payload);
-    }
-
-
-    setFormData({
-      title: "",
-      description: "",
-      domain: "",
-      githubLink: "",
-      liveLink: "",
-      completeness: "idea",
-      startDate: "",
-      endDate: "",
+    // Append standard fields
+    Object.keys(formData).forEach(key => {
+      payload.append(key, formData[key]);
     });
 
-    setTeamMembers([]);
-    setTechStack([]);
-    setImages([]);
+    // Append arrays
+    techStack.forEach(tech => payload.append("techStack", tech));
+    teamMembers.forEach(member => payload.append("teamMembers", member));
 
-    onClose();
+    // Append images (files and URLs)
+    images.forEach(img => {
+      payload.append("images", img);
+    });
+
+    try {
+      if (initialData?._id) {
+        await updateProject(initialData._id, payload);
+      } else {
+        await createProject(payload);
+      }
+
+      setFormData({
+        title: "",
+        description: "",
+        domain: "",
+        githubLink: "",
+        liveLink: "",
+        completeness: "idea",
+        startDate: "",
+        endDate: "",
+      });
+
+      setTeamMembers([]);
+      setTechStack([]);
+      setImages([]);
+
+      onClose();
+    } catch (error) {
+      console.error("Project submission error:", error);
+      toast.error("Failed to save project");
+    }
   };
 
   if (!isProjectAdd) return null;
@@ -239,7 +234,7 @@ const CreateProjectForm = ({ isProjectAdd, onClose, initialData = null }) => {
               {images.map((img, i) => (
                 <div key={i}>
                   <ImagePreview
-                    src={img}
+                    src={typeof img === 'string' ? img : URL.createObjectURL(img)}
                     alt="project"
                     className="rounded-lg object-cover h-24 w-full border dark:border-gray-600"
                   />

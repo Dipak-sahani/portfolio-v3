@@ -18,7 +18,7 @@ import {
 import { getMessagesByConversation } from "../../services/message.service";
 import { useAuthStore } from "../../store/auth.store";
 import socket from "../../app/socket";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useContacts } from "../../store/contactSelection.store";
 import { useCallback } from "react";
 
@@ -35,6 +35,7 @@ const ChatArea = ({ activeContact }) => {
   const [newMessage, setNewMessage] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
   // console.log(id);
   const selectedContact = useContacts((state) => state.selectedContact);
   // console.log(selectedContact);
@@ -132,7 +133,7 @@ const ChatArea = ({ activeContact }) => {
     if (!newMessage.trim() || !selectedContact) return;
 
     if (!socket.connected) {
-      console.log("Socket not connected");
+      // console.log("Socket not connected");
 
       // console.error("Socket not connected");
       return;
@@ -354,12 +355,24 @@ const ChatArea = ({ activeContact }) => {
     >
       {/* Header */}
       <div className="p-4 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center sticky transition-colors">
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
-            {selectedContact.avatar}
+        <div
+          className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => {
+            if (selectedContact?.id) {
+              navigate(`/profile/${selectedContact.id}`);
+            }
+          }}
+        >
+          <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold overflow-hidden">
+            {/* If avatar is URL, show img, else text */}
+            {(selectedContact.avatar && selectedContact.avatar.length > 2) ? (
+              <img src={selectedContact.avatar} alt={selectedContact.name} className="w-full h-full object-cover" />
+            ) : (
+              selectedContact.avatar
+            )}
           </div>
           <div className="ml-3">
-            <h3 className="font-bold text-gray-900 dark:text-gray-100">{selectedContact.name}</h3>
+            <h3 className="font-bold text-gray-900 dark:text-gray-100 hover:underline">{selectedContact.name}</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               <span
                 className={`inline-block w-2 h-2 rounded-full mr-1 ${statusColor}`}

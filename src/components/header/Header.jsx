@@ -196,15 +196,16 @@ const Header = () => {
           <div className="w-[15%] md:w-[10%] flex justify-start">
             <Link to="/" className="flex items-center gap-2 group">
               <img
-                src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/logo.png"
+                // src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/logo.png"
+                src='/images/logo.png'
                 alt="Berojgar Founder Logo"
                 className="w-8 h-12 sm:w-10 sm:h-14 object-contain transition-transform duration-300 group-hover:scale-110"
               />
               <div className="flex flex-col leading-none">
-                <h1 className="text-lg sm:text-2xl font-extrabold text-[#3C4044] dark:text-gray-100 tracking-tight">
-                  <span className="text-[#FD7B41]">Be</span>rojgar
+                <h1 className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-100 tracking-tight">
+                  <span className="text-red-500">Be</span>rojgar
                 </h1>
-                <span className="text-lg sm:text-sm font-bold text-gray-800 dark:text-gray-300 tracking-widest uppercase">Founder</span>
+                <span className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-300 tracking-tight ">Founder</span>
               </div>
             </Link>
           </div>
@@ -376,7 +377,7 @@ const Header = () => {
                         <Link to="/startup-profile" className={`${menuItem}`}>
                           Startup
                         </Link>
-                        <Link to="/create-page" className={`${menuItem}`}>
+                        <Link to="/page-builder" className={`${menuItem}`}>
                           Create Page / Product
                         </Link>
 

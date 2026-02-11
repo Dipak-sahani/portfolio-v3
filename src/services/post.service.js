@@ -11,13 +11,13 @@ const handleApiError = (error) => {
 // Posts API
 export const createPost = async (postData) => {
   try {
-    const res = await API.post('/post', postData,{
-    headers: {
-      'Content-Type': 'multipart/form-data' // Browser usually sets this automatically with FormData
-    }
-  });
+    const res = await API.post('/post', postData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     // console.log(res);
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -28,18 +28,18 @@ export const getPosts = async (params = {}, isAuthenticated) => {
   try {
     const query = new URLSearchParams(params).toString();
     let res
-    if(isAuthenticated){
-     res = await API.get(`/post?${query}`);
+    if (isAuthenticated) {
+      res = await API.get(`/post?${query}`);
       console.log(res);
-      
+
     }
-    else{
-    res = await API.get(`/post/unauthorized?${query}`);
+    else {
+      res = await API.get(`/post/unauthorized?${query}`);
 
     }
 
     // console.log(res);
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -50,7 +50,7 @@ export const getPostById = async (postId) => {
   try {
     const res = await API.get(`/post/${postId}`);
     console.log(res);
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -78,13 +78,13 @@ export const deletePost = async (postId) => {
 export const likePost = async (postId) => {
   try {
     console.log("2");
-    
+
     const res = await API.patch(`/post/${postId}/like`);
     console.log(res);
-    if (res.status==200) {
+    if (res.status == 200) {
       toast.success(res.data.message)
     }
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -95,10 +95,10 @@ export const unLikePost = async (postId) => {
   try {
     const res = await API.patch(`/post/${postId}/unlike`);
     // console.log(res);
-    if (res.status==200) {
+    if (res.status == 200) {
       toast.success(res.data?.message)
     }
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);
@@ -109,7 +109,7 @@ export const savePost = async (postId) => {
   try {
     const res = await API.patch(`/post/${postId}/post-save`);
     // console.log(res);
-    
+
     return res.data.data;
   } catch (error) {
     handleApiError(error);

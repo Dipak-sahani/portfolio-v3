@@ -6,7 +6,7 @@ import {
   faCross,
   faXmark
 } from '@fortawesome/free-solid-svg-icons';
-import { uploadImage } from '../../services/upload.service';
+
 import { useAuthStore } from '../../store/auth.store';
 import { toast } from 'react-toastify';
 import { createEvent } from '../../services/event.service';
@@ -96,27 +96,7 @@ const EventCreationWizard = ({ onClose }) => {
   };
 
   const user = useAuthStore((state) => state.user)
-  const [uploading, setUploading] = useState(false);
-
-  const handleUpload = async () => {
-    if (!formData.coverImage) return;
-
-    try {
-      setUploading(true);
-
-      // Call your existing upload function
-      const publicUrl = await uploadImage(formData.coverImage, user._id);
-
-      // Save the returned URL in formData
-      setFormData((prev) => ({ ...prev, coverImage: publicUrl }));
-      toast.success('Image uploaded successfully!');
-    } catch (err) {
-      console.error('Error uploading image:', err);
-      //   toast.error('Failed to upload image.');
-    } finally {
-      setUploading(false);
-    }
-  };
+  /* Removed handleUpload */
 
 
   return (
@@ -200,22 +180,10 @@ const EventCreationWizard = ({ onClose }) => {
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 text-[#3C4044] dark:text-gray-300 rounded-2xl outline-none font-bold border-2 border-transparent dark:border-gray-600 transition-colors"
                   />
 
-                  {/* Upload button */}
-                  {formData?.coverImage && (
-                    <button
-                      type="button"
-                      onClick={handleUpload}
-                      disabled={uploading}
-                      className="mt-2 px-6 py-2 bg-[#FD7B41] text-white rounded-full font-bold text-sm disabled:opacity-50"
-                    >
-                      {uploading ? 'Uploading...' : 'Upload Image'}
-                    </button>
-                  )}
-
                   {/* Show uploaded image */}
                   {formData.coverImage && (
                     <p className="text-[10px] mt-2 text-green-600 font-bold">
-                      Uploaded: {formData?.coverImage?.name}
+                      Selected: {formData?.coverImage?.name || "Image"}
                     </p>
                   )}
                 </div>

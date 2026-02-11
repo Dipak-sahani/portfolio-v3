@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faTimes, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "../../store/auth.store";
-import { uploadImage } from "../../services/upload.service";
 import { updateProfileApi } from "../../services/auth.service";
 
 const EditProfileForm = ({ isOpen, onClose }) => {
@@ -73,52 +72,57 @@ const EditProfileForm = ({ isOpen, onClose }) => {
     setForm({ ...form, [e.target.name]: e.target.files[0] });
   };
 
+  /* ---------- SUBMIT ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = { userId: user._id };
-
-    // Upload avatar if exists
-    if (form.avatar) {
-      payload.avatar = await uploadImage(form.avatar, "avatars");
-    }
-
-    // Upload cover image if exists
-    if (form.coverImage) {
-      payload.coverImage = await uploadImage(form.coverImage, "covers");
-    }
+    const data = new FormData();
+    data.append("userId", user._id);
 
     // Helper to process arrays
     const processArray = (str) =>
       str ? str.split(",").map(s => s.trim()).filter(Boolean) : [];
 
-    // Map form fields to payload
-    const textFields = ["username", "city", "country", "headline", "bio", "timeCommitment"];
-    textFields.forEach(key => payload[key] = form[key]);
+    // Map simple text fields
+    const textFields = ["username", "city", "country", "headline", "bio", "timeCommitment", "experienceLevel", "lookingFor"];
+    textFields.forEach(key => {
+      if (form[key]) data.append(key, form[key]);
+    });
 
-    // Enum fields (only send if valid value)
-    if (form.experienceLevel) payload.experienceLevel = form.experienceLevel;
-    if (form.lookingFor) payload.lookingFor = form.lookingFor;
+    // Map array fields - append each item individually
+    const arrayFields = ["skills", "interests", "languages", "startupStagePreference"];
+    arrayFields.forEach(key => {
+      const arr = processArray(form[key]);
+      arr.forEach(item => data.append(key, item));
+    });
 
-    // Map array fields
-    payload.skills = processArray(form.skills);
-    payload.interests = processArray(form.interests);
-    payload.languages = processArray(form.languages);
-    payload.startupStagePreference = processArray(form.startupStagePreference);
-
-    // Social Links
-    payload.socialLogins = {
+    // Social Links - send as JSON string
+    const socialLogins = {
       github: form.github,
       linkedin: form.linkedin,
       twitter: form.twitter
     };
+    data.append("socialLogins", JSON.stringify(socialLogins));
 
     // Boolean fields
-    payload.remotePreference = form.remotePreference;
+    data.append("remotePreference", form.remotePreference);
 
-    const updated = await updateProfileApi(payload);
-    setUser(updated.user);
-    onClose();
+    // Files and existing images
+    if (form.avatar) {
+      data.append("avatar", form.avatar);
+    }
+    if (form.coverImage) {
+      data.append("coverImage", form.coverImage);
+    }
+
+    try {
+      const updated = await updateProfileApi(data);
+      setUser(updated.user);
+      onClose();
+    } catch (error) {
+      console.error("Update profile error:", error);
+      // toast handling is likely in the service or global error handler, but good to have fallback
+    }
   };
 
   return (

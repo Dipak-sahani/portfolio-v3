@@ -224,7 +224,7 @@ const PostCard = ({ postId, post: propPost }) => {
 
         {/* Post Content */}
         <div className="mb-3">
-          <p className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-line">
+          <p className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-line text-start">
             {displayContent}
             {showSeeMore && (
               <button

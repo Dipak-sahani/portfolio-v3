@@ -1,7 +1,7 @@
+import axios from "axios";
 import { toast } from "react-toastify";
-import { supabase } from "../lib/supabase";
 
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB matching backend limit
 const ALLOWED_TYPES = [
   "image/png",
   "image/x-png",
@@ -10,11 +10,7 @@ const ALLOWED_TYPES = [
   "image/webp",
 ];
 
-// safer uuid fallback
-const generateUUID = () =>
-  crypto?.randomUUID?.() || Date.now().toString();
-
-export const uploadImage = async (file, folder = "general") => {
+export const uploadImage = async (file) => {
   try {
     if (!file) {
       throw new Error("No file provided");
@@ -25,34 +21,27 @@ export const uploadImage = async (file, folder = "general") => {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error("Image must be less than 1MB");
+      throw new Error("Image must be less than 5MB");
     }
 
-    const ext = file.name.split(".").pop();
-    const fileName = `${generateUUID()}.${ext}`;
-    const filePath = `${folder}/${fileName}`;
+    const formData = new FormData();
+    formData.append("image", file);
 
-    const { error: uploadError } = await supabase.storage
-      .from("user-images")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-        contentType: file.type,
-      });
+    const response = await axios.post("/api/builder/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-    if (uploadError) throw uploadError;
-
-    const { data } = supabase.storage
-      .from("user-images")
-      .getPublicUrl(filePath);
-
-    if (!data?.publicUrl) {
-      throw new Error("Failed to get public URL");
+    if (!response.data || !response.data.url) {
+      throw new Error("Failed to get upload URL from server");
     }
 
-    return data.publicUrl;
+    return response.data.url;
   } catch (error) {
-    toast.error(error.message || "Error uploading image");
-    throw error; // ✅ IMPORTANT: propagate error
+    console.error("Upload service error:", error);
+    const message = error.response?.data?.message || error.message || "Error uploading image";
+    toast.error(message);
+    throw error;
   }
 };

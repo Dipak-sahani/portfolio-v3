@@ -155,10 +155,12 @@ export const mySession = async () => {
 
 
 
-export const updateProfileApi = async (formData) => {
-  // console.log(formData);
-
-  const res = await API.put("/users/profile", formData);
+export const updateProfile = async (formData) => {
+  const res = await API.put("/users/profile", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 };
 

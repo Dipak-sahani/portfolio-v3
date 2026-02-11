@@ -32,6 +32,7 @@ import StartupProfile from "../pages/startupAndBusinessPages/StartupProfile";
 import StartupForm from "../pages/startupAndBusinessPages/StartupForm";
 import MyStartupProfile from "../pages/startupAndBusinessPages/MyStartupProfile";
 import PostDetailsPage from "../pages/PostDetailsPage";
+import PageBuilder from "../pages/PageBuilder";
 
 
 
@@ -92,6 +93,10 @@ const AppRoutes = () => {
 
 
           <Route path="/startup-idea" element={<IdeaSelectionPage />} />
+
+          {/* Page Builder Route */}
+          <Route path="/page-builder" element={<PageBuilder />} />
+          <Route path="/page-builder/:pageId" element={<PageBuilder />} />
 
 
 

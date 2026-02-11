@@ -97,8 +97,8 @@ const StartupForm = ({ initialData, isEdit = false, onClose }) => {
               type="button"
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-all ${activeTab === tab
-                  ? 'text-[#FD7B41] border-b-4 border-[#FD7B41] bg-white dark:bg-gray-800'
-                  : 'text-gray-400 hover:text-[#3C4044] dark:hover:text-gray-200'
+                ? 'text-[#FD7B41] border-b-4 border-[#FD7B41] bg-white dark:bg-gray-800'
+                : 'text-gray-400 hover:text-[#3C4044] dark:hover:text-gray-200'
                 }`}
             >
               {tab}
@@ -111,6 +111,37 @@ const StartupForm = ({ initialData, isEdit = false, onClose }) => {
           {/* SECTION 1: BASICS */}
           {activeTab === 'basics' && (
             <div className="space-y-6 animate-fadeIn">
+
+              {/* Image Uploads */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Startup Logo</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) setFormData(prev => ({ ...prev, logoFile: file }));
+                    }}
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EDBF9B] file:text-[#3C4044] hover:file:bg-[#FD7B41]"
+                  />
+                  {formData.logoFile && <p className="text-xs mt-1 text-green-500">Selected: {formData.logoFile.name}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Cover Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) setFormData(prev => ({ ...prev, coverImageFile: file }));
+                    }}
+                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EDBF9B] file:text-[#3C4044] hover:file:bg-[#FD7B41]"
+                  />
+                  {formData.coverImageFile && <p className="text-xs mt-1 text-green-500">Selected: {formData.coverImageFile.name}</p>}
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Startup Name *</label>

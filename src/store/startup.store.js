@@ -30,27 +30,50 @@ export const useStartupStore = create((set, get) => ({
     }
   },
 
-  saveStartup: async (formData) => {
+  saveStartup: async (data) => {
     set({ isLoading: true });
-    console.log(formData);
-
     try {
-      const isEdit = !!formData._id;
+      const isEdit = !!data._id;
+
+      const formData = new FormData();
+
+      // Append all fields
+      Object.keys(data).forEach(key => {
+        if (key === 'socialLinks') {
+          Object.keys(data.socialLinks).forEach(socialKey => {
+            formData.append(`socialLinks[${socialKey}]`, data.socialLinks[socialKey]);
+          });
+        } else if (Array.isArray(data[key])) {
+          data[key].forEach(item => formData.append(key, item));
+        } else if (key === 'logoFile') {
+          if (data.logoFile) formData.append('logo', data.logoFile);
+        } else if (key === 'coverImageFile') {
+          if (data.coverImageFile) formData.append('coverImage', data.coverImageFile);
+        } else if (key !== 'logo' && key !== 'coverImage') {
+          // Exclude existing URL strings if we're uploading new files? 
+          // Actually, backend update usually merges. 
+          // typically we just append everything else
+          formData.append(key, data[key]);
+        }
+      });
+
+
       const response = isEdit
-        ? await API.put(`/startup/${formData._id}`, formData)
-        : await API.post('/startup', formData);
-
-
+        ? await API.put(`/startup/${data._id}`, formData, { headers: { "Content-Type": "multipart/form-data" } })
+        : await API.post('/startup', formData, { headers: { "Content-Type": "multipart/form-data" } });
 
       const updatedStartup = response.data.data;
 
-
-      set({
-        myStartup: updatedStartup,
+      set((state) => ({
+        myStartup: updatedStartup, // Update store directly
         isLoading: false
-      });
+      }));
+
+      // Refresh list if needed (optional)
+
       return { success: true };
     } catch (err) {
+      console.error(err);
       set({ isLoading: false });
       return { success: false, error: err.response?.data?.message };
     }
