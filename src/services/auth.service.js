@@ -155,7 +155,7 @@ export const mySession = async () => {
 
 
 
-export const updateProfile = async (formData) => {
+export const updateProfileApi = async (formData) => {
   const res = await API.put("/users/profile", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
