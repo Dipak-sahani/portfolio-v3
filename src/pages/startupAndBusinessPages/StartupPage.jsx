@@ -2,6 +2,7 @@ import { useState } from "react";
 import { STARTUP_IDEAS } from "../../../public/data/journeyData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faMoneyBillWave } from "@fortawesome/free-solid-svg-icons";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function StartupExplorer() {
@@ -86,8 +87,8 @@ export default function StartupExplorer() {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedKey(key)}
                 className={`w-full text-left px-4 py-2 rounded-lg transition-colors text-sm ${selectedKey === key
-                    ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-medium"
-                    : "hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-medium"
+                  : "hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
                   }`}
               >
                 {value.title}
@@ -136,107 +137,155 @@ export default function StartupExplorer() {
                 </motion.p>
               </div>
 
-              {/* Problem */}
-              {idea.problem && (
-                <motion.section
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <h3 className="font-semibold text-lg sm:text-xl mb-2 flex items-center dark:text-gray-200">
-                    <FontAwesomeIcon
-                      icon={faLightbulb}
-                      className="mr-2 text-yellow-500"
-                    />
-                    Problem
-                  </h3>
+              {/* Check if idea has the new detailed structure */}
+              {idea["1_idea_and_vision"] ? (
+                <div className="space-y-8">
+                  {Object.entries(idea).map(([key, sectionData], index) => {
+                    // Filter out title, tagline, categories, etc.
+                    if (key === 'title' || key === 'tagline' || key === 'categories') return null;
 
-                  {Array.isArray(idea.problem) ? (
-                    <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
-                      {idea.problem.map((p, i) => (
-                        <li key={i}>{p}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="space-y-3 text-sm sm:text-base dark:text-gray-300">
-                      <div>
-                        <h4 className="font-medium dark:text-gray-200">Customers</h4>
-                        <ul className="list-disc pl-5">
-                          {idea.problem.customers?.map((p, i) => (
+                    // Helper helper to format key: "1_idea_and_vision" -> "1. Idea and Vision"
+                    const formatTitle = (k) => {
+                      const parts = k.split('_');
+                      if (!isNaN(parts[0])) {
+                        return parts.shift() + '. ' + parts.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                      }
+                      return k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    };
+
+                    return (
+                      <motion.section
+                        key={key}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 * index }}
+                        className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg"
+                      >
+                        <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">
+                          {formatTitle(key)}
+                        </h3>
+                        <div className="grid grid-cols-1 gap-4">
+                          {Object.entries(sectionData).map(([subKey, value]) => (
+                            <div key={subKey}>
+                              <h4 className="font-semibold text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                                {subKey.replace(/_/g, ' ')}
+                              </h4>
+                              <p className="text-gray-700 dark:text-gray-300">
+                                {value}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.section>
+                    );
+                  })}
+                </div>
+              ) : (
+                /* Legacy View */
+                <>
+                  {/* Problem */}
+                  {idea.problem && (
+                    <motion.section
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <h3 className="font-semibold text-lg sm:text-xl mb-2 flex items-center dark:text-gray-200">
+                        <FontAwesomeIcon
+                          icon={faLightbulb}
+                          className="mr-2 text-yellow-500"
+                        />
+                        Problem
+                      </h3>
+
+                      {Array.isArray(idea.problem) ? (
+                        <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
+                          {idea.problem.map((p, i) => (
                             <li key={i}>{p}</li>
                           ))}
                         </ul>
-                      </div>
+                      ) : (
+                        <div className="space-y-3 text-sm sm:text-base dark:text-gray-300">
+                          <div>
+                            <h4 className="font-medium dark:text-gray-200">Customers</h4>
+                            <ul className="list-disc pl-5">
+                              {idea.problem.customers?.map((p, i) => (
+                                <li key={i}>{p}</li>
+                              ))}
+                            </ul>
+                          </div>
 
-                      <div>
-                        <h4 className="font-medium dark:text-gray-200">Service Providers</h4>
-                        <ul className="list-disc pl-5">
-                          {idea.problem.providers?.map((p, i) => (
-                            <li key={i}>{p}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                          <div>
+                            <h4 className="font-medium dark:text-gray-200">Service Providers</h4>
+                            <ul className="list-disc pl-5">
+                              {idea.problem.providers?.map((p, i) => (
+                                <li key={i}>{p}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+                    </motion.section>
                   )}
-                </motion.section>
-              )}
 
-              {/* Solution */}
-              {idea.solution && (
-                <motion.section
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <h3 className="font-semibold text-lg sm:text-xl mb-2 dark:text-gray-200">
-                    Solution
-                  </h3>
-                  <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
-                    {idea.solution.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ul>
-                </motion.section>
-              )}
+                  {/* Solution */}
+                  {idea.solution && (
+                    <motion.section
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      <h3 className="font-semibold text-lg sm:text-xl mb-2 dark:text-gray-200">
+                        Solution
+                      </h3>
+                      <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
+                        {idea.solution.map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </motion.section>
+                  )}
 
-              {/* Revenue */}
-              {idea.revenueModel && (
-                <motion.section
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <h3 className="font-semibold text-lg sm:text-xl mb-2 flex items-center dark:text-gray-200">
-                    <FontAwesomeIcon
-                      icon={faMoneyBillWave}
-                      className="mr-2 text-green-600"
-                    />
-                    Revenue Model
-                  </h3>
-                  <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
-                    {idea.revenueModel.map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
-                </motion.section>
-              )}
+                  {/* Revenue */}
+                  {idea.revenueModel && (
+                    <motion.section
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      <h3 className="font-semibold text-lg sm:text-xl mb-2 flex items-center dark:text-gray-200">
+                        <FontAwesomeIcon
+                          icon={faMoneyBillWave}
+                          className="mr-2 text-green-600"
+                        />
+                        Revenue Model
+                      </h3>
+                      <ul className="list-disc pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
+                        {idea.revenueModel.map((r, i) => (
+                          <li key={i}>{r}</li>
+                        ))}
+                      </ul>
+                    </motion.section>
+                  )}
 
-              {/* Roadmap */}
-              {idea.roadmap && (
-                <motion.section
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <h3 className="font-semibold text-lg sm:text-xl mb-2 dark:text-gray-200">
-                    Roadmap
-                  </h3>
-                  <ol className="list-decimal pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
-                    {idea.roadmap.map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ol>
-                </motion.section>
+                  {/* Roadmap */}
+                  {idea.roadmap && (
+                    <motion.section
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <h3 className="font-semibold text-lg sm:text-xl mb-2 dark:text-gray-200">
+                        Roadmap
+                      </h3>
+                      <ol className="list-decimal pl-5 space-y-1 text-sm sm:text-base dark:text-gray-300">
+                        {idea.roadmap.map((r, i) => (
+                          <li key={i}>{r}</li>
+                        ))}
+                      </ol>
+                    </motion.section>
+                  )}
+                </>
               )}
             </motion.div>
           </AnimatePresence>

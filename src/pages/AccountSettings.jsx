@@ -14,6 +14,7 @@ const AccountSettings = () => {
     const [formData, setFormData] = useState({
         fullName: user?.fullName || '',
         email: user?.email || '',
+        isPublic: user?.isPublic ?? true, // Default to true if undefined
     });
     const [passwords, setPasswords] = useState({
         oldPassword: '',
@@ -80,6 +81,29 @@ const AccountSettings = () => {
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white p-2 shadow-sm focus:border-[#FD7B41] focus:ring-[#FD7B41] outline-none transition-colors"
                         />
+                    </div>
+
+                    <div className="md:col-span-2 pt-2">
+                        <label className="flex items-center space-x-3 cursor-pointer">
+                            <div className="relative">
+                                <input
+                                    type="Checkbox"
+                                    className="sr-only"
+                                    checked={formData.isPublic}
+                                    onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
+                                />
+                                <div className={`block w-14 h-8 rounded-full transition-colors ${formData.isPublic ? 'bg-[#FD7B41]' : 'bg-gray-400'}`}></div>
+                                <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${formData.isPublic ? 'transform translate-x-6' : ''}`}></div>
+                            </div>
+                            <div className="text-gray-700 dark:text-gray-200 font-medium">
+                                {formData.isPublic ? 'Public Profile' : 'Private Profile'}
+                            </div>
+                        </label>
+                        <p className="text-xs text-gray-500 mt-1 ml-16">
+                            {formData.isPublic
+                                ? "Your profile is visible to everyone on the platform."
+                                : "Your profile is hidden from search and public lists."}
+                        </p>
                     </div>
                 </div>
                 <button type="submit" className="bg-[#3C4044] dark:bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 transition">

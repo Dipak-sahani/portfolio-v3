@@ -64,25 +64,25 @@ const Header = () => {
   {
     id: 3,
     title: "Pitch Decks",
-    isEnable: false,
+    isEnable: true,
     link: '/pitch-decks'
   },
   {
     id: 4,
     title: "Funding & Investors",
-    isEnable: false,
+    isEnable: true,
     link: '/funding-investors'
   },
   {
     id: 5,
     title: "Incubators & Accelerators",
-    isEnable: false,
+    isEnable: true,
     link: '/incubators'
   },
   {
     id: 6,
     title: "Mentorship",
-    isEnable: false,
+    isEnable: true,
     link: '/mentorship'
   },
   {
@@ -102,37 +102,37 @@ const Header = () => {
     {
       id: 9,
       title: "Developers",
-      isEnable: false,
+      isEnable: true,
       link: '/developers'
     },
     {
       id: 10,
       title: "Designers",
-      isEnable: false,
+      isEnable: true,
       link: '/designers'
     },
     {
       id: 11,
       title: "Marketers",
-      isEnable: false,
+      isEnable: true,
       link: '/marketers'
     },
     {
       id: 12,
       title: "Advisors",
-      isEnable: false,
+      isEnable: true,
       link: '/advisors'
     },
     {
       id: 13,
       title: "Freelancers",
-      isEnable: false,
+      isEnable: true,
       link: '/freelancers'
     },
     {
       id: 14,
       title: "Teams",
-      isEnable: false,
+      isEnable: true,
       link: '/team'
     }
   ]
@@ -142,43 +142,43 @@ const Header = () => {
     {
       id: 15,
       title: "Website Builder",
-      isEnable: false,
+      isEnable: true,
       link: '/website-builder'
     },
     {
       id: 16,
       title: "Payment Integration",
-      isEnable: false,
+      isEnable: true,
       link: '/payment'
     },
     {
       id: 17,
       title: "Legal & Compliance",
-      isEnable: false,
+      isEnable: true,
       link: '/legal-compliance'
     },
     {
       id: 18,
       title: "Accounting & GST",
-      isEnable: false,
+      isEnable: true,
       link: '/accounting'
     },
     {
       id: 19,
       title: "Marketing Tools",
-      isEnable: false,
+      isEnable: true,
       link: '/marketing'
     },
     {
       id: 20,
       title: "Analytics",
-      isEnable: false,
+      isEnable: true,
       link: '/analytics'
     },
     {
       id: 21,
       title: "AI Tools",
-      isEnable: false,
+      isEnable: true,
       link: '/ai-tool'
     }
   ];
@@ -192,11 +192,10 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-20 w-full">
 
-          {/* Logo Section - 10% */}
-          <div className="w-[15%] md:w-[10%] flex justify-start">
+          {/* Logo Section */}
+          <div className="flex-1 md:w-[10%] flex justify-start">
             <Link to="/" className="flex items-center gap-2 group">
               <img
-                // src="https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/logo.png"
                 src='/images/logo.png'
                 alt="Berojgar Founder Logo"
                 className="w-8 h-12 sm:w-10 sm:h-14 object-contain transition-transform duration-300 group-hover:scale-110"
@@ -210,9 +209,9 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Center Section: Navigation Links (Desktop) - 80% */}
-          <div className="w-[70%] md:w-[80%] flex justify-center">
-            <nav className="hidden md:flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full border border-gray-200 dark:border-gray-700">
+          {/* Center Section: Navigation Links (Desktop) */}
+          <div className="hidden md:flex md:w-[80%] justify-center">
+            <nav className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full border border-gray-200 dark:border-gray-700">
               <Link
                 to="/"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 relative group ${slug.pathname === '/' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
@@ -232,6 +231,12 @@ const Header = () => {
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/event' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
               >
                 Event
+              </Link>
+              <Link
+                to="/explore"
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/explore' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
+              >
+                Explore
               </Link>
               <Link
                 to="/create-post"
@@ -319,8 +324,8 @@ const Header = () => {
             {/* Mobile Title if needed or spacer */}
           </div>
 
-          {/* Right Section: Login/User - 10% */}
-          <div className="w-[15%] md:w-[10%] flex justify-end items-center gap-2">
+          {/* Right Section: Login/User */}
+          <div className="w-auto md:w-[10%] flex justify-end items-center gap-2">
 
             <div className="hidden md:block">
               <ThemeToggle />
@@ -415,34 +420,33 @@ const Header = () => {
                 </Link>
               </div>
             )}
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-gray-700 dark:text-gray-200 focus:outline-none ml-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Button */}
-      <button
-        className="md:hidden text-gray-700 focus:outline-none"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
-
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg md:hidden z-10 transition-all duration-300 ease-in-out border-t dark:border-gray-700">
+        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg md:hidden z-10 transition-all duration-300 ease-in-out border-t dark:border-gray-700 overflow-y-auto max-h-[85vh]">
           <div className="flex flex-col px-6 py-4 space-y-4 text-center">
             <div className="flex justify-end mb-2">
               <ThemeToggle />
@@ -486,12 +490,69 @@ const Header = () => {
                   Event
                 </Link>
                 <Link
+                  to="/explore"
+                  className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Explore
+                </Link>
+                <Link
                   to="/create-post"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Create
                 </Link>
+
+                {/* Mobile More Links */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Startup & Business</p>
+                  {startupNbusiness.map((item) => (
+                    item.isEnable && (
+                      <Link
+                        key={item.id}
+                        to={item.link}
+                        className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition text-sm"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.title}
+                      </Link>
+                    )
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">People & Networking</p>
+                  {peopleNnetWorking.map((item) => (
+                    item.isEnable && (
+                      <Link
+                        key={item.id}
+                        to={item.link}
+                        className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition text-sm"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.title}
+                      </Link>
+                    )
+                  ))}
+                </div>
+
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Tools & Services</p>
+                  {toolsNservice.map((item) => (
+                    item.isEnable && (
+                      <Link
+                        key={item.id}
+                        to={item.link}
+                        className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition text-sm"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.title}
+                      </Link>
+                    )
+                  ))}
+                </div>
+
                 <div className="h-px bg-gray-200 my-1" />
                 <Link
                   to="/profile"
@@ -519,6 +580,13 @@ const Header = () => {
               </>
             ) : (
               <>
+                <Link
+                  to="/explore"
+                  className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Explore
+                </Link>
                 <Link
                   to="/event"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"

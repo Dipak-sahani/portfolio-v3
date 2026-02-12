@@ -4,6 +4,9 @@ import ProtectedRoute from "./ProtectedRoutes";
 
 import HomePage from "../pages/HomePage";
 import AuthPage from "../pages/AuthPage";
+import VerifyEmailPage from '../pages/auth/VerifyEmailPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import AboutUs from "../pages/AboutUs";
 import ContactPage from "../pages/ContactPage";
 import ChatPage from "../pages/chat/ChatPage";
@@ -33,6 +36,7 @@ import StartupForm from "../pages/startupAndBusinessPages/StartupForm";
 import MyStartupProfile from "../pages/startupAndBusinessPages/MyStartupProfile";
 import PostDetailsPage from "../pages/PostDetailsPage";
 import PageBuilder from "../pages/PageBuilder";
+import GuidePage from "../pages/startupAndBusinessPages/GuidePage";
 
 
 
@@ -46,6 +50,9 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactPage />} />
       </Route>
@@ -93,6 +100,27 @@ const AppRoutes = () => {
 
 
           <Route path="/startup-idea" element={<IdeaSelectionPage />} />
+
+          {/* Guide Pages */}
+          <Route path="/business-model" element={<GuidePage topic="businessModel" />} />
+          <Route path="/funding-investors" element={<GuidePage topic="funding" />} />
+          <Route path="/pitch-decks" element={<GuidePage topic="pitchDeck" />} />
+          <Route path="/incubators" element={<GuidePage topic="incubators" />} />
+          <Route path="/mentorship" element={<GuidePage topic="mentorship" />} />
+          <Route path="/case-study" element={<GuidePage topic="caseStudy" />} />
+          <Route path="/developers" element={<GuidePage topic="developers" />} />
+          <Route path="/designers" element={<GuidePage topic="designers" />} />
+          <Route path="/marketers" element={<GuidePage topic="marketers" />} />
+          <Route path="/advisors" element={<GuidePage topic="advisors" />} />
+          <Route path="/freelancers" element={<GuidePage topic="freelancers" />} />
+          <Route path="/team" element={<GuidePage topic="team" />} />
+          <Route path="/website-builder" element={<GuidePage topic="websiteBuilder" />} />
+          <Route path="/payment" element={<GuidePage topic="paymentValues" />} />
+          <Route path="/legal-compliance" element={<GuidePage topic="legalCompliance" />} />
+          <Route path="/accounting" element={<GuidePage topic="accounting" />} />
+          <Route path="/marketing" element={<GuidePage topic="marketing" />} />
+          <Route path="/analytics" element={<GuidePage topic="analytics" />} />
+          <Route path="/ai-tool" element={<GuidePage topic="aiTool" />} />
 
           {/* Page Builder Route */}
           <Route path="/page-builder" element={<PageBuilder />} />

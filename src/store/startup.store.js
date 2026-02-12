@@ -38,7 +38,11 @@ export const useStartupStore = create((set, get) => ({
       const formData = new FormData();
 
       // Append all fields
+      const excludedFields = ['notes', '_id', 'createdAt', 'updatedAt', '__v', 'founderId', 'team'];
+
       Object.keys(data).forEach(key => {
+        if (excludedFields.includes(key)) return;
+
         if (key === 'socialLinks') {
           Object.keys(data.socialLinks).forEach(socialKey => {
             formData.append(`socialLinks[${socialKey}]`, data.socialLinks[socialKey]);
@@ -50,9 +54,6 @@ export const useStartupStore = create((set, get) => ({
         } else if (key === 'coverImageFile') {
           if (data.coverImageFile) formData.append('coverImage', data.coverImageFile);
         } else if (key !== 'logo' && key !== 'coverImage') {
-          // Exclude existing URL strings if we're uploading new files? 
-          // Actually, backend update usually merges. 
-          // typically we just append everything else
           formData.append(key, data[key]);
         }
       });

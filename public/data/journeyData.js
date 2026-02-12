@@ -1,4 +1,104 @@
 export const STARTUP_IDEAS = {
+  "urbanEV": {
+    "title": "Mobile EV Charging",
+    "tagline": "We bring the 'gas station' to your parking spot",
+    "1_idea_and_vision": {
+      "problem_statement": "Urban EV owners lack home charging infrastructure, leading to 'range anxiety' and time wasted at public stations.",
+      "target_audience": "EV owners living in high-rise apartments or rentals without dedicated charging ports.",
+      "urgency_level": "High (Urgent); it's a daily friction point for commuting.",
+      "current_alternatives": "Public DC fast chargers or long extension cords from windows (unsafe/impractical).",
+      "unique_value_proposition": "We bring the 'gas station' to your parking spot while you sleep via mobile battery units.",
+      "scalability": "Highly scalable through fleet expansion and franchised city hubs.",
+      "founder_market_fit": "Founder has 10 years in battery tech and a network in urban property management.",
+      "long_term_viability": "Strong; EV adoption is projected to grow 30% YoY for the next decade."
+    },
+    "2_market_and_customers": {
+      "customer_persona": "Tech-savvy professionals, 25–45, urban dwellers, environmentally conscious, high disposable income.",
+      "market_size": "TAM: $50B (Global EV charging), SAM: $2B (Urban Mobile Charging), SOM: $10M (Initial City Launch).",
+      "market_trends": "Government mandates phasing out gas cars by 2035.",
+      "willingness_to_pay": "$80–$150 per month for a recurring subscription.",
+      "accessibility": "High; reachable via targeted social ads and partnerships with luxury apartment buildings.",
+      "purchase_motivation": "Convenience and time-saving (reclaiming 2 hours/week spent at chargers).",
+      "usage_frequency": "2–3 times per week.",
+      "segmentation_strategy": "Segment by car battery size (e.g., Tesla Long Range vs. small city commuters)."
+    },
+    "3_competition_and_differentiation": {
+      "competitor_landscape": "Direct: SparkCharge; Indirect: Tesla Superchargers, ChargePoint.",
+      "swot_analysis_competitors": "Strengths: Established brand. Weaknesses: Stationary location, high wait times.",
+      "competitive_advantage": "Proprietary 'Silent-Charge' battery tech and lower overhead by not owning real estate.",
+      "defensibility": "Patent-pending connector design and exclusive contracts with 50+ apartment complexes.",
+      "moat_strategy": "Network effect; as we grow, our vans are always 'just 5 mins away.'",
+      "barriers_to_entry": "High capital cost for mobile battery units and safety certifications.",
+      "price_positioning": "Premium; slightly more expensive than public charging but cheaper than a valet."
+    },
+    "4_product_and_solution": {
+      "mvp_definition": "One modified electric van with a 100kWh battery pack serving one specific zip code.",
+      "feature_prioritization": "Essential: App booking, auto-unlocking charge port. Nice-to-have: Tire pressure check, window cleaning.",
+      "delivery_logistics": "Night-shift drivers navigate to pinned GPS locations to charge vehicles overnight.",
+      "unit_cost": "$0.12 per kWh delivered (electricity + labor).",
+      "quality_assurance": "Remote monitoring of every charge session via IoT sensors.",
+      "product_evolution": "Future: Vehicle-to-Grid (V2G) services to sell power back to the grid during peaks.",
+      "sustainability_impact": "100% green energy sourced from solar-backed warehouses."
+    },
+    "5_business_model_and_revenue": {
+      "revenue_streams": "Monthly subscriptions and 'Emergency Boost' one-time fees.",
+      "pricing_logic": "Tiered subscription (Basic, Pro, Unlimited) based on kWh usage.",
+      "cac_estimate": "$45 per customer via referral programs and apartment signage.",
+      "ltv_estimate": "$2,400 (Average 2-year retention).",
+      "break_even_point": "18 months or 500 active subscribers.",
+      "revenue_diversification": "Data monetization (EV health reports) and advertising in the mobile app.",
+      "recurring_revenue": "90% of revenue is recurring subscription-based."
+    },
+    "6_marketing_and_growth": {
+      "brand_awareness": "Instagram/LinkedIn ads and physical branding on the charging vans.",
+      "channel_mix": "Local SEO ('EV charging near me'), Partnership with EV dealerships.",
+      "growth_metrics": "Churn rate, Cost per kWh delivered, and Customer Satisfaction Score (CSAT).",
+      "retention_strategy": "Loyalty points for every 100th gallon-equivalent charged.",
+      "viral_coefficient": "Referral program: 'Get a free week for every neighbor you sign up.'",
+      "partnership_leverage": "Official charging partner for local 'Green City' initiatives."
+    },
+    "7_operations_and_team": {
+      "human_capital": "Now: 2 Engineers, 1 Operations Lead. Later: Fleet Manager, 20 Drivers.",
+      "roles_and_responsibilities": "Operations Lead handles logistics; Engineers focus on the battery-to-car interface.",
+      "advisory_board": "Former Tesla VP of Charging and a local Real Estate Developer.",
+      "supply_chain_management": "Sourcing LFP batteries from certified sustainable suppliers.",
+      "tech_stack": "AWS for IoT, React Native for the App, Geotab for fleet tracking.",
+      "legal_compliance": "Local fire marshal permits for mobile high-voltage transport.",
+      "outsourcing_strategy": "Outsource driver hiring to a specialized logistics agency initially."
+    },
+    "8_finances_and_funding": {
+      "startup_capital": "$250,000 for the first 2 vans and software dev.",
+      "cash_runway": "10 months at current burn rate.",
+      "funding_source": "Seed round via Angel Investors focusing on CleanTech.",
+      "cost_structure": "Fixed: Van leases, Software. Variable: Electricity, Driver wages.",
+      "profitability_tracking": "Monthly P&L statements and Burn Rate monitoring.",
+      "investment_readiness": "Pitch deck ready; targeting Series A after reaching 1,000 users.",
+      "exit_strategy": "Acquisition by a major energy company (e.g., Shell, BP) or an EV OEM."
+    },
+    "9_risks_and_challenges": {
+      "primary_risks": "Regulatory changes regarding mobile battery storage; rapid increase in public chargers.",
+      "market_rejection": "Low; pilot program showed 85% waitlist conversion.",
+      "cash_flow_crisis": "Mitigated by securing a line of credit against fleet assets.",
+      "mitigation_plan": "Diversify into fleet charging (Amazon/FedEx vans) if consumer demand lags.",
+      "macro_sensitivity": "Recession might cause users to switch back to cheaper public charging.",
+      "disruption_threat": "Solid-state batteries making charging 10x faster at public stalls."
+    },
+    "10_vision_and_long_term_strategy": {
+      "roadmap_milestones": "Year 1: 3 Cities; Year 3: National Coverage; Year 5: Autonomous Charging Robots.",
+      "founder_alignment": "Goal to reduce global CO2 emissions by accelerating EV adoption.",
+      "success_definitions": "1 Million tons of CO2 offset and 15% net profit margin.",
+      "pivoting_readiness": "Can pivot to a 'Home Battery Backup' service if EV charging becomes a commodity.",
+      "brand_narrative": "The invisible infrastructure making the green revolution effortless.",
+      "resilience_plan": "Weekly 'wins' log and peer-founder support group."
+    },
+    "11_validation_and_feedback_loops": {
+      "hypothesis_testing": "Assumption: People prefer paying more for convenience than sitting at a free charger.",
+      "customer_feedback_loop": "In-app 'Rate your charge' feature with immediate follow-up on 3-star reviews.",
+      "fail_fast_criteria": "If CAC exceeds LTV for 3 consecutive months without improvement.",
+      "speed_to_market": "Launch 'Concierge Charging' (manual valet) in 30 days to test demand before building the van.",
+      "community_building": "Monthly 'EV & Coffee' meetups for subscribers."
+    }
+  },
   "homeServices": {
     "title": "Home Services Startup",
     "tagline": "Reliable professionals at your doorstep",
@@ -20,8 +120,8 @@ export const STARTUP_IDEAS = {
       "Verified & trained professionals",
       "Fixed and transparent pricing",
       "Instant booking via app/website",
-        "On-time service assurance",
-        "Post-service warranty & support"
+      "On-time service assurance",
+      "Post-service warranty & support"
     ],
     "revenueModel": [
       "Commission per service",

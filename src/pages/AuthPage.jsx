@@ -3,12 +3,15 @@ import { useAuthStore } from "../store/auth.store";
 import { register } from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 const AuthForm = () => {
   const { login, loading, isAuthenticated } = useAuthStore();
   const [isLogin, setIsLogin] = useState(true);
-  const [isRemember, setIsRemember] = useState(false)
+  const [isRemember, setIsRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -52,6 +55,13 @@ const AuthForm = () => {
         toast.warn("Passwords don't match!");
         return;
       }
+
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(formData.password)) {
+        toast.warn("Password must be at least 8 characters, include uppercase, lowercase, number, and special character.");
+        return;
+      }
+
       await register({ formData });
 
       navigate("/");
@@ -79,9 +89,9 @@ const AuthForm = () => {
             </div>
 
             {/* Form Container */}
-            <div className="p-4 flex flex-col items-center">
+            <div className="p-4 flex flex-col items-center w-full">
               {/* Toggle */}
-              <div className="flex mb-8 w-[80%]">
+              <div className="flex mb-8 w-full max-w-md">
                 <button
                   onClick={() => setIsLogin(true)}
                   disabled={loading}
@@ -102,7 +112,7 @@ const AuthForm = () => {
               </div>
 
               {/* Simple Form */}
-              <form onSubmit={handleSubmit} className="space-y-6 w-[80%]">
+              <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md">
                 {!isLogin && (
                   <div>
                     <label
@@ -164,15 +174,24 @@ const AuthForm = () => {
                   >
                     Password
                   </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all bg-[#F9F9F9] dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white dark:focus:ring-[#FD7B41]"
-                    placeholder="Enter your password"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all bg-[#F9F9F9] dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white dark:focus:ring-[#FD7B41]"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#FD7B41]"
+                    >
+                      <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    </button>
+                  </div>
                 </div>
 
                 {!isLogin && (
@@ -182,15 +201,24 @@ const AuthForm = () => {
                     >
                       Confirm Password
                     </label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      required={!isLogin}
-                      className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all bg-[#F9F9F9] dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white dark:focus:ring-[#FD7B41]"
-                      placeholder="Confirm your password"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required={!isLogin}
+                        className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all bg-[#F9F9F9] dark:bg-gray-800 border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-white dark:focus:ring-[#FD7B41]"
+                        placeholder="Confirm your password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#FD7B41]"
+                      >
+                        <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -210,6 +238,7 @@ const AuthForm = () => {
                     </label>
                     <button
                       type="button"
+                      onClick={() => navigate('/forgot-password')}
                       className="text-sm font-medium hover:underline text-[#FD7B41]"
                     >
                       Forgot password?
@@ -254,7 +283,7 @@ const AuthForm = () => {
               </form>
 
               {/* Divider */}
-              <div className="my-8 relative w-[80%]">
+              <div className="my-8 relative w-full max-w-md">
                 <div className="absolute inset-0 flex items-center">
                   <div
                     className="w-full border-t border-[#EDBF9B] dark:border-gray-700"
@@ -268,7 +297,7 @@ const AuthForm = () => {
               </div>
 
               {/* Social Login */}
-              <div className="flex space-x-4 w-[80%]">
+              <div className="flex space-x-4 w-full max-w-md">
                 <button
                   type="button"
                   className="flex-1 py-3 px-4 rounded-lg border flex items-center justify-center font-medium transition-colors hover:shadow border-[#EDBF9B] dark:border-gray-700 text-[#3C4044] dark:text-gray-200 bg-[#F9F9F9] dark:bg-gray-800 dark:hover:bg-gray-700"

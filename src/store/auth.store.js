@@ -31,13 +31,14 @@ export const useAuthStore = create(
 
           const user = await register(credentials);
 
-          set({
-            user,
-            isAuthenticated: true,
-            loading: false,
-          });
+          // set({
+          //   user,
+          //   isAuthenticated: true,
+          //   loading: false,
+          // });
+          set({ loading: false });
 
-          toast.success("register successful");
+          toast.success("Registration successful! Please verify your email.");
         } catch (error) {
           set({ loading: false });
           console.log(err);
