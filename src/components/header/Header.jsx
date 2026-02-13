@@ -201,10 +201,10 @@ const Header = () => {
                 className="w-8 h-12 sm:w-10 sm:h-14 object-contain transition-transform duration-300 group-hover:scale-110"
               />
               <div className="flex flex-col leading-none">
-                <h1 className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-100 tracking-tight">
-                  <span className="text-red-500">Be</span>rojgar
+                <h1 className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-100 tracking-tight flex flex-col leading-none">
+                  <span><span className="text-red-500">Be</span>rojgar</span>
+                  <span className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-300 tracking-tight">Founder</span>
                 </h1>
-                <span className="text-lg sm:text-2xl font-bold text-[#3C4044] dark:text-gray-300 tracking-tight ">Founder</span>
               </div>
             </Link>
           </div>

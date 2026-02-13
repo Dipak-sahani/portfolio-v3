@@ -1,18 +1,39 @@
-import { faEdit, faEllipsisV, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEllipsisV, faUser, faShareAlt, faFlag, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Notes from "../Notes";
 import { Link } from "react-router-dom";
 import StartupForm from "./StartupForm";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import MediaUploadModal from "../../components/common/MediaUploadModal";
 import { useStartupStore } from "../../store/startup.store";
 import { toast } from "react-toastify";
+import ShareModal from "../../components/common/ShareModal";
+import ReportModal from "../../components/common/ReportModal";
 
 const StartupProfile = ({ isUser = true, startupData }) => {
   // Mock data based on your Mongoose Schema
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [openNotes, setOpenNotes] = useState(false);
+
+  // Menu and Modals state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Separate edit states
   const [isLogoEditOpen, setIsLogoEditOpen] = useState(false);
@@ -132,9 +153,49 @@ const StartupProfile = ({ isUser = true, startupData }) => {
             </button>
           </>
         )}
-        <button className=" p-2 rounded bg-white/20 hover:bg-white/40 transition">
-          <FontAwesomeIcon icon={faEllipsisV} className="text-white" />
-        </button>
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 rounded bg-white/20 hover:bg-white/40 transition"
+          >
+            <FontAwesomeIcon icon={faEllipsisV} className="text-white" />
+          </button>
+
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.1 }}
+                className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50"
+              >
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsShareOpen(true);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faShareAlt} className="text-blue-500 w-4" />
+                    Share Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsReportOpen(true);
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faFlag} className="text-red-500 w-4" />
+                    Report Startup
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       <motion.div
@@ -373,6 +434,21 @@ const StartupProfile = ({ isUser = true, startupData }) => {
             onUpload={handleCoverUpdate}
             title="Update Cover Image"
             aspectRatio="video"
+          />
+
+          <ShareModal
+            isOpen={isShareOpen}
+            onClose={() => setIsShareOpen(false)}
+            title={`Check out ${data.name} on Berojgar Founder`}
+            url={window.location.href}
+            content={data.tagline}
+          />
+
+          <ReportModal
+            isOpen={isReportOpen}
+            onClose={() => setIsReportOpen(false)}
+            targetId={startupData?._id}
+            targetType="Startup"
           />
         </div>
       </motion.div>
