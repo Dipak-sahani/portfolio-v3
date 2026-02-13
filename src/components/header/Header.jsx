@@ -232,12 +232,12 @@ const Header = () => {
               >
                 Event
               </Link>
-              <Link
+              {/* <Link
                 to="/explore"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/explore' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
               >
                 Explore
-              </Link>
+              </Link> */}
               <Link
                 to="/create-post"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/create-post' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
@@ -489,13 +489,13 @@ const Header = () => {
                 >
                   Event
                 </Link>
-                <Link
+                {/* <Link
                   to="/explore"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Explore
-                </Link>
+                </Link> */}
                 <Link
                   to="/create-post"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
@@ -580,13 +580,13 @@ const Header = () => {
               </>
             ) : (
               <>
-                <Link
+                {/* <Link
                   to="/explore"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Explore
-                </Link>
+                </Link> */}
                 <Link
                   to="/event"
                   className="text-gray-700 hover:text-blue-600 font-medium py-2 hover:bg-gray-100 rounded-lg transition"

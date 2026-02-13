@@ -112,35 +112,7 @@ const StartupForm = ({ initialData, isEdit = false, onClose }) => {
           {activeTab === 'basics' && (
             <div className="space-y-6 animate-fadeIn">
 
-              {/* Image Uploads */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Startup Logo</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) setFormData(prev => ({ ...prev, logoFile: file }));
-                    }}
-                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EDBF9B] file:text-[#3C4044] hover:file:bg-[#FD7B41]"
-                  />
-                  {formData.logoFile && <p className="text-xs mt-1 text-green-500">Selected: {formData.logoFile.name}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Cover Image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) setFormData(prev => ({ ...prev, coverImageFile: file }));
-                    }}
-                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EDBF9B] file:text-[#3C4044] hover:file:bg-[#FD7B41]"
-                  />
-                  {formData.coverImageFile && <p className="text-xs mt-1 text-green-500">Selected: {formData.coverImageFile.name}</p>}
-                </div>
-              </div>
+              {/* Image Uploads Removed - Handled in Profile via MediaUploadModal */}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -151,6 +123,23 @@ const StartupForm = ({ initialData, isEdit = false, onClose }) => {
                   <label className="block text-sm font-bold text-[#3C4044] dark:text-gray-200 mb-2">Tagline (Max 150)</label>
                   <input type="text" name="tagline" maxLength="150" value={formData.tagline} onChange={handleInputChange} className="w-full p-3 rounded-xl border-2 border-[#DDDCDB] dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-[#FD7B41] outline-none transition-all" />
                 </div>
+              </div>
+
+              <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
+                <input
+                  type="checkbox"
+                  name="isPublic"
+                  id="isPublic"
+                  checked={formData.isPublic}
+                  onChange={(e) => setFormData(prev => ({ ...prev, isPublic: e.target.checked }))}
+                  className="w-5 h-5 text-[#FD7B41] rounded focus:ring-[#FD7B41]"
+                />
+                <label htmlFor="isPublic" className="text-sm font-bold text-[#3C4044] dark:text-gray-200 cursor-pointer select-none">
+                  Make Startup Public
+                  <span className="block text-xs font-normal text-gray-500 dark:text-gray-400">
+                    If unchecked, your startup will not be visible on your profile or in search results.
+                  </span>
+                </label>
               </div>
 
               <div>

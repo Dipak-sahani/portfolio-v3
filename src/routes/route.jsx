@@ -34,6 +34,7 @@ import EventCreationForm from "../pages/Event";
 import StartupProfile from "../pages/startupAndBusinessPages/StartupProfile";
 import StartupForm from "../pages/startupAndBusinessPages/StartupForm";
 import MyStartupProfile from "../pages/startupAndBusinessPages/MyStartupProfile";
+import StartupDetailsPage from "../pages/startupAndBusinessPages/StartupDetailsPage";
 import PostDetailsPage from "../pages/PostDetailsPage";
 import PageBuilder from "../pages/PageBuilder";
 import GuidePage from "../pages/startupAndBusinessPages/GuidePage";
@@ -84,18 +85,8 @@ const AppRoutes = () => {
           <Route path="/event" element={<EventCreationForm />} />
           <Route path="/event/:id" element={<EventPage />} />
           <Route path="/startup-profile" element={<MyStartupProfile />} />
+          <Route path="/startup/:id" element={<StartupDetailsPage />} />
           <Route path="/startup-form" element={<StartupForm />} />
-
-
-
-
-
-
-
-
-
-
-
 
 
 

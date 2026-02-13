@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAuthStore } from "../store/auth.store";
 import { useNotificationStore } from "../store/notification.store";
 import Posts from "./Posts";
-import HoverPauseScroll from "../components/component/AutoScroll";
+import HeroImageSlider from "../components/component/HeroImageSlider";
 import CTASection from "../components/component/CTASection";
 import { motion } from "framer-motion";
 import { getAuthToken } from "../services/auth.service";
@@ -93,7 +93,7 @@ const HomePage = () => {
             variants={itemVariants}
           >
             {user && <span className="block text-2xl sm:text-3xl font-medium text-gray-300 mb-2">Welcome back, {user?.fullName}</span>}
-            Welcome to <span className="text-[#FD7B41] inline-block relative after:content-[''] after:absolute after:bottom-2 after:left-0 after:w-full after:h-4 after:bg-[#FD7B41]/20 after:-z-10 transform hover:scale-105 transition-transform cursor-default">Berojgar Founder</span>
+            Welcome to <span className="inline-block relative  transform hover:scale-105 transition-transform cursor-default"> <span className="text-red-500">Be</span>rojgar Founder</span>
           </motion.h1>
 
           <motion.div
@@ -116,7 +116,7 @@ const HomePage = () => {
             className="mt-16 w-full"
             variants={itemVariants}
           >
-            <HoverPauseScroll />
+            <HeroImageSlider />
           </motion.div>
 
           {!isAuthenticated && (

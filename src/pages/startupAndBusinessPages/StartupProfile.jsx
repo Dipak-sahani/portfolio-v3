@@ -5,11 +5,38 @@ import Notes from "../Notes";
 import { Link } from "react-router-dom";
 import StartupForm from "./StartupForm";
 import { motion } from "framer-motion";
+import MediaUploadModal from "../../components/common/MediaUploadModal";
+import { useStartupStore } from "../../store/startup.store";
+import { toast } from "react-toastify";
 
 const StartupProfile = ({ isUser = true, startupData }) => {
   // Mock data based on your Mongoose Schema
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [openNotes, setOpenNotes] = useState(false);
+
+  // Separate edit states
+  const [isLogoEditOpen, setIsLogoEditOpen] = useState(false);
+  const [isCoverEditOpen, setIsCoverEditOpen] = useState(false);
+
+  const saveStartup = useStartupStore((state) => state.saveStartup);
+
+  const handleLogoUpdate = async (file) => {
+    const res = await saveStartup({ _id: startupData._id, logoFile: file });
+    if (res.success) {
+      toast.success("Logo updated successfully");
+    } else {
+      toast.error(res.error || "Failed to update logo");
+    }
+  };
+
+  const handleCoverUpdate = async (file) => {
+    const res = await saveStartup({ _id: startupData._id, coverImageFile: file });
+    if (res.success) {
+      toast.success("Cover image updated successfully");
+    } else {
+      toast.error(res.error || "Failed to update cover image");
+    }
+  };
 
   const data = startupData || {
     // Default mock data if none provided
@@ -76,23 +103,34 @@ const StartupProfile = ({ isUser = true, startupData }) => {
           alt="Cover"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+        {isUser && (
+          <button
+            onClick={() => setIsCoverEditOpen(true)}
+            className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 p-2 rounded-full text-white backdrop-blur-sm transition-all"
+            title="Change Cover Image"
+          >
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+        )}
       </div>
 
       <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-5">
-        <button
-          onClick={() => setOpenNotes(true)}
-          className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-        >
-          <FontAwesomeIcon icon={faEdit} /> Notes
-        </button>
         {isUser && (
-          <button
-            onClick={() => setIsEditOpen(true)}
-            className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-          >
-            <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
-          </button>
+          <>
+            <button
+              onClick={() => setOpenNotes(true)}
+              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+            >
+              <FontAwesomeIcon icon={faEdit} /> Notes
+            </button>
+            <button
+              onClick={() => setIsEditOpen(true)}
+              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+            >
+              <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
+            </button>
+          </>
         )}
         <button className=" p-2 rounded bg-white/20 hover:bg-white/40 transition">
           <FontAwesomeIcon icon={faEllipsisV} className="text-white" />
@@ -110,11 +148,22 @@ const StartupProfile = ({ isUser = true, startupData }) => {
           <motion.div variants={itemVariants} className="lg:col-span-1 space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border-b-4 border-[#FD7B41]">
               <div className="flex flex-col items-center text-center">
-                <img
-                  src={data?.logoUrl || "/images/logo.png"}
-                  className="w-24 h-24 rounded-2xl shadow-md border-4 border-white dark:border-gray-700 -mt-16 bg-white dark:bg-gray-700"
-                  alt="Logo"
-                />
+                <div className="relative -mt-16 inline-block group">
+                  <img
+                    src={data?.logoUrl || "/images/logo.png"}
+                    className="w-24 h-24 rounded-2xl shadow-md border-4 border-white dark:border-gray-700 bg-white dark:bg-gray-700 object-cover"
+                    alt="Logo"
+                  />
+                  {isUser && (
+                    <button
+                      onClick={() => setIsLogoEditOpen(true)}
+                      className="absolute -bottom-2 -right-2 bg-[#FD7B41] text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform text-xs"
+                      title="Change Logo"
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                  )}
+                </div>
                 <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">{data?.name}</h1>
                 <p className="text-[#FD7B41] font-medium uppercase text-xs tracking-widest">
                   {data?.fundingStage}
@@ -246,12 +295,14 @@ const StartupProfile = ({ isUser = true, startupData }) => {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Link
-                to="/team"
-                className="bg-[#DDDCDB] dark:bg-gray-700 text-[#3C4044] dark:text-gray-200 px-4 py-1 rounded font-bold flex items-center gap-2 hover:brightness-110 border-2 dark:border-gray-600 w-40 text-center h-12 text-xl hover:scale-110 transition"
-              >
-                Team
-              </Link>
+              {isUser && (
+                <Link
+                  to="/team"
+                  className="bg-[#DDDCDB] dark:bg-gray-700 text-[#3C4044] dark:text-gray-200 px-4 py-1 rounded font-bold flex items-center gap-2 hover:brightness-110 border-2 dark:border-gray-600 w-40 text-center h-12 text-xl hover:scale-110 transition"
+                >
+                  Team
+                </Link>
+              )}
 
               <h1 className="my-2 font-bold text-gray-900 dark:text-white">Team Name :  <span className="text-[#FD7B41]"> {data.team?.name || "Not Assigned"}</span> </h1>
 
@@ -307,6 +358,22 @@ const StartupProfile = ({ isUser = true, startupData }) => {
               onClose={() => setIsEditOpen(false)}
             />
           )}
+
+          <MediaUploadModal
+            isOpen={isLogoEditOpen}
+            onClose={() => setIsLogoEditOpen(false)}
+            onUpload={handleLogoUpdate}
+            title="Update Startup Logo"
+            aspectRatio="square"
+          />
+
+          <MediaUploadModal
+            isOpen={isCoverEditOpen}
+            onClose={() => setIsCoverEditOpen(false)}
+            onUpload={handleCoverUpdate}
+            title="Update Cover Image"
+            aspectRatio="video"
+          />
         </div>
       </motion.div>
     </div>

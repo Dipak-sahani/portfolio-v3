@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
@@ -11,7 +11,10 @@ import {
   faFlag
 } from "@fortawesome/free-solid-svg-icons";
 import EditProfileForm from "./EditProfile";
+import StartupForm from "../../pages/startupAndBusinessPages/StartupForm";
+import { useStartupStore } from "../../store/startup.store";
 import ProjectDashboard from "../../pages/ProjectShowCase";
+import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import CreateProjectForm from "../../forms/ProjectCreateForm";
 import ImagePreview from "../ImagePrev/ImagePreview";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,12 +25,25 @@ import { toast } from "react-toastify";
 
 const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isStartupFormOpen, setIsStartupFormOpen] = useState(false);
   const [isAddProject, setIsAddProject] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+
+  const { myStartup, fetchMyStartup, getStartupByUserId, selectedUserStartup } = useStartupStore();
+
+  useEffect(() => {
+    if (isUser) {
+      fetchMyStartup();
+    } else if (info?._id) {
+      getStartupByUserId(info._id);
+    }
+  }, [isUser, info?._id]);
+
+  const hasStartup = myStartup && (Array.isArray(myStartup) ? myStartup.length > 0 : myStartup._id);
   // console.log(info);
   // console.log(follow);
 
@@ -65,12 +81,36 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
 
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           {isUser && (
-            <button
-              onClick={() => setIsEditOpen(true)}
-              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsEditOpen(true)}
+                className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+              >
+                <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
+              </button>
+
+              {hasStartup ? (
+                <Link to="/startup-profile" className="bg-[#3C4044] dark:bg-black text-white px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:bg-[#FD7B41] transition shadow-lg">
+                  <FontAwesomeIcon icon={faRocket} /> MY STARTUP
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setIsStartupFormOpen(true)}
+                  className="bg-[#3C4044] dark:bg-black text-white px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:bg-[#FD7B41] transition shadow-lg"
+                >
+                  <FontAwesomeIcon icon={faRocket} /> CREATE STARTUP
+                </button>
+              )}
+            </div>
+          )}
+
+          {!isUser && selectedUserStartup && selectedUserStartup.isPublic && (
+            <Link
+              to={`/startup/${selectedUserStartup._id}`}
+              className="bg-[#3C4044] dark:bg-black text-white px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:bg-[#FD7B41] transition shadow-lg"
             >
-              <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
-            </button>
+              <FontAwesomeIcon icon={faRocket} /> VISIT STARTUP
+            </Link>
           )}
           <div className="relative">
             <button
@@ -363,6 +403,14 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       />
+
+      {isStartupFormOpen && (
+        <StartupForm
+          initialData={null}
+          // isEdit={false} // Default is false
+          onClose={() => setIsStartupFormOpen(false)}
+        />
+      )}
 
       <CreateProjectForm
         isProjectAdd={isAddProject}

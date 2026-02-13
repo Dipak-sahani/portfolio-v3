@@ -80,10 +80,10 @@ export const likePost = async (postId) => {
     console.log("2");
 
     const res = await API.patch(`/post/${postId}/like`);
-    console.log(res);
-    if (res.status == 200) {
-      toast.success(res.data.message)
-    }
+    // console.log(res);
+    // if (res.status == 200) {
+    //   toast.success(res.data.message)
+    // }
 
     return res.data.data;
   } catch (error) {
@@ -95,9 +95,9 @@ export const unLikePost = async (postId) => {
   try {
     const res = await API.patch(`/post/${postId}/unlike`);
     // console.log(res);
-    if (res.status == 200) {
-      toast.success(res.data?.message)
-    }
+    // if (res.status == 200) {
+    //   toast.success(res.data?.message)
+    // }
 
     return res.data.data;
   } catch (error) {

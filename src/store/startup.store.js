@@ -5,6 +5,7 @@ export const useStartupStore = create((set, get) => ({
   startups: [],
   myStartup: [],
   currentStartup: null,
+  selectedUserStartup: null,
   isLoading: false,
   error: null,
 
@@ -23,8 +24,18 @@ export const useStartupStore = create((set, get) => ({
   getStartupDetails: async (id) => {
     set({ isLoading: true });
     try {
-      const { data } = await API.get(`/${id}`);
+      const { data } = await API.get(`/startup/${id}`);
       set({ currentStartup: data.data, isLoading: false });
+    } catch (err) {
+      set({ error: 'Startup not found', isLoading: false });
+    }
+  },
+
+  getStartupByUserId: async (userId) => {
+    set({ isLoading: true });
+    try {
+      const { data } = await API.get(`/startup/user/${userId}`);
+      set({ selectedUserStartup: data.data, isLoading: false });
     } catch (err) {
       set({ error: 'Startup not found', isLoading: false });
     }

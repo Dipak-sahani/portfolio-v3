@@ -27,6 +27,7 @@ const EditProfileForm = ({ isOpen, onClose }) => {
     github: "",
     linkedin: "",
     twitter: "",
+    isPublic: true,
   });
 
   useEffect(() => {
@@ -54,6 +55,8 @@ const EditProfileForm = ({ isOpen, onClose }) => {
         github: user.socialLogins?.github || "",
         linkedin: user.socialLogins?.linkedin || "",
         twitter: user.socialLogins?.twitter || "",
+
+        isPublic: user.isPublic ?? true,
       });
     }
   }, [user]);
@@ -106,6 +109,7 @@ const EditProfileForm = ({ isOpen, onClose }) => {
 
     // Boolean fields
     data.append("remotePreference", form.remotePreference);
+    data.append("isPublic", form.isPublic);
 
     // Files and existing images
     if (form.avatar) {
@@ -378,6 +382,17 @@ const EditProfileForm = ({ isOpen, onClose }) => {
                   className="w-5 h-5 accent-[#FD7B41]"
                 />
                 <span className="text-sm font-bold text-gray-700 dark:text-[#DDDCDB]">Open to Remote?</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="isPublic"
+                  checked={form.isPublic}
+                  onChange={handleChange}
+                  className="w-5 h-5 accent-[#FD7B41]"
+                />
+                <span className="text-sm font-bold text-gray-700 dark:text-[#DDDCDB]">Public Profile?</span>
               </label>
             </div>
           </div>
