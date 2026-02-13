@@ -295,10 +295,12 @@ const StartupProfile = ({ isUser = true, startupData }) => {
               <h2 className="text-xl font-bold mb-4 border-l-4 border-[#FD7B41] pl-4 text-gray-900 dark:text-white">
                 About the Startup
               </h2>
-              {renderContentOrPlaceholder(
-                data?.description,
-                "Briefly describe your startup's mission and vision here. What are you building and why?"
-              )}
+              <p className="text-justify">
+                {renderContentOrPlaceholder(
+                  data?.description,
+                  "Briefly describe your startup's mission and vision here. What are you building and why?"
+                )}
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="p-4 bg-[#DDDCDB]/30 dark:bg-gray-700/50 rounded-xl">
