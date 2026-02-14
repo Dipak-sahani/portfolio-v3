@@ -40,9 +40,14 @@ API.interceptors.response.use(
       const message = error.response.data?.message
       clearAuth();
       setAuthFlase();
-      toast.warn("Please Login / Register", { autoClose: 2000 })
 
-
+      // Use toastId to prevent duplicates
+      if (!toast.isActive("auth-error")) {
+        toast.warn("Please Login / Register", {
+          autoClose: 2000,
+          toastId: "auth-error"
+        });
+      }
 
       return Promise.reject({
         status,
@@ -54,10 +59,11 @@ API.interceptors.response.use(
       const message = error.response.data?.message || "Too many requests. Please slow down.";
 
       // show toast / alert
-      toast.warn(message);
-
-      // optional UI feedback
-      // toast.error(message);
+      if (!toast.isActive("rate-limit")) {
+        toast.warn(message, {
+          toastId: "rate-limit"
+        });
+      }
 
       return Promise.reject({
         status: 429,
@@ -66,8 +72,17 @@ API.interceptors.response.use(
     }
 
     if (error?.response?.data?.message) {
-      toast.error(error?.response?.data?.message)
+      const message = error?.response?.data?.message;
+      // Use message as ID to prevent same error showing multiple times
+      // We truncate or hash it if it's too long, but message is usually short.
+      // We prefix with 'err-' to avoid collision with other IDs if any.
+      const toastId = `err-${message.substring(0, 50)}`;
 
+      if (!toast.isActive(toastId)) {
+        toast.error(message, {
+          toastId: toastId
+        });
+      }
     }
     return Promise.reject(error);
   }

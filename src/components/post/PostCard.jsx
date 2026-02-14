@@ -43,21 +43,24 @@ const PostCard = ({ postId, post: propPost }) => {
     ? post?.content
     : post?.content?.substring(0, contentLimit) + (showSeeMore ? "..." : "");
 
+  const [isLiking, setIsLiking] = useState(false);
+
   const handleLike = async () => {
-    if (liked || post?.isLikedByMe) {
-      try {
+    if (isLiking) return;
+
+    setIsLiking(true);
+    try {
+      if (liked || post?.isLikedByMe) {
         await unLikePost(post?._id);
         setLiked(false);
-      } catch (error) {
-        console.error("Error unliking post:", error);
-      }
-    } else {
-      try {
+      } else {
         await likePost(post?._id);
         setLiked(true);
-      } catch (error) {
-        console.error("Error liking post:", error);
       }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    } finally {
+      setIsLiking(false);
     }
   };
 
@@ -302,9 +305,11 @@ const PostCard = ({ postId, post: propPost }) => {
           {/* Like Button */}
           <button
             onClick={handleLike}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${liked || post?.isLikedByMe
-              ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
-              : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+            disabled={isLiking}
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${isLiking ? "opacity-50 cursor-not-allowed" : ""
+              } ${liked || post?.isLikedByMe
+                ? "bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
           >
             <svg
