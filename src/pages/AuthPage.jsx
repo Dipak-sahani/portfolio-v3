@@ -64,6 +64,8 @@ const AuthForm = () => {
 
       await register({ formData });
 
+      toast.success("Registration successful! Please check your email to verify your account.");
+
       navigate("/");
     }
   };

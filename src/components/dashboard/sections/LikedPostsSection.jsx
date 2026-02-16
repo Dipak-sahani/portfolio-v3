@@ -15,7 +15,7 @@ function LikedPostsSection({ posts, onPostClick }) {
             <div className="flex items-start space-x-4">
               <div className="w-10 h-10 rounded-full bg-[#EDBF9B] dark:bg-[#FD7B41] flex items-center justify-center overflow-hidden">
                 {post?.authorId?.avatar ? (
-                  <img src={post.authorId.avatar} alt="avatar" className="w-full h-full object-cover" />
+                  <img src={`${import.meta.env.VITE_IMG_CDN}/${post.authorId.avatar}`} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-[#3C4044] font-bold">{post?.authorId?.fullName?.charAt(0)}</span>
                 )}

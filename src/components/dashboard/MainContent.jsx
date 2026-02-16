@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CalendarSection from './CalendarSection';
 import { Link } from 'react-router-dom';
 
-function MainContent({ activeTab, data, user, allData, onPostClick, onProjectClick }) {
+function MainContent({ activeTab, data, user, allData, onPostClick, onProjectClick, refresh }) {
   const sectionTitles = {
     posts: 'My Posts',
     events: 'Participated Events',
@@ -99,7 +99,7 @@ function MainContent({ activeTab, data, user, allData, onPostClick, onProjectCli
   const renderSection = () => {
     switch (activeTab) {
       case 'posts':
-        return <PostsSection posts={data} />;
+        return <PostsSection posts={data} refresh={refresh} />;
       case 'events':
         return <EventsSection events={data} />;
       case 'calendar':

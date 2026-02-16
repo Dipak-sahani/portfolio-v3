@@ -15,7 +15,7 @@ const CreatePostPage = () => {
     content: "",
     media: [], // This will now hold both File objects and URL strings
     workspaceId: "",
-    mediaInput: "",
+
   });
 
   const handleSubmit = async (e) => {
@@ -61,24 +61,27 @@ const CreatePostPage = () => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
+    // Check for file size check 1MB
+    const validFiles = files.filter(file => {
+      if (file.size > 1024 * 1024) {
+        toast.error(`File ${file.name} is too large. Max 1MB allowed.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
     // Just add the raw file objects to the state
     setFormData((prev) => ({
       ...prev,
-      media: [...prev.media, ...files],
+      media: [...prev.media, ...validFiles],
     }));
 
     e.target.value = ""; // reset file input
   };
 
-  const handleAddMedia = () => {
-    if (formData.mediaInput.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        media: [...prev.media, prev.mediaInput],
-        mediaInput: "",
-      }));
-    }
-  };
+
 
   const handleRemoveMedia = (index) => {
     setFormData((prev) => ({
@@ -148,22 +151,7 @@ const CreatePostPage = () => {
                     />
                   </div>
 
-                  <div className="flex gap-2 mb-4">
-                    <input
-                      type="text"
-                      value={formData.mediaInput}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, mediaInput: e.target.value }))}
-                      placeholder="Enter media URL"
-                      className="flex-1 px-4 py-3 border border-[#EDBF9B] dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#FD7B41] outline-none transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddMedia}
-                      className="px-6 py-3 bg-[#EDBF9B] dark:bg-[#FD7B41]/80 text-[#3C4044] dark:text-white rounded-lg hover:bg-[#EDBF9B]/80 dark:hover:bg-[#FD7B41] font-medium transition-colors"
-                    >
-                      Add URL
-                    </button>
-                  </div>
+
 
                   {formData.media.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -197,7 +185,7 @@ const CreatePostPage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-8 py-3 bg-gradient-to-r from-[#FD7B41] to-[#EDBF9B] text-white rounded-lg font-medium shadow-lg disabled:opacity-50 hover:shadow-xl transition-shadow"
+                    className="px-8 py-3 bg-linear-to-r from-[#FD7B41] to-[#EDBF9B] text-white rounded-lg font-medium shadow-lg disabled:opacity-50 hover:shadow-xl transition-shadow"
                   >
                     {isSubmitting ? "Publishing..." : "Publish Post"}
                   </button>

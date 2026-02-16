@@ -68,7 +68,7 @@ export const updatePost = async (postId, updateData) => {
 
 export const deletePost = async (postId) => {
   try {
-    const res = await API.delete(`/posts/${postId}`);
+    const res = await API.delete(`/post/${postId}`);
     return res.data.data;
   } catch (error) {
     handleApiError(error);

@@ -19,7 +19,7 @@ function Sidebar({ activeTab, setActiveTab, user }) {
       <div className="p-6 border-b border-gray-600 dark:border-gray-700">
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 rounded-full bg-[#EDBF9B] dark:bg-[#FD7B41] flex items-center justify-center text-xl overflow-hidden text-[#3C4044]">
-            {user.avatar ? <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" /> : user.username?.charAt(0).toUpperCase()}
+            {user.avatar ? <img src={`${import.meta.env.VITE_IMG_CDN}/${user.avatar}`} alt={user.username} className="w-full h-full object-cover" /> : user.username?.charAt(0).toUpperCase()}
           </div>
           <div className="overflow-hidden">
             <h2 className="font-semibold truncate">{user.username}</h2>

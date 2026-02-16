@@ -1,10 +1,22 @@
-// components/sections/SavedPostsSection.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { savePost } from '../../../services/post.service';
+import { toast } from 'react-toastify';
 
 function SavedPostsSection({ posts }) {
 
+  const handleUnsave = async (postId) => {
+    try {
+      await savePost(postId);
+      toast.success("Post removed from saved");
+      // Ideally trigger a refresh here. simpler to just reload for now or trust the user navigates away.
+      // Better: use a local state to filter it out if we want immediate feedback without reload
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to unsave post");
+    }
+  }
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-colors duration-300">
@@ -19,8 +31,11 @@ function SavedPostsSection({ posts }) {
                 <h3 className="font-semibold text-lg text-[#3C4044] dark:text-white">{post.postId?.title || "Untitled"}</h3>
                 <p className="text-gray-600 dark:text-gray-400 mt-1">By {post.postId?.authorId?.fullName || "Unknown"} • {dayjs(post.createdAt).format("DD MMM YYYY")}</p>
               </div>
-              <button className="text-[#FD7B41] hover:text-opacity-80 font-medium text-sm">
-                💾 Saved
+              <button
+                onClick={() => handleUnsave(post.postId._id)}
+                className="text-[#FD7B41] hover:text-opacity-80 font-medium text-sm flex items-center gap-1"
+              >
+                <span>💾</span> Saved (Remove)
               </button>
             </div>
             <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">{post.postId?.content}</p>

@@ -11,6 +11,7 @@ import {
   faUserCircle,
   faGlobe,
   faEdit,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { Link } from 'react-router-dom';
@@ -20,6 +21,8 @@ import { useAuthStore } from '../store/auth.store';
 import { useState } from 'react';
 import CreateProjectForm from '../forms/ProjectCreateForm';
 import { likeService } from '../services/like.service';
+import projectService from '../services/project.service';
+import { toast } from 'react-toastify';
 
 
 
@@ -86,12 +89,31 @@ const ProjectDetailCard = ({ project, callBack }) => {
         </div>
         <div>
           {user?._id == project?.createdBy && (
-            <button
-              onClick={() => setIsEdit(true)}
-              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow"
-            >
-              <FontAwesomeIcon icon={faEdit} /> EDIT
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsEdit(true)}
+                className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow"
+              >
+                <FontAwesomeIcon icon={faEdit} /> EDIT
+              </button>
+              <button
+                onClick={async () => {
+                  if (window.confirm("Are you sure you want to delete this project?")) {
+                    try {
+                      await projectService.deleteProjectService(project._id);
+                      toast.success("Project deleted successfully");
+                      if (callBack) callBack(null, true); // Signal refresh if supported
+                      window.location.reload();
+                    } catch (error) {
+                      toast.error("Failed to delete project");
+                    }
+                  }
+                }}
+                className="bg-red-100 text-red-600 px-3 py-1 rounded font-bold text-sm flex items-center gap-2 hover:bg-red-200 transition shadow"
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
           )}
         </div>
 

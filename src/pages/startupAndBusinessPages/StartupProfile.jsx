@@ -10,6 +10,7 @@ import { useStartupStore } from "../../store/startup.store";
 import { toast } from "react-toastify";
 import ShareModal from "../../components/common/ShareModal";
 import ReportModal from "../../components/common/ReportModal";
+import ImagePreview from "../../components/ImagePrev/ImagePreview";
 
 const StartupProfile = ({ isUser = true, startupData }) => {
   // Mock data based on your Mongoose Schema
@@ -119,8 +120,8 @@ const StartupProfile = ({ isUser = true, startupData }) => {
         </div>
       )}
       <div className="h-64 w-full relative overflow-hidden">
-        <img
-          src={data?.coverImageUrl || null}
+        <ImagePreview
+          src={data?.coverImageUrl?.startsWith("http") ? data.coverImageUrl : (data?.coverImageUrl ? `${import.meta.env.VITE_IMG_CDN}/${data.coverImageUrl}` : null)}
           alt="Cover"
           className="w-full h-full object-cover"
         />
@@ -136,7 +137,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
         )}
       </div>
 
-      <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-5">
+      <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-20">
         {isUser && (
           <>
             <button
@@ -211,7 +212,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
               <div className="flex flex-col items-center text-center">
                 <div className="relative -mt-16 inline-block group">
                   <img
-                    src={data?.logoUrl || "/images/logo.png"}
+                    src={data?.logoUrl?.startsWith("http") ? data.logoUrl : (data?.logoUrl ? `${import.meta.env.VITE_IMG_CDN}/${data.logoUrl}` : "/images/logo.png")}
                     className="w-24 h-24 rounded-2xl shadow-md border-4 border-white dark:border-gray-700 bg-white dark:bg-gray-700 object-cover"
                     alt="Logo"
                   />
@@ -377,7 +378,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                     <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
                       {user?.userId?.avatar ? (
                         <img
-                          src={user.userId.avatar}
+                          src={user.userId.avatar?.startsWith("http") ? user.userId.avatar : `${import.meta.env.VITE_IMG_CDN}/${user.userId.avatar}`}
                           alt={user?.userId?.username || "User"}
                           className="w-full h-full object-cover"
                         />

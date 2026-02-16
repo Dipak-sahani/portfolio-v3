@@ -148,7 +148,7 @@ const EditProfileForm = ({ isOpen, onClose }) => {
           <div className="space-y-4">
             <div className="relative h-32 w-full bg-zinc-200 dark:bg-zinc-800 rounded-md overflow-hidden group">
               <img
-                src={user?.coverImage || "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?q=80&w=1000"}
+                src={user?.coverImage ? `${import.meta.env.VITE_IMG_CDN}/${user.coverImage}` : "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?q=80&w=1000"}
                 className="w-full h-full object-cover opacity-50"
                 alt="Banner Preview"
               />
@@ -162,7 +162,7 @@ const EditProfileForm = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-6">
               <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#FD7B41] group">
                 <img
-                  src={user?.avatar || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400"}
+                  src={user?.avatar ? `${import.meta.env.VITE_IMG_CDN}/${user.avatar}` : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400"}
                   className="w-full h-full object-cover opacity-60"
                   alt="Profile"
                 />

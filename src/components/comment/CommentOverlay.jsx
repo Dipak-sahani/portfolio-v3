@@ -4,8 +4,9 @@ import {
   faXmark,
   faPaperPlane,
   faUser,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { getComments, postComment } from "../../services/comment.service";
+import { getComments, postComment, deleteComment } from "../../services/comment.service";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
@@ -79,7 +80,7 @@ const CommentOverlay = ({ targetType, Id, onClose }) => {
               {/* Avatar */}
               {c?.userId?.avatar ? (
                 <img
-                  src={c.userId.avatar}
+                  src={`${import.meta.env.VITE_IMG_CDN}/${c.userId.avatar}`}
                   alt={c.userId.fullName}
                   className="w-9 h-9 rounded-full object-cover"
                 />
@@ -108,6 +109,25 @@ const CommentOverlay = ({ targetType, Id, onClose }) => {
                   {c.text}
                 </p>
               </div>
+              {/* Delete Button */}
+              {(typeof window !== 'undefined' && JSON.parse(localStorage.getItem("user"))?._id === c.userId?._id) && ( // Simple check, better to use auth store if available
+                <button
+                  onClick={async () => {
+                    if (window.confirm("Delete this comment?")) {
+                      try {
+                        await deleteComment(c._id);
+                        setComments(prev => prev.filter(comment => comment._id !== c._id));
+                        toast.success("Comment deleted");
+                      } catch (error) {
+                        toast.error("Failed to delete comment");
+                      }
+                    }
+                  }}
+                  className="text-gray-400 hover:text-red-500 transition-colors self-start ml-2"
+                >
+                  <FontAwesomeIcon icon={faTrash} size="sm" />
+                </button>
+              )}
             </div>
           ))}
         </div>

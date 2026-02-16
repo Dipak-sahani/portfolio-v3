@@ -21,7 +21,7 @@ export const PeopleList = ({ people }) => {
             {/* Profile Image */}
             <div className="w-24 h-24 rounded-full bg-amber-100 dark:bg-amber-900/30 mr-4 shrink-0 flex items-center justify-center overflow-hidden">
               {person?.image ? <img
-                src={person.image}
+                src={person.image?.startsWith("http") ? person.image : `${import.meta.env.VITE_IMG_CDN}/${person.image}`}
                 alt={person.fullName}
                 className="w-full h-full object-cover"
               /> : <FontAwesomeIcon icon={faUser} className='text-[#3C4044] dark:text-gray-400 text-4xl' />}

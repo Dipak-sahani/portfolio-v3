@@ -366,7 +366,7 @@ const ChatArea = ({ activeContact }) => {
           <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold overflow-hidden">
             {/* If avatar is URL, show img, else text */}
             {(selectedContact.avatar && selectedContact.avatar.length > 2) ? (
-              <img src={selectedContact.avatar} alt={selectedContact.name} className="w-full h-full object-cover" />
+              <img src={selectedContact.avatar?.startsWith("http") ? selectedContact.avatar : `${import.meta.env.VITE_IMG_CDN}/${selectedContact.avatar}`} alt={selectedContact.name} className="w-full h-full object-cover" />
             ) : (
               selectedContact.avatar
             )}

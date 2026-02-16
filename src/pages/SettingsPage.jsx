@@ -53,6 +53,12 @@ const SettingsPage = () => {
                         >
                             Appearance
                         </button>
+                        <button
+                            onClick={() => window.location.href = '/blocked-users'}
+                            className="text-left px-4 py-2 rounded-lg font-medium transition-colors text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                            Blocked Users
+                        </button>
                     </nav>
                 </div>
 

@@ -143,7 +143,7 @@ const PostCard = ({ postId, post: propPost }) => {
             <div className="relative">
               <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg overflow-hidden">
                 {post?.authorId?.avatar ? (
-                  <img src={post.authorId.avatar} alt={post.authorId.username} className="w-full h-full object-cover" />
+                  <img src={`${process.env.VITE_IMG_CDN}/${post.authorId.avatar}`} alt={post.authorId.username} className="w-full h-full object-cover" />
                 ) : (
                   post?.authorId?.fullName?.charAt(0) || "B"
                 )}
@@ -290,7 +290,7 @@ const PostCard = ({ postId, post: propPost }) => {
         <div className="border-t border-gray-100 dark:border-gray-700">
           <div className="relative mx-auto w-full max-w-170 bg-gray-100 dark:bg-gray-900 overflow-hidden aspect-video rounded-lg">
             <ImagePreview
-              src={post.media[0]}
+              src={`${import.meta.env.VITE_IMG_CDN}/${post.media[0]}`}
               alt="Post media"
               className="absolute inset-0 w-full h-full object-contain"
               loading="lazy"

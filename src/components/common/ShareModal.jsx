@@ -81,7 +81,7 @@ const ShareModal = ({ isOpen, onClose, title, url, content }) => {
     const shareTitle = title || "Check this out on Berojgar Founder";
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 animate-fade-in-up">
                 <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Share</h2>
 

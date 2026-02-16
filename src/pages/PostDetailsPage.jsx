@@ -81,7 +81,7 @@ const PostDetailsPage = () => {
                         <div className="px-4 pb-4 text-center relative">
                             <div className="w-16 h-16 mx-auto -mt-8 border-2 border-white dark:border-gray-800 rounded-full bg-white dark:bg-gray-700 overflow-hidden mb-3">
                                 {user?.avatar ? (
-                                    <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
+                                    <img src={`${import.meta.env.VITE_IMG_CDN}/${user.avatar}`} alt={user.fullName} className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300 font-bold text-xl">
                                         {user?.fullName?.charAt(0) || "U"}

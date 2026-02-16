@@ -13,6 +13,7 @@ import {
 import EditProfileForm from "./EditProfile";
 import StartupForm from "../../pages/startupAndBusinessPages/StartupForm";
 import { useStartupStore } from "../../store/startup.store";
+import { useAuthStore } from "../../store/auth.store";
 import ProjectDashboard from "../../pages/ProjectShowCase";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import CreateProjectForm from "../../forms/ProjectCreateForm";
@@ -21,6 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ShareModal from "../common/ShareModal";
 import ReportModal from "../common/ReportModal";
 import { blockUser } from "../../services/user.service";
+import { followUser, unfollowUser } from "../../services/follow.service";
 import { toast } from "react-toastify";
 
 const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
@@ -34,6 +36,80 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
   const navigate = useNavigate();
 
   const { myStartup, fetchMyStartup, getStartupByUserId, selectedUserStartup } = useStartupStore();
+  const { updateProfileApi, user: currentUser } = useAuthStore();
+
+  // Follow State
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+
+  useEffect(() => {
+    if (follow) {
+      setFollowersCount(follow.followers?.length || follow.followersCount || 0);
+      setFollowingCount(follow.following?.length || follow.followingCount || 0);
+
+      // Check if current user is in the followers list
+      if (currentUser && follow.followers) {
+        const isFound = follow.followers.some(f =>
+          (f._id === currentUser._id) || (f === currentUser._id)
+        );
+        setIsFollowing(isFound);
+        // Also check API specific isFollowing boolean if available directly
+        if (follow.isFollowing !== undefined) setIsFollowing(follow.isFollowing);
+      }
+    }
+  }, [follow, currentUser]);
+
+  const handleToggleFollow = async () => {
+    if (!currentUser) {
+      toast.error("Please login to follow users");
+      return;
+    }
+
+    // Optimistic update
+    const prevIsFollowing = isFollowing;
+    const prevCount = followersCount;
+
+    setIsFollowing(!prevIsFollowing);
+    setFollowersCount(prevIsFollowing ? prevCount - 1 : prevCount + 1);
+
+    try {
+      if (prevIsFollowing) {
+        await unfollowUser(info._id);
+        toast.success("Unfollowed successfully");
+      } else {
+        await followUser(info._id);
+        toast.success("Followed successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      // Revert on error
+      setIsFollowing(prevIsFollowing);
+      setFollowersCount(prevCount);
+      toast.error("Action failed");
+    }
+  };
+
+  const handleImageUpdate = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+      toast.error("Image is too large. Max 1MB allowed.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(field, file);
+
+    try {
+      await updateProfileApi(formData);
+      toast.success("Profile image updated successfully!");
+    } catch (error) {
+      console.error("Error updating image:", error);
+      toast.error("Failed to update image.");
+    }
+  };
 
   useEffect(() => {
     if (isUser) {
@@ -72,12 +148,32 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         </div>
 
         {/* Action Buttons - Moved outside overflow-hidden container */}
+        {/* Action Buttons - Moved outside overflow-hidden container */}
         <button
           onClick={() => setIsShareOpen(true)}
           className="absolute top-4 left-4 bg-[#3C4044]/60 dark:bg-black/60 p-2 rounded-md hover:bg-[#FD7B41] dark:hover:bg-[#FD7B41] text-white transition z-10"
         >
           <FontAwesomeIcon icon={faShareAlt} />
         </button>
+
+        {isUser && (
+          <div className="absolute bottom-4 right-4 z-10">
+            <input
+              type="file"
+              id="cover-upload"
+              className="hidden"
+              accept="image/*"
+              onChange={(e) => handleImageUpdate(e, "coverImage")}
+            />
+            <label
+              htmlFor="cover-upload"
+              className="bg-[#3C4044]/60 dark:bg-black/60 p-2 rounded-md hover:bg-[#FD7B41] dark:hover:bg-[#FD7B41] text-white transition cursor-pointer flex items-center gap-2"
+            >
+              <FontAwesomeIcon icon={faEdit} />
+              <span className="text-xs font-bold">Edit Cover</span>
+            </label>
+          </div>
+        )}
 
         <div className="absolute top-4 right-4 flex gap-2 z-10">
           {isUser && (
@@ -161,7 +257,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
 
         {/* Info Bar */}
         <div className="bg-[#3C4044] dark:bg-gray-800 border-b border-[#EDBF9B]/20 dark:border-gray-700 relative px-4 sm:px-8 py-6 flex flex-col md:flex-row items-center md:items-end gap-6 transition-colors duration-300">
-          <div className="absolute -top-24 left-8 w-48 h-48 rounded-full border-4 border-[#EDBF9B] dark:border-[#FD7B41] overflow-hidden flex bg-[#3C4044] dark:bg-gray-800 justify-center items-center shadow-2xl">
+          <div className="absolute -top-24 left-8 w-48 h-48 rounded-full border-4 border-[#EDBF9B] dark:border-[#FD7B41] overflow-hidden flex bg-[#3C4044] dark:bg-gray-800 justify-center items-center shadow-2xl group">
             {info?.avatar ? (
               <ImagePreview
                 src={info?.avatar}
@@ -173,6 +269,23 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
                 icon={faUser}
                 className="text-[#EDBF9B] text-8xl"
               />
+            )}
+            {isUser && (
+              <>
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpdate(e, "avatar")}
+                />
+                <label
+                  htmlFor="avatar-upload"
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white"
+                >
+                  <FontAwesomeIcon icon={faEdit} className="text-2xl" />
+                </label>
+              </>
             )}
           </div>
 
@@ -223,12 +336,22 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
             <div className="flex gap-2 w-full justify-center md:justify-end">
               {
                 isUser ? <h1 className="text-[#EDBF9B] dark:text-[#FD7B41] flex gap-2">
-                  <span className="border border-[#EDBF9B] dark:border-[#FD7B41] px-4 py-2 rounded text-xs font-bold uppercase transition-colors hover:bg-[#EDBF9B]/10 cursor-pointer"> Followers : {follow?.followers?.length || 0}</span>
-                  <span className="border border-[#EDBF9B] dark:border-[#FD7B41] px-4 py-2 rounded text-xs font-bold uppercase transition-colors hover:bg-[#EDBF9B]/10 cursor-pointer"> Following : {follow?.following?.length || 0}</span>
+                  <span className="border border-[#EDBF9B] dark:border-[#FD7B41] px-4 py-2 rounded text-xs font-bold uppercase transition-colors hover:bg-[#EDBF9B]/10 cursor-pointer"> Followers : {followersCount}</span>
+                  <span className="border border-[#EDBF9B] dark:border-[#FD7B41] px-4 py-2 rounded text-xs font-bold uppercase transition-colors hover:bg-[#EDBF9B]/10 cursor-pointer"> Following : {followingCount}</span>
                 </h1>
-                  : <button className="border border-[#EDBF9B] dark:border-[#FD7B41] text-[#EDBF9B] dark:text-[#FD7B41] px-6 py-2 rounded text-xs font-bold uppercase hover:bg-[#EDBF9B]/10 transition">
-                    {follow?.followersCount || 0} Connections
-                  </button>}
+                  : <div className="flex gap-2 items-center">
+                    <span className="text-[#EDBF9B] dark:text-[#FD7B41] text-xs font-bold uppercase mr-2">{followersCount} Followers</span>
+                    <button
+                      onClick={handleToggleFollow}
+                      className={`px-6 py-2 rounded text-xs font-bold uppercase transition border ${isFollowing
+                          ? "border-gray-500 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                          : "border-[#EDBF9B] dark:border-[#FD7B41] text-[#EDBF9B] dark:text-[#FD7B41] hover:bg-[#EDBF9B]/10"
+                        }`}
+                    >
+                      {isFollowing ? "Unfollow" : "Follow"}
+                    </button>
+                  </div>
+              }
             </div>
           </div>
         </div>

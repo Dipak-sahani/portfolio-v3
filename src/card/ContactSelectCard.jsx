@@ -41,7 +41,7 @@ const ModernProfessionalCard = ({ data }) => {
             <div className="w-32 h-32 rounded-full p-1 bg-linear-to-tr from-[#FD7B41] to-[#EDBF9B]">
               <Link to={`/profile/${data?._id}`} className="w-full h-full rounded-full bg-white dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                 {avatar ? (
-                  <img src={avatar} alt={fullName} className="w-full h-full object-cover" />
+                  <img src={avatar?.startsWith("http") ? avatar : `${import.meta.env.VITE_IMG_CDN}/${avatar}`} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
                   <FontAwesomeIcon icon={faUserCircle} className="text-[#DDDCDB] dark:text-gray-500 text-8xl" />
                 )}

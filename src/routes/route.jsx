@@ -38,6 +38,7 @@ import StartupDetailsPage from "../pages/startupAndBusinessPages/StartupDetailsP
 import PostDetailsPage from "../pages/PostDetailsPage";
 import PageBuilder from "../pages/PageBuilder";
 import GuidePage from "../pages/startupAndBusinessPages/GuidePage";
+import BlockedUsersPage from "../pages/BlockedUsersPage";
 
 
 

@@ -156,6 +156,7 @@ function Dashboard() {
             allData={allData}
             onPostClick={handlePostClick}
             onProjectClick={handleProjectClick}
+            refresh={fetchDashboardData}
           />
         </div>
       </div>

@@ -37,7 +37,7 @@ const MobileHeader = ({ isSidebarOpen, setIsSidebarOpen, user, activeTab }) => {
 
         {/* User Avatar */}
         <div className="w-10 h-10 rounded-full bg-[#EDBF9B] dark:bg-[#FD7B41] flex items-center justify-center text-lg overflow-hidden text-[#3C4044]">
-          {user.avatar ? <img src={user.avatar} alt="avatar" className="w-full h-full object-cover" /> : user.username?.charAt(0).toUpperCase()}
+          {user.avatar ? <img src={`${import.meta.env.VITE_IMG_CDN}/${user.avatar}`} alt="avatar" className="w-full h-full object-cover" /> : user.username?.charAt(0).toUpperCase()}
         </div>
       </div>
 

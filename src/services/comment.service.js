@@ -29,3 +29,13 @@ export const getComments = async (postId) => {
 
     }
 }
+
+export const deleteComment = async (commentId) => {
+    try {
+        const res = await API.delete(`/comment/${commentId}`);
+        return res;
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to delete comment");
+        throw error;
+    }
+}
