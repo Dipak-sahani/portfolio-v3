@@ -232,12 +232,12 @@ const Header = () => {
               >
                 Event
               </Link>
-              {/* <Link
-                to="/explore"
+              <Link
+                to="/users"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/explore' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
               >
-                Explore
-              </Link> */}
+                Find
+              </Link>
               <Link
                 to="/create-post"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/create-post' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
