@@ -144,7 +144,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
       <div className="relative shadow-xl">
         <div className="h-64 overflow-hidden relative bg-[#DDDCDB] dark:bg-gray-700 rounded-t-lg">
           <ImagePreview
-            src={`${import.meta.env.VITE_IMG_CDN}/uploads/${info?.coverImage}`}
+            src={`${import.meta.env.VITE_IMG_CDN}/${info?.coverImage}`}
             alt="Banner"
             className="w-full h-full object-cover opacity-80"
           />
@@ -274,7 +274,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
           <div className="absolute -top-24 left-8 w-48 h-48 rounded-full border-4 border-[#EDBF9B] dark:border-[#FD7B41] overflow-hidden flex bg-[#3C4044] dark:bg-gray-800 justify-center items-center shadow-2xl group">
             {info?.avatar ? (
               <ImagePreview
-                src={`${import.meta.env.VITE_IMG_CDN}/uploads/${info?.avatar}`}
+                src={`${import.meta.env.VITE_IMG_CDN}/${info?.avatar}`}
                 alt="Profile"
                 className="w-full h-full object-cover rounded-full"
               />
