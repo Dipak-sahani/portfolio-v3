@@ -25,6 +25,8 @@ export const useStartupStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       const { data } = await API.get(`/startup/${id}`);
+      console.log(data);
+
       set({ currentStartup: data.data, isLoading: false });
     } catch (err) {
       set({ error: 'Startup not found', isLoading: false });
@@ -88,6 +90,72 @@ export const useStartupStore = create((set, get) => ({
       console.error(err);
       set({ isLoading: false });
       return { success: false, error: err.response?.data?.message };
+    }
+  },
+
+  deleteStartup: async (startupId) => {
+    set({ isLoading: true });
+    try {
+      await API.delete(`/startup/${startupId}`);
+      set({ myStartup: null, isLoading: false });
+      return { success: true };
+    } catch (error) {
+      set({ isLoading: false });
+      return { success: false, error: error.response.data.message };
+    }
+  },
+
+  followStartup: async (startupId) => {
+    try {
+      await API.post(`/startup/${startupId}/follow`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  unfollowStartup: async (startupId) => {
+    try {
+      await API.post(`/startup/${startupId}/unfollow`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  getStartupFollowStatus: async (startupId) => {
+    try {
+      const res = await API.get(`/startup/${startupId}/follow-info`);
+      return res.data;
+    } catch (error) {
+      return null;
+    }
+  },
+
+  likeStartup: async (startupId) => {
+    try {
+      await API.post(`/startup/${startupId}/like`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  unlikeStartup: async (startupId) => {
+    try {
+      await API.post(`/startup/${startupId}/unlike`);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  getStartupLikeStatus: async (startupId) => {
+    try {
+      const res = await API.get(`/startup/${startupId}/like-info`);
+      return res.data;
+    } catch (error) {
+      return null;
     }
   },
 

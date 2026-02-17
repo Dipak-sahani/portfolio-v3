@@ -15,6 +15,9 @@ try {
     },
     autoConnect: false, // ❗ IMPORTANT
     withCredentials: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
   });
 } catch (error) {
 

@@ -21,6 +21,7 @@ import socket from "../../app/socket";
 import { useParams, useNavigate } from "react-router-dom";
 import { useContacts } from "../../store/contactSelection.store";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 const LIMIT = 10;
 
@@ -72,92 +73,98 @@ const ChatArea = ({ activeContact }) => {
       socket.connect();
     }
 
-    socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
+    const onConnect = () => {
+      console.log("✅ Connected:", socket.id);
       setIsConnected(true);
-    });
+    };
 
-    socket.off("new_message", handleNewMessage);
-    socket.on("new_message", handleNewMessage);
-
-    socket.off("ReceiverInRoom", handleOnlineUser);
-    socket.on("ReceiverInRoom", handleOnlineUser);
-
-    socket.on("disconnect", () => {
-      console.log("❌ Socket disconnected");
+    const onDisconnect = () => {
+      console.log("❌ Disconnected");
       setIsConnected(false);
-    });
+    };
+
+    const onNewMessage = (data) => {
+      if (!data?.message) return;
+
+      // ignore own message
+      if (data.message.senderId === user._id) return;
+
+      setMessages((prev) => [...prev, data.message]);
+      setIsUserOnline(data?.status || false);
+    };
+
+    const onOnlineStatus = (data) => {
+      setIsUserOnline(data?.status || false);
+    };
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("new_message", onNewMessage);
+    socket.on("ReceiverInRoom", onOnlineStatus);
 
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("new_message", handleNewMessage);
-      socket.off("ReceiverInRoom", handleOnlineUser);
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("new_message", onNewMessage);
+      socket.off("ReceiverInRoom", onOnlineStatus);
 
-      // 🔥 disconnect ONLY when chat page unmounts
-      socket.disconnect();
+      // ❌ DO NOT disconnect here
+      // Let socket stay alive globally
     };
-  }, []);
+  }, [user._id]);
 
-  useEffect(() => {
-    if (!selectedContact?.conversationId) return;
-    if (!socket.connected) return;
 
-    socket.emit("join_conversation", {
-      conversationId: selectedContact.conversationId,
-    });
-  }, [selectedContact, isConnected]);
+
+
 
   /* ---------------- FETCH MESSAGES ---------------- */
 
   useEffect(() => {
     if (!selectedContact?.conversationId) return;
 
-    // console.log(selectedContact);
+    socket.emit("join_conversation", {
+      conversationId: selectedContact.conversationId,
+    });
 
-    if (selectedContact) {
-      setMessages([]); // clear old messages
-      setIsUserOnline(false);
-      setSkip(0); // reset pagination
-      setHasMore(true); // reset load more
-      loadMessages(true); // fetch new messages
-    }
-  }, [selectedContact?.id]);
+    console.log("📥 Joined room");
+
+    return () => {
+      socket.emit("leave_conversation", {
+        conversationId: selectedContact.conversationId,
+      });
+
+      console.log("📤 Left room");
+    };
+  }, [selectedContact?.conversationId]);
 
   /* ---------------- SEND MESSAGE ---------------- */
 
-  const handleSendMessage = (e) => {
-    e?.preventDefault();
-    console.log("clicked");
+  const handleSendMessage = () => {
+    if (!newMessage.trim()) return;
+    if (!socket.connected) return;
 
-    if (!newMessage.trim() || !selectedContact) return;
-
-    if (!socket.connected) {
-      // console.log("Socket not connected");
-
-      // console.error("Socket not connected");
-      return;
-    }
-
-    console.log("yes show chat");
-
-    const messagePayload = {
-      conversationId: selectedContact?.conversationId,
-      receiverId: id,
-      content: newMessage,
+    const tempMessage = {
+      _id: Date.now(), // temporary id
+      conversationId: selectedContact?.conversationId || null,
+      receiverId: selectedContact?.id,
       senderId: user._id,
-      type: "text",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      content: newMessage,
+      createdAt: new Date(),
+      status: "sending", // optional
     };
 
-    setMessages((prev) => [...prev, messagePayload]);
+    // ✅ 1️⃣ Add immediately to UI
+    setMessages((prev) => [...prev, tempMessage]);
+
+    // clear input
     setNewMessage("");
 
-    socket.emit("send_message", messagePayload);
+    // ✅ 2️⃣ Emit to backend
+    socket.emit("send_message", tempMessage);
   };
+
+
+
 
   // ===============================
   // presence ping
@@ -273,9 +280,9 @@ const ChatArea = ({ activeContact }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   loadMessages(true);
-  // }, [conversationId]);
+  useEffect(() => {
+    loadMessages(true);
+  }, [selectedContact?.conversationId]);
 
   const loadMessages = useCallback(
     async (isInitial = false) => {

@@ -4,30 +4,31 @@ import { useAuthStore } from '../../store/auth.store';
 import { useStartupStore } from '../../store/startup.store';
 
 const MyStartupProfile = () => {
-    const user=useAuthStore((state)=>state.user)
+    const user = useAuthStore((state) => state.user)
     const myStartup = useStartupStore((state) => state.myStartup);
-    const fetchMyStartup=useStartupStore((state)=>state.fetchMyStartup)
+    const fetchMyStartup = useStartupStore((state) => state.fetchMyStartup)
     // const [myStartup, setMyStartup]=useState([])
+    console.log(myStartup);
 
 
-    const fetchMyStartupFunc=async()=>{
+    const fetchMyStartupFunc = async () => {
         try {
-            const res= await fetchMyStartup()
-            
+            const res = await fetchMyStartup()
+
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchMyStartupFunc()
-    },[])
+    }, [])
 
-    
+
     return (
         <div>
-            <StartupProfile startupData={myStartup} isUser={user}/>
+            <StartupProfile startupData={Array.isArray(myStartup) ? myStartup[0] : myStartup} isUser={user} />
         </div>
     );
 }

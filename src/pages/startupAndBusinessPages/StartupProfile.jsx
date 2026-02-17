@@ -1,8 +1,8 @@
-import { faEdit, faEllipsisV, faUser, faShareAlt, faFlag, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEllipsisV, faUser, faShareAlt, faFlag, faTrash, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect, useRef } from "react";
 import Notes from "../Notes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import StartupForm from "./StartupForm";
 import { motion, AnimatePresence } from "framer-motion";
 import MediaUploadModal from "../../components/common/MediaUploadModal";
@@ -12,7 +12,32 @@ import ShareModal from "../../components/common/ShareModal";
 import ReportModal from "../../components/common/ReportModal";
 import ImagePreview from "../../components/ImagePrev/ImagePreview";
 
+import { useAuthStore } from "../../store/auth.store";
+
 const StartupProfile = ({ isUser = true, startupData }) => {
+  const { user } = useAuthStore();
+
+  // Permission Logic
+  const canEdit = React.useMemo(() => {
+    if (!user || !startupData) return false;
+
+    // 1. Check if user is the Creator/Founder
+    const founderId = startupData.founderId?._id || startupData.founderId;
+    if (founderId === user._id) return true;
+
+    // 2. Check if user is a Co-Founder or Founder in the team
+    if (startupData.team?.members) {
+      const member = startupData.team.members.find(
+        (m) => (m.userId?._id || m.userId) === user._id
+      );
+      if (member && (member.role === "Founder" || member.role === "Co-Founder")) {
+        return true;
+      }
+    }
+
+    return false;
+  }, [user, startupData]);
+
   // Mock data based on your Mongoose Schema
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [openNotes, setOpenNotes] = useState(false);
@@ -41,6 +66,91 @@ const StartupProfile = ({ isUser = true, startupData }) => {
   const [isCoverEditOpen, setIsCoverEditOpen] = useState(false);
 
   const saveStartup = useStartupStore((state) => state.saveStartup);
+  const {
+    deleteStartup,
+    followStartup,
+    unfollowStartup,
+    getStartupFollowStatus,
+    likeStartup,
+    unlikeStartup,
+    getStartupLikeStatus,
+    myStartup
+  } = useStartupStore();
+
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (startupData?._id) {
+      // Fetch stats
+      getStartupFollowStatus(startupData._id).then(data => {
+        if (data) {
+          setFollowersCount(data.followersCount);
+          setIsFollowing(data.isFollowing);
+        }
+      });
+      getStartupLikeStatus(startupData._id).then(data => {
+        if (data) {
+          setLikesCount(data.likesCount);
+          setIsLiked(data.isLiked);
+        }
+      });
+    }
+  }, [startupData?._id]);
+
+  const handleFollowToggle = async () => {
+    const prevFollowing = isFollowing;
+    const prevCount = followersCount;
+
+    setIsFollowing(!prevFollowing);
+    setFollowersCount(prevFollowing ? prevCount - 1 : prevCount + 1);
+
+    const res = prevFollowing
+      ? await unfollowStartup(startupData._id)
+      : await followStartup(startupData._id);
+
+    if (!res.success) {
+      setIsFollowing(prevFollowing);
+      setFollowersCount(prevCount);
+      toast.error(res.error || "Action failed");
+    } else {
+      toast.success(prevFollowing ? "Unfollowed" : "Following");
+    }
+  };
+
+  const handleLikeToggle = async () => {
+    const prevLiked = isLiked;
+    const prevCount = likesCount;
+
+    setIsLiked(!prevLiked);
+    setLikesCount(prevLiked ? prevCount - 1 : prevCount + 1);
+
+    const res = prevLiked
+      ? await unlikeStartup(startupData._id)
+      : await likeStartup(startupData._id);
+
+    if (!res.success) {
+      setIsLiked(prevLiked);
+      setLikesCount(prevCount);
+      toast.error(res.error || "Action failed");
+    }
+  };
+
+  const handleDeleteStartup = async () => {
+    if (window.confirm("Are you sure you want to delete this startup? This action cannot be undone.")) {
+      const res = await deleteStartup(startupData._id);
+      if (res.success) {
+        toast.success("Startup deleted successfully");
+        navigate("/");
+      } else {
+        toast.error(res.error || "Failed to delete startup");
+      }
+    }
+  };
 
   const handleLogoUpdate = async (file) => {
     const res = await saveStartup({ _id: startupData._id, logoFile: file });
@@ -60,26 +170,52 @@ const StartupProfile = ({ isUser = true, startupData }) => {
     }
   };
 
-  const data = startupData || {
-    // Default mock data if none provided
-    name: "Nexus AI",
-    tagline: "Revolutionizing predictive logistics for global supply chains.",
-    logoUrl: "https://via.placeholder.com/100",
-    coverImageUrl: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80",
-    description: "Nexus AI leverages deep learning to predict shipping delays before they happen, saving companies millions in lost productivity and logistics overhead.",
-    problemStatement: "Global supply chains are reactive, leading to massive inefficiencies when unexpected delays occur.",
-    solution: "A real-time predictive engine that suggests rerouting options 48 hours before a bottleneck manifests.",
-    market: "Fortune 500 Logistics and E-commerce retailers.",
-    businessModel: "SaaS - Tiered monthly subscription based on volume.",
-    mvpStatus: "MVP",
-    fundingStage: "seed",
-    teamSize: 12,
-    skillsRequired: ["Rust Engineer", "ML Ops", "Product Designer"],
-    tags: ["AI", "Logistics", "SaaS"],
-    website: "https://nexus-ai.io",
-    socialLinks: { linkedin: "#", twitter: "#", github: "#" },
-    founderName: "Alex Rivera",
-  };
+  if (!startupData) {
+    if (isUser) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#DDDCDB] dark:bg-gray-900 transition-colors duration-300">
+          <div className="bg-white dark:bg-gray-800 p-10 rounded-3xl shadow-2xl text-center max-w-lg mx-4">
+            <div className="mb-6 bg-[#EDBF9B]/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+              <FontAwesomeIcon icon={faUser} className="text-4xl text-[#FD7B41]" />
+            </div>
+            <h2 className="text-3xl font-black text-[#3C4044] dark:text-gray-100 mb-4 uppercase">
+              Start Your Journey
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+              You haven't listed a startup yet. Turn your vision into reality and showcase your innovation to the world.
+            </p>
+            <button
+              onClick={() => setIsEditOpen(true)}
+              className="bg-[#FD7B41] text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest shadow-lg hover:scale-105 hover:bg-[#e66a35] transition-all duration-300"
+            >
+              Build Your Startup
+            </button>
+          </div>
+
+          {/* Form Modal for Creation */}
+          <AnimatePresence>
+            {isEditOpen && (
+              <StartupForm
+                initialData={null}
+                isEdit={false}
+                onClose={() => setIsEditOpen(false)}
+              />
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    }
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#DDDCDB] dark:bg-gray-900">
+        <div className="text-center text-gray-500">
+          <h2 className="text-xl font-bold">No Startup Found</h2>
+          <p>This user hasn't listed a startup yet.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const data = startupData;
 
   // Helper for empty states
   const renderContentOrPlaceholder = (content, placeholder) => {
@@ -106,6 +242,9 @@ const StartupProfile = ({ isUser = true, startupData }) => {
     visible: { opacity: 1, y: 0 }
   };
 
+  // console.log(canEdit);
+
+
   return (
     <div className="min-h-screen bg-[#DDDCDB] dark:bg-gray-900 font-sans text-[#3C4044] dark:text-gray-200 transition-colors duration-300">
       {/* Cover Image */}
@@ -126,7 +265,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
-        {isUser && (
+        {canEdit && (
           <button
             onClick={() => setIsCoverEditOpen(true)}
             className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 p-2 rounded-full text-white backdrop-blur-sm transition-all"
@@ -138,21 +277,40 @@ const StartupProfile = ({ isUser = true, startupData }) => {
       </div>
 
       <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-20">
-        {isUser && (
+        {/* Like Button */}
+        <button
+          onClick={handleLikeToggle}
+          className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isLiked ? 'bg-red-500 text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
+        >
+          <FontAwesomeIcon icon={faHeart} /> {likesCount}
+        </button>
+
+        {isUser ? (
           <>
-            <button
-              onClick={() => setOpenNotes(true)}
-              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-            >
-              <FontAwesomeIcon icon={faEdit} /> Notes
-            </button>
-            <button
-              onClick={() => setIsEditOpen(true)}
-              className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-            >
-              <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
-            </button>
+            {canEdit && (
+              <>
+                <button
+                  onClick={() => setOpenNotes(true)}
+                  className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+                >
+                  <FontAwesomeIcon icon={faEdit} /> Notes
+                </button>
+                <button
+                  onClick={() => setIsEditOpen(true)}
+                  className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
+                >
+                  <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
+                </button>
+              </>
+            )}
           </>
+        ) : (
+          <button
+            onClick={handleFollowToggle}
+            className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isFollowing ? 'bg-gray-600 text-white' : 'bg-[#FD7B41] text-[#3C4044]'}`}
+          >
+            {isFollowing ? "Following" : "+ Follow"} {followersCount > 0 && `(${followersCount})`}
+          </button>
         )}
         <div className="relative" ref={menuRef}>
           <button
@@ -192,6 +350,18 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                     <FontAwesomeIcon icon={faFlag} className="text-red-500 w-4" />
                     Report Startup
                   </button>
+                  {canEdit && (
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        handleDeleteStartup();
+                      }}
+                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors border-t border-gray-100 dark:border-gray-700"
+                    >
+                      <FontAwesomeIcon icon={faTrash} className="w-4" />
+                      Delete Startup
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -216,7 +386,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                     className="w-24 h-24 rounded-2xl shadow-md border-4 border-white dark:border-gray-700 bg-white dark:bg-gray-700 object-cover"
                     alt="Logo"
                   />
-                  {isUser && (
+                  {canEdit && (
                     <button
                       onClick={() => setIsLogoEditOpen(true)}
                       className="absolute -bottom-2 -right-2 bg-[#FD7B41] text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform text-xs"
@@ -296,12 +466,12 @@ const StartupProfile = ({ isUser = true, startupData }) => {
               <h2 className="text-xl font-bold mb-4 border-l-4 border-[#FD7B41] pl-4 text-gray-900 dark:text-white">
                 About the Startup
               </h2>
-              <p className="text-justify">
+              <div className="text-justify">
                 {renderContentOrPlaceholder(
                   data?.description,
                   "Briefly describe your startup's mission and vision here. What are you building and why?"
                 )}
-              </p>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                 <div className="p-4 bg-[#DDDCDB]/30 dark:bg-gray-700/50 rounded-xl">
@@ -359,7 +529,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              {isUser && (
+              {canEdit && (
                 <Link
                   to="/team"
                   className="bg-[#DDDCDB] dark:bg-gray-700 text-[#3C4044] dark:text-gray-200 px-4 py-1 rounded font-bold flex items-center gap-2 hover:brightness-110 border-2 dark:border-gray-600 w-40 text-center h-12 text-xl hover:scale-110 transition"

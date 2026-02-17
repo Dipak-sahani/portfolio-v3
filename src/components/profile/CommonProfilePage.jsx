@@ -54,8 +54,11 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
           (f._id === currentUser._id) || (f === currentUser._id)
         );
         setIsFollowing(isFound);
-        // Also check API specific isFollowing boolean if available directly
-        if (follow.isFollowing !== undefined) setIsFollowing(follow.isFollowing);
+      }
+
+      // Also check API specific isFollowing boolean if available directly
+      if (follow?.isFollowing !== undefined) {
+        setIsFollowing(follow.isFollowing);
       }
     }
   }, [follow, currentUser]);
@@ -228,6 +231,17 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
                 >
                   <FontAwesomeIcon icon={faShareAlt} className="w-4" /> Share Profile
                 </button>
+                {!isUser && isFollowing && (
+                  <button
+                    onClick={() => {
+                      handleToggleFollow();
+                      setShowMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                  >
+                    <FontAwesomeIcon icon={faUser} className="w-4" /> Unfollow
+                  </button>
+                )}
                 {!isUser && (
                   <>
                     <button
@@ -341,15 +355,21 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
                 </h1>
                   : <div className="flex gap-2 items-center">
                     <span className="text-[#EDBF9B] dark:text-[#FD7B41] text-xs font-bold uppercase mr-2">{followersCount} Followers</span>
-                    <button
-                      onClick={handleToggleFollow}
-                      className={`px-6 py-2 rounded text-xs font-bold uppercase transition border ${isFollowing
-                          ? "border-gray-500 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          : "border-[#EDBF9B] dark:border-[#FD7B41] text-[#EDBF9B] dark:text-[#FD7B41] hover:bg-[#EDBF9B]/10"
-                        }`}
-                    >
-                      {isFollowing ? "Unfollow" : "Follow"}
-                    </button>
+                    {!isFollowing ? (
+                      <button
+                        onClick={handleToggleFollow}
+                        className="px-6 py-2 rounded text-xs font-bold uppercase transition border border-[#EDBF9B] dark:border-[#FD7B41] text-[#EDBF9B] dark:text-[#FD7B41] hover:bg-[#EDBF9B]/10"
+                      >
+                        Follow
+                      </button>
+                    ) : (
+                      <Link
+                        to={`/chat/${info?._id}`}
+                        className="px-6 py-2 rounded text-xs font-bold uppercase transition border border-[#EDBF9B] dark:border-[#FD7B41] bg-[#EDBF9B] dark:bg-[#FD7B41] text-[#3C4044] hover:brightness-110"
+                      >
+                        Message
+                      </Link>
+                    )}
                   </div>
               }
             </div>
@@ -379,7 +399,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         <button className="bg-[#EDBF9B] dark:bg-gray-700 text-[#3C4044] dark:text-gray-300 px-8 py-3 font-bold uppercase text-xs rounded-t-lg shadow-md hover:bg-[#FD7B41] hover:text-[#3C4044] transition whitespace-nowrap">
           Activity
         </button>
-        {!isUser &&
+        {!isUser && isFollowing &&
           <Link to={`/chat/${info?._id}`} className="bg-[#EDBF9B] dark:bg-gray-700 text-[#3C4044] dark:text-gray-300 px-8 py-3 font-bold uppercase text-xs rounded-t-lg shadow-md hover:bg-[#FD7B41] hover:text-[#3C4044] transition whitespace-nowrap">
             Message
           </Link>}
