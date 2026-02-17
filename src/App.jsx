@@ -11,7 +11,7 @@ function App() {
 
   const user = useAuthStore((state) => state.user);
 
-  console.log(user._id);
+
 
   useEffect(() => {
     if (!user?._id) return;
