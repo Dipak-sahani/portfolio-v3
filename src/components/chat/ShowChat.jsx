@@ -22,6 +22,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useContacts } from "../../store/contactSelection.store";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
+import ImagePreview from "../ImagePrev/ImagePreview";
 
 const LIMIT = 10;
 
@@ -374,7 +375,7 @@ const ChatArea = ({ activeContact }) => {
           <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold overflow-hidden">
             {/* If avatar is URL, show img, else text */}
             {(selectedContact.avatar && selectedContact.avatar.length > 2) ? (
-              <img src={selectedContact.avatar?.startsWith("http") ? selectedContact.avatar : `${import.meta.env.VITE_IMG_CDN}/${selectedContact.avatar}`} alt={selectedContact.name} className="w-full h-full object-cover" />
+              <ImagePreview src={selectedContact.avatar?.startsWith("http") ? selectedContact.avatar : `${import.meta.env.VITE_IMG_CDN}/${selectedContact.avatar}`} alt={selectedContact.name} className="w-full h-full object-cover" />
             ) : (
               selectedContact.avatar
             )}

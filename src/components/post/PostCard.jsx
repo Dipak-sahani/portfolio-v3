@@ -143,7 +143,7 @@ const PostCard = ({ postId, post: propPost }) => {
             <div className="relative">
               <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg overflow-hidden">
                 {post?.authorId?.avatar ? (
-                  <img src={`${process.env.VITE_IMG_CDN}/${post.authorId.avatar}`} alt={post.authorId.username} className="w-full h-full object-cover" />
+                  <ImagePreview src={`${import.meta.env.VITE_IMG_CDN}/${post.authorId.avatar}`} alt={post.authorId.username} className="w-full h-full object-cover" />
                 ) : (
                   post?.authorId?.fullName?.charAt(0) || "B"
                 )}

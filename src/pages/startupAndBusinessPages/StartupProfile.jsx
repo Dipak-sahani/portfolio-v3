@@ -265,7 +265,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
-        {canEdit && (
+        {canEdit && !isEditOpen && !openNotes && (
           <button
             onClick={() => setIsCoverEditOpen(true)}
             className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 p-2 rounded-full text-white backdrop-blur-sm transition-all"
@@ -276,98 +276,100 @@ const StartupProfile = ({ isUser = true, startupData }) => {
         )}
       </div>
 
-      <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-20">
-        {/* Like Button */}
-        <button
-          onClick={handleLikeToggle}
-          className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isLiked ? 'bg-red-500 text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
-        >
-          <FontAwesomeIcon icon={faHeart} /> {likesCount}
-        </button>
-
-        {isUser ? (
-          <>
-            {canEdit && (
-              <>
-                <button
-                  onClick={() => setOpenNotes(true)}
-                  className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-                >
-                  <FontAwesomeIcon icon={faEdit} /> Notes
-                </button>
-                <button
-                  onClick={() => setIsEditOpen(true)}
-                  className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
-                >
-                  <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
-                </button>
-              </>
-            )}
-          </>
-        ) : (
+      {!isEditOpen && !openNotes && (
+        <div className="absolute top-30 sm:top-50 right-10 flex gap-2 z-20">
+          {/* Like Button */}
           <button
-            onClick={handleFollowToggle}
-            className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isFollowing ? 'bg-gray-600 text-white' : 'bg-[#FD7B41] text-[#3C4044]'}`}
+            onClick={handleLikeToggle}
+            className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isLiked ? 'bg-red-500 text-white' : 'bg-white/20 text-white hover:bg-white/40'}`}
           >
-            {isFollowing ? "Following" : "+ Follow"} {followersCount > 0 && `(${followersCount})`}
-          </button>
-        )}
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 rounded bg-white/20 hover:bg-white/40 transition"
-          >
-            <FontAwesomeIcon icon={faEllipsisV} className="text-white" />
+            <FontAwesomeIcon icon={faHeart} /> {likesCount}
           </button>
 
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                transition={{ duration: 0.1 }}
-                className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50"
-              >
-                <div className="py-1">
+          {isUser ? (
+            <>
+              {canEdit && (
+                <>
                   <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setIsShareOpen(true);
-                    }}
-                    className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                    onClick={() => setOpenNotes(true)}
+                    className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
                   >
-                    <FontAwesomeIcon icon={faShareAlt} className="text-blue-500 w-4" />
-                    Share Profile
+                    <FontAwesomeIcon icon={faEdit} /> Notes
                   </button>
                   <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setIsReportOpen(true);
-                    }}
-                    className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                    onClick={() => setIsEditOpen(true)}
+                    className="bg-[#FD7B41] text-[#3C4044] px-4 py-1 rounded font-bold text-sm flex items-center gap-2 hover:brightness-110 transition shadow-lg"
                   >
-                    <FontAwesomeIcon icon={faFlag} className="text-red-500 w-4" />
-                    Report Startup
+                    <FontAwesomeIcon icon={faEdit} /> EDIT PROFILE
                   </button>
-                  {canEdit && (
+                </>
+              )}
+            </>
+          ) : (
+            <button
+              onClick={handleFollowToggle}
+              className={`px-4 py-1 rounded font-bold text-sm flex items-center gap-2 transition shadow-lg ${isFollowing ? 'bg-gray-600 text-white' : 'bg-[#FD7B41] text-[#3C4044]'}`}
+            >
+              {isFollowing ? "Following" : "+ Follow"} {followersCount > 0 && `(${followersCount})`}
+            </button>
+          )}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded bg-white/20 hover:bg-white/40 transition"
+            >
+              <FontAwesomeIcon icon={faEllipsisV} className="text-white" />
+            </button>
+
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  transition={{ duration: 0.1 }}
+                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-50"
+                >
+                  <div className="py-1 z-20">
                     <button
                       onClick={() => {
                         setIsMenuOpen(false);
-                        handleDeleteStartup();
+                        setIsShareOpen(true);
                       }}
-                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors border-t border-gray-100 dark:border-gray-700"
+                      className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
                     >
-                      <FontAwesomeIcon icon={faTrash} className="w-4" />
-                      Delete Startup
+                      <FontAwesomeIcon icon={faShareAlt} className="text-blue-500 w-4" />
+                      Share Profile
                     </button>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsReportOpen(true);
+                      }}
+                      className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faFlag} className="text-red-500 w-4" />
+                      Report Startup
+                    </button>
+                    {canEdit && (
+                      <button
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          handleDeleteStartup();
+                        }}
+                        className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 transition-colors border-t border-gray-100 dark:border-gray-700"
+                      >
+                        <FontAwesomeIcon icon={faTrash} className="w-4" />
+                        Delete Startup
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      )}
 
       <motion.div
         variants={containerVariants}
@@ -386,7 +388,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                     className="w-24 h-24 rounded-2xl shadow-md border-4 border-white dark:border-gray-700 bg-white dark:bg-gray-700 object-cover"
                     alt="Logo"
                   />
-                  {canEdit && (
+                  {canEdit && !isEditOpen && !openNotes && (
                     <button
                       onClick={() => setIsLogoEditOpen(true)}
                       className="absolute -bottom-2 -right-2 bg-[#FD7B41] text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform text-xs"

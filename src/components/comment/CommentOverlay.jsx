@@ -9,6 +9,7 @@ import {
 import { getComments, postComment, deleteComment } from "../../services/comment.service";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import ImagePreview from "../ImagePrev/ImagePreview";
 
 const CommentOverlay = ({ targetType, Id, onClose }) => {
   const [comments, setComments] = useState([]);
@@ -79,7 +80,7 @@ const CommentOverlay = ({ targetType, Id, onClose }) => {
             >
               {/* Avatar */}
               {c?.userId?.avatar ? (
-                <img
+                <ImagePreview
                   src={`${import.meta.env.VITE_IMG_CDN}/${c.userId.avatar}`}
                   alt={c.userId.fullName}
                   className="w-9 h-9 rounded-full object-cover"

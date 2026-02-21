@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth.store';
+import ImagePreview from '../ImagePrev/ImagePreview';
 
 export const PeopleList = ({ people }) => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export const PeopleList = ({ people }) => {
           <div className="flex ">
             {/* Profile Image */}
             <div className="w-24 h-24 rounded-full bg-amber-100 dark:bg-amber-900/30 mr-4 shrink-0 flex items-center justify-center overflow-hidden">
-              {person?.image ? <img
+              {person?.image ? <ImagePreview
                 src={person.image?.startsWith("http") ? person.image : `${import.meta.env.VITE_IMG_CDN}/${person.image}`}
                 alt={person.fullName}
                 className="w-full h-full object-cover"
