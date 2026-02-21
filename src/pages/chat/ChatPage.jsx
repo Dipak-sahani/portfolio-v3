@@ -52,6 +52,7 @@ export default function Chat() {
 
         formattedContacts = {
           id: res?.data?.user._id,
+          username: res?.data?.user.username,
           name: res?.data?.user.fullName,
           avatar: res?.data?.user.fullName
             .split(" ")
@@ -79,6 +80,7 @@ export default function Chat() {
       else {
         formattedContacts = {
           id: isUserPresentInContact?.user?._id,
+          username: isUserPresentInContact?.user?.username,
           name: isUserPresentInContact?.user?.fullName,
           avatar: isUserPresentInContact?.user?.fullName
             .split(" ")

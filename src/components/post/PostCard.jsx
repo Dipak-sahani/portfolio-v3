@@ -137,7 +137,7 @@ const PostCard = ({ postId, post: propPost }) => {
       <div className="p-4 pb-3">
         <div className="flex items-center justify-between mb-3 relative">
           <Link
-            to={`/profile/${post?.authorId?._id}`}
+            to={`/profile/${post?.authorId?.username}`}
             className="flex items-center space-x-3"
           >
             <div className="relative">

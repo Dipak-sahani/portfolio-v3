@@ -79,7 +79,7 @@ export const PeopleList = ({ people }) => {
               <div className="flex space-x-3">
                 <button
                   className="flex-1 py-2 px-4 rounded-lg font-medium text-center transition-colors bg-[#FD7B41] text-white hover:bg-orange-600"
-                  onClick={() => navigate(`/profile/${person._id}`)}
+                  onClick={() => navigate(`/profile/${person.username}`)}
                 >
                   View Profile
                 </button>

@@ -367,8 +367,8 @@ const ChatArea = ({ activeContact }) => {
         <div
           className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => {
-            if (selectedContact?.id) {
-              navigate(`/profile/${selectedContact.id}`);
+            if (selectedContact?.username) {
+              navigate(`/profile/${selectedContact.username}`);
             }
           }}
         >

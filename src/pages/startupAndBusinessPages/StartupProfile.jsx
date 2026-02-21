@@ -545,7 +545,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
 
               <div className="flex my-5 py-2 px-4 gap-4 overflow-x-auto no-scrollbar">
                 {data?.team?.members?.length > 0 ? data.team.members.map((user, id) => (
-                  <Link to={`/profile/${user?.userId?._id}`} key={id} className="flex items-center gap-3 border-2 p-2 rounded-2xl border-[#FD7B41] cursor-pointer bg-white dark:bg-gray-800 min-w-[200px]">
+                  <Link to={`/profile/${user?.userId?.username}`} key={id} className="flex items-center gap-3 border-2 p-2 rounded-2xl border-[#FD7B41] cursor-pointer bg-white dark:bg-gray-800 min-w-[200px]">
                     {/* Avatar */}
                     <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
                       {user?.userId?.avatar ? (

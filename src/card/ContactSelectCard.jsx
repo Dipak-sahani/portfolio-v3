@@ -40,7 +40,7 @@ const ModernProfessionalCard = ({ data }) => {
           {/* Avatar with Custom Border */}
           <div className="relative">
             <div className="w-32 h-32 rounded-full p-1 bg-linear-to-tr from-[#FD7B41] to-[#EDBF9B]">
-              <Link to={`/profile/${data?._id}`} className="w-full h-full rounded-full bg-white dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+              <Link to={`/profile/${username}`} className="w-full h-full rounded-full bg-white dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                 {avatar ? (
                   <ImagePreview src={avatar?.startsWith("http") ? avatar : `${import.meta.env.VITE_IMG_CDN}/${avatar}`} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
@@ -52,10 +52,10 @@ const ModernProfessionalCard = ({ data }) => {
 
           {/* User Details */}
           <div className="flex-1 text-center sm:text-left">
-            <Link to={`/profile/${data?._id}`} className="block text-2xl font-black text-[#3C4044] dark:text-white tracking-tight uppercase leading-none pt-2">
+            <Link to={`/profile/${username}`} className="block text-2xl font-black text-[#3C4044] dark:text-white tracking-tight uppercase leading-none pt-2">
               {fullName}
             </Link>
-            <Link to={`/profile/${data?._id}`} className=" block text-[#FD7B41] font-bold text-sm mt-1">@{username}</Link>
+            <Link to={`/profile/${username}`} className=" block text-[#FD7B41] font-bold text-sm mt-1">@{username}</Link>
             <p className="text-[#3C4044]/80 dark:text-gray-300 mt-2 text-sm font-medium leading-relaxed">
               {tagline}
             </p>

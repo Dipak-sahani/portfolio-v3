@@ -2,17 +2,17 @@ import { toast } from "react-toastify";
 import { API } from "./auth.service";
 
 
-export const getUserProfile= async(userId)=>{
-     try {
-        const res= await API.get(`/users/get-by-id/${userId}`);
+export const getUserProfile = async (username) => {
+    try {
+        const res = await API.get(`/users/get-by-username/${username}`);
         // console.log(res);
-        
-        if (res.status==200) {
+
+        if (res.status == 200) {
             return res?.data
-        } 
-     } catch (error) {
+        }
+    } catch (error) {
         console.log(error);
-    toast.error(error.response.data.message || "user not found")
-        
-     }
+        toast.error(error.response?.data?.message || "user not found")
+
+    }
 }

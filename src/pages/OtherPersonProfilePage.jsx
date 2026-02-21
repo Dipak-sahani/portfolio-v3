@@ -7,18 +7,18 @@ import { useState } from "react";
 import { useAuthStore } from "../store/auth.store";
 
 const OtherPersonProfilePage = () => {
-  const { id } = useParams();
-  // console.log(id);
+  const { username } = useParams();
+  // console.log(username);
 
-  const user=useAuthStore((state)=>state.user)
+  const user = useAuthStore((state) => state.user)
 
   const [info, setInfo] = useState(null);
   const [projets, setProjects] = useState([]);
-  const [followInfo, setFollowInfo]=useState([]);
+  const [followInfo, setFollowInfo] = useState([]);
 
   const fetchUserDetail = async () => {
     try {
-      const res = await getUserProfile(id);
+      const res = await getUserProfile(username);
 
       setInfo(res?.user);
       setProjects(res?.projects);
@@ -30,11 +30,11 @@ const OtherPersonProfilePage = () => {
 
   useEffect(() => {
     fetchUserDetail();
-  }, [id]);
+  }, [username]);
 
   return (
     <div>
-      <CommonProfilePage isUser={user._id==id?true:false} info={info} follow={followInfo}  projectList={projets} />
+      <CommonProfilePage isUser={user.username == username ? true : false} info={info} follow={followInfo} projectList={projets} />
     </div>
   );
 };

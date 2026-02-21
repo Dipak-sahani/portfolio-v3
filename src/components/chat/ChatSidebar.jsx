@@ -64,6 +64,7 @@ const ChatSidebar = ({ onContactSelect, activeContactId }) => {
 
     const formattedContacts = myContacts.map(data => ({
       id: data?.user?._id,
+      username: data?.user?.username,
       name: data?.user?.fullName,
       avatar: data?.user?.fullName.split(' ').map(n => n[0]).join(''),
       email: data?.user?.email?.toLowerCase(),

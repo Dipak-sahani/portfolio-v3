@@ -567,7 +567,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
         title={`Check out ${info?.username}'s profile`}
-        url={id ? window.location.href : window.location.href + "/" + currentUser?._id}
+        url={`${window.location.origin}/profile/${info?.username}`}
       />
 
       {info && (
