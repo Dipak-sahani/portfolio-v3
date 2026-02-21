@@ -139,7 +139,8 @@ const ChatArea = ({ activeContact }) => {
 
   /* ---------------- SEND MESSAGE ---------------- */
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e) => {
+    e.preventDefault();
     if (!newMessage.trim()) return;
     if (!socket.connected) return;
 
