@@ -18,7 +18,7 @@ import ProjectDashboard from "../../pages/ProjectShowCase";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import CreateProjectForm from "../../forms/ProjectCreateForm";
 import ImagePreview from "../ImagePrev/ImagePreview";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ShareModal from "../common/ShareModal";
 import ReportModal from "../common/ReportModal";
 import { blockUser } from "../../services/user.service";
@@ -34,6 +34,9 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
+  // console.log(id);
+
 
   const { myStartup, fetchMyStartup, getStartupByUserId, selectedUserStartup } = useStartupStore();
   const { updateProfileApi, user: currentUser } = useAuthStore();
@@ -564,7 +567,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
         title={`Check out ${info?.username}'s profile`}
-        url={window.location.href}
+        url={id ? window.location.href : window.location.href + "/" + currentUser?._id}
       />
 
       {info && (
