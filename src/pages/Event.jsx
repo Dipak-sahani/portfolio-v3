@@ -99,7 +99,7 @@ const Event = () => {
         <div className="text-center">
           <button
             onClick={() => setIsCreate(true)}
-            className="bg-amber-200 rounded-2xl hover:scale-110 py-2 px-4 mb-5"
+            className="bg-orange-700 rounded-2xl hover:scale-110 py-2 px-4 mb-5"
           >
             <FontAwesomeIcon icon={faAdd} /> Create Event
           </button>

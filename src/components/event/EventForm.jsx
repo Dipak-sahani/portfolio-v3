@@ -58,10 +58,10 @@ const EventCreationWizard = ({ onClose }) => {
 
       for (const key in formData) {
         if (key === 'coverImage' && formData.coverImage) {
-          // Only send the URL of the uploaded image
+          // If it's a File object, append it normally
           formPayload.append('coverImage', formData.coverImage);
-        } else if (typeof formData[key] === 'object') {
-          // Nested objects like location, price
+        } else if (key !== 'coverImage' && typeof formData[key] === 'object') {
+          // Nested objects like location, price - stringify them
           formPayload.append(key, JSON.stringify(formData[key]));
         } else {
           // Regular fields
@@ -258,7 +258,7 @@ const EventCreationWizard = ({ onClose }) => {
           {step === 3 && (
             <div className="space-y-6 animate-fadeIn">
               <div
-                className="flex items-center justify-between p-6 rounded-[2rem] cursor-pointer border-2 transition-all dark:bg-gray-700/50"
+                className="flex items-center justify-between p-6 rounded-4xl cursor-pointer border-2 transition-all dark:bg-gray-700/50"
                 style={{ backgroundColor: formData.isPaid ? 'rgba(237, 191, 155, 0.2)' : undefined, borderColor: formData.isPaid ? '#FD7B41' : 'transparent' }}
                 onClick={() => setFormData({ ...formData, isPaid: !formData.isPaid })}
               >
