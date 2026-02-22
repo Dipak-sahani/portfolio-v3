@@ -221,5 +221,17 @@ export const useStartupStore = create((set, get) => ({
     } catch (err) {
       return { success: false, error: "Failed to delete some notes" };
     }
+  },
+
+  transferStartupOwnership: async (startupId, newOwnerId) => {
+    set({ isLoading: true });
+    try {
+      const res = await API.patch(`/startup/${startupId}/transfer-ownership`, { newOwnerId });
+      set({ myStartup: res.data.data, isLoading: false });
+      return { success: true };
+    } catch (err) {
+      set({ isLoading: false });
+      return { success: false, error: err.response?.data?.message || "Failed to transfer ownership" };
+    }
   }
 }));

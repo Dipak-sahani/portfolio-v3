@@ -8,11 +8,15 @@ import {
   faCheckCircle,
   faUser,
   faEdit,
+  faCrown,
+  faExchangeAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { useContacts } from "../store/contactSelection.store";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { createTeam, fetchMyTeams, updateTeamService } from "../services/team.service";
+import { useAuthStore } from "../store/auth.store";
+import { useStartupStore } from "../store/startup.store";
 
 const TeamCreationPage = () => {
   // 1. State for Custom Roles
@@ -32,6 +36,11 @@ const TeamCreationPage = () => {
   const [isTeamPresent, setIsTeamPresent] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [myTeam, setMyTeam] = useState([]);
+
+  const user = useAuthStore((state) => state.user);
+  const myStartup = useStartupStore((state) => state.myStartup);
+  const fetchMyStartup = useStartupStore((state) => state.fetchMyStartup);
+  const transferStartupOwnership = useStartupStore((state) => state.transferStartupOwnership);
 
   // 2. State for Contacts and Search
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,9 +112,29 @@ const TeamCreationPage = () => {
 
   useEffect(() => {
     fetchMyContact();
-
     getMyTeam();
+    fetchMyStartup();
   }, []);
+
+  const handleChangeOwnership = async (newOwnerId, newOwnerName) => {
+    if (!window.confirm(`Are you sure you want to transfer ownership to ${newOwnerName}? You will lose administrative control.`)) return;
+
+    try {
+      const startupId = Array.isArray(myStartup) ? myStartup[0]?._id : myStartup?._id;
+      if (!startupId) return toast.error("Startup not found");
+
+      const res = await transferStartupOwnership(startupId, newOwnerId);
+      if (res.success) {
+        toast.success("Ownership transferred successfully");
+        getMyTeam(); // Refresh team info
+        fetchMyStartup(); // Refresh startup info
+      } else {
+        toast.error(res.error);
+      }
+    } catch (error) {
+      toast.error("An error occurred during transfer");
+    }
+  };
 
   const handleCreateTeam = async () => {
     try {
@@ -351,6 +380,15 @@ const TeamCreationPage = () => {
                     {member.assignedRole}
                   </p>
                 </div>
+                {isTeamPresent && !isEdit && (Array.isArray(myStartup) ? myStartup[0]?.founderId === user?._id : myStartup?.founderId === user?._id) && member.id !== user?._id && (
+                  <button
+                    onClick={() => handleChangeOwnership(member.id, member.username)}
+                    className="mr-3 text-gray-400 hover:text-[#FD7B41] transition-colors title='Transfer Ownership'"
+                    title="Transfer Ownership"
+                  >
+                    <FontAwesomeIcon icon={faExchangeAlt} />
+                  </button>
+                )}
                 {(!isTeamPresent || isEdit) && (
                   <button
                     onClick={() => removeMember(member.id)}
