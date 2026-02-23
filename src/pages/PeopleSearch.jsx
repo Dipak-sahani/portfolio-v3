@@ -6,6 +6,7 @@ import { Pagination } from "../components/component/Pagination";
 import { searchPeople } from "../services/people.service";
 import { toast } from "react-toastify";
 import ModernProfessionalCard from "../card/ContactSelectCard";
+import { Helmet } from "react-helmet";
 
 const PeopleSearch = () => {
   const [filters, setFilters] = useState({
@@ -44,11 +45,6 @@ const PeopleSearch = () => {
       isMountedRef.current = false; // ✅ component unmounted
     };
   }, []);
-
-
-
-
-
 
   // Debounced search with error handling
   const debouncedSearch = useCallback(
@@ -153,6 +149,13 @@ const PeopleSearch = () => {
 
   return (
     <div className="min-h-screen bg-[#DDDCDB] dark:bg-gray-900 transition-colors duration-300">
+      <Helmet>
+        <title>Explore Startup Founders | Berojgar Founder</title>
+        <meta
+          name="description"
+          content="Browse verified startup founders, projects, and creator tools all in one place."
+        />
+      </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -205,7 +208,7 @@ const PeopleSearch = () => {
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <div className="mb-4 sm:mb-0 flex-1/3">
                 <p className="text-lg font-medium text-[#3C4044] dark:text-gray-300">
-                  {(pagination?.totalResults)} people found
+                  {pagination?.totalResults} people found
                   {filters.query && ` for "${filters.query}"`}
                 </p>
               </div>
@@ -258,7 +261,9 @@ const PeopleSearch = () => {
                     className="w-16 h-16 border-4 rounded-full animate-spin mx-auto mb-4"
                     style={{ borderTopColor: "#FD7B41" }}
                   ></div>
-                  <p className="text-[#3C4044] dark:text-gray-300">Loading people...</p>
+                  <p className="text-[#3C4044] dark:text-gray-300">
+                    Loading people...
+                  </p>
                 </div>
               </div>
             )}
@@ -290,12 +295,8 @@ const PeopleSearch = () => {
             {/* No Results */}
             {!loading && people.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4 text-[#EDBF9B]">
-                  👥
-                </div>
-                <h3
-                  className="text-xl font-semibold mb-2 text-[#3C4044] dark:text-white"
-                >
+                <div className="text-6xl mb-4 text-[#EDBF9B]">👥</div>
+                <h3 className="text-xl font-semibold mb-2 text-[#3C4044] dark:text-white">
                   No people found
                 </h3>
                 <p className="mb-4 text-[#3C4044] dark:text-gray-300">

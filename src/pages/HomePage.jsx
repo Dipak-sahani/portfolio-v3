@@ -6,6 +6,7 @@ import HeroImageSlider from "../components/component/HeroImageSlider";
 import CTASection from "../components/component/CTASection";
 import { motion } from "framer-motion";
 import { getAuthToken } from "../services/auth.service";
+import { Helmet } from "react-helmet";
 
 const HomePage = () => {
   const { user, isAuthenticated, loadUser } = useAuthStore();
@@ -30,9 +31,9 @@ const HomePage = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.3,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const itemVariants = {
@@ -42,9 +43,9 @@ const HomePage = () => {
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 100
-      }
-    }
+        stiffness: 100,
+      },
+    },
   };
 
   const wordAnimation = {
@@ -55,21 +56,38 @@ const HomePage = () => {
       transition: {
         delay: i * 0.1,
         type: "spring",
-        stiffness: 120
-      }
-    })
+        stiffness: 120,
+      },
+    }),
   };
 
-  const sloganWords = ['" Find ', "Your ", "Team. ", "Build ", "Your ", "Startup ", "and ", 'Business "'];
+  const sloganWords = [
+    '" Find ',
+    "Your ",
+    "Team. ",
+    "Build ",
+    "Your ",
+    "Startup ",
+    "and ",
+    'Business "',
+  ];
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden font-sans">
+      <Helmet>
+        <title>Berojgar Founder – Platform for Startup Creators</title>
+        <meta
+          name="description"
+          content="Discover startup founders, connect with creators, and access direct links without comment-for-link tricks."
+        />
+      </Helmet>
       {/* Background with Overlay */}
       <div className="fixed inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] ease-in-out hover:scale-105"
           style={{
-            backgroundImage: "url('https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/bgIMG.png')",
+            backgroundImage:
+              "url('https://twjy8inzgmn5uu9r.public.blob.vercel-storage.com/berojgarfounder/bgIMG.png')",
           }}
         ></div>
         {/* Darker Overlay for better contrast */}
@@ -92,8 +110,16 @@ const HomePage = () => {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-4 drop-shadow-lg"
             variants={itemVariants}
           >
-            {user && <span className="block text-2xl sm:text-3xl font-medium text-gray-300 mb-2">Welcome back, {user?.fullName}</span>}
-            Welcome to <span className="inline-block relative  transform hover:scale-105 transition-transform cursor-default"> <span className="text-red-500">Be</span>rojgar Founder</span>
+            {user && (
+              <span className="block text-2xl sm:text-3xl font-medium text-gray-300 mb-2">
+                Welcome back, {user?.fullName}
+              </span>
+            )}
+            Welcome to{" "}
+            <span className="inline-block relative  transform hover:scale-105 transition-transform cursor-default">
+              {" "}
+              <span className="text-red-500">Be</span>rojgar Founder
+            </span>
           </motion.h1>
 
           <motion.div
@@ -112,10 +138,7 @@ const HomePage = () => {
             ))}
           </motion.div>
 
-          <motion.div
-            className="mt-16 w-full"
-            variants={itemVariants}
-          >
+          <motion.div className="mt-16 w-full" variants={itemVariants}>
             <HeroImageSlider />
           </motion.div>
 
@@ -137,13 +160,14 @@ const HomePage = () => {
           >
             <div className="flex items-center gap-4 mb-10">
               <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent flex-1"></div>
-              <h2 className="font-bold text-3xl text-white tracking-wide uppercase drop-shadow-md">Latest Community Posts</h2>
+              <h2 className="font-bold text-3xl text-white tracking-wide uppercase drop-shadow-md">
+                Latest Community Posts
+              </h2>
               <div className="h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent flex-1"></div>
             </div>
 
             <Posts isHome={true} />
           </motion.div>
-
         </motion.div>
       </div>
     </div>
