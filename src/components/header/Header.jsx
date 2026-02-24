@@ -233,6 +233,12 @@ const Header = () => {
                 Event
               </Link>
               <Link
+                to="/news"
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/news' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
+              >
+                News
+              </Link>
+              <Link
                 to="/users"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${slug.pathname === '/explore' ? 'bg-white dark:bg-gray-700 text-[#FD7B41] shadow-sm' : 'text-gray-600 dark:text-gray-300 hover:text-[#FD7B41] dark:hover:text-white'}`}
               >

@@ -39,6 +39,7 @@ import PostDetailsPage from "../pages/PostDetailsPage";
 import PageBuilder from "../pages/PageBuilder";
 import GuidePage from "../pages/startupAndBusinessPages/GuidePage";
 import BlockedUsersPage from "../pages/BlockedUsersPage";
+import NewsPage from "../pages/NewsPage";
 
 
 
@@ -57,6 +58,7 @@ const AppRoutes = () => {
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/news" element={<NewsPage />} />
       </Route>
 
       {/* Auth Layout */}

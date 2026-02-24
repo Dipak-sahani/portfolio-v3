@@ -5,6 +5,7 @@ import EventsSection from './sections/EventSection';
 import LikedPostsSection from './sections/LikedPostsSection';
 import CommentsSection from './sections/CommentsSection';
 import SavedPostsSection from './sections/SavedPostsSections';
+import SavedNewsSection from './sections/SavedNewsSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import CalendarSection from './CalendarSection';
@@ -19,7 +20,8 @@ function MainContent({ activeTab, data, user, allData, onPostClick, onProjectCli
     likedProjects: 'Liked Projects',
     likedEvents: 'Liked Events',
     comments: 'My Comments',
-    savedPosts: 'Saved Posts'
+    savedPosts: 'Saved Posts',
+    savedNews: 'Saved News'
   };
 
   // Helper component for Liked Projects (Simple List)
@@ -114,6 +116,8 @@ function MainContent({ activeTab, data, user, allData, onPostClick, onProjectCli
         return <CommentsSection comments={data} />;
       case 'savedPosts':
         return <SavedPostsSection posts={data} />;
+      case 'savedNews':
+        return <SavedNewsSection />;
       default:
         return <PostsSection posts={data} />;
     }
@@ -189,7 +193,7 @@ function MainContent({ activeTab, data, user, allData, onPostClick, onProjectCli
 }
 
 const StatCard = ({ title, value, icon, color }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300 hover:scale-105 transition-transform">
+  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 transition duration-300 hover:scale-105 transform">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{title}</p>

@@ -30,7 +30,8 @@ function Dashboard() {
     likedProjects: [],
     likedEvents: [],
     comments,
-    savedPosts
+    savedPosts,
+    savedNews: []
   })
 
 

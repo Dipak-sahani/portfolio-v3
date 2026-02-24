@@ -11,6 +11,7 @@ function Sidebar({ activeTab, setActiveTab, user }) {
     { id: 'likedEvents', label: 'Liked Events', icon: '🎉' },
     { id: 'comments', label: 'My Comments', icon: '💬' },
     { id: 'savedPosts', label: 'Saved Posts', icon: '💾' },
+    { id: 'savedNews', label: 'Saved News', icon: '📰' },
   ];
 
   return (
