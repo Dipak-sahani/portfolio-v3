@@ -10,6 +10,7 @@ const NewsPage = () => {
         visibleGoogleRSS,
         googleRSS,
         loading,
+        didFetch,
         error,
         fetchAllNews,
         loadMoreNews,
@@ -27,10 +28,10 @@ const NewsPage = () => {
        Fetch only once (safe)
     --------------------------- */
     useEffect(() => {
-        if (!loading && newsdata.length === 0 && googleRSS.length === 0) {
+        if (!didFetch && !loading) {
             fetchAllNews();
         }
-    }, [fetchAllNews, loading, newsdata.length, googleRSS.length]);
+    }, [didFetch, loading, fetchAllNews]);
 
     /* --------------------------
        Handlers

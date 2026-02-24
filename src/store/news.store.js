@@ -12,6 +12,7 @@ export const useNewsStore = create((set, get) => ({
     savedNews: [],
     loading: false,
     loadingSaved: false,
+    didFetch: false,
     error: null,
 
     fetchAllNews: async () => {
@@ -20,8 +21,9 @@ export const useNewsStore = create((set, get) => ({
             const data = await fetchNewsApi();
 
             // data should be { newsdata: [], googleRSS: [] }
-            const newsdata = data.newsdata || [];
-            const googleRSS = data.googleRSS || [];
+            // Some keys might return error objects if API limit is hit
+            const newsdata = Array.isArray(data.newsdata) ? data.newsdata : [];
+            const googleRSS = Array.isArray(data.googleRSS) ? data.googleRSS : [];
 
             set({
                 newsdata,
@@ -31,9 +33,14 @@ export const useNewsStore = create((set, get) => ({
                 newsIndex: 10,
                 rssIndex: 10,
                 loading: false,
+                didFetch: true,
             });
         } catch (error) {
-            set({ error: error.message || "Failed to fetch news", loading: false });
+            set({
+                error: error.message || "Failed to fetch news",
+                loading: false,
+                didFetch: true // Mark as fetched even on error to stop infinite loops
+            });
         }
     },
 
