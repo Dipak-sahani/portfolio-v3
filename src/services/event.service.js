@@ -70,3 +70,6 @@ export const registerEvent = async (eventId) =>
 
 export const getMyRegisteredEvents = async () =>
   await API.get("/event/my-registered");
+
+export const getMyPostedEventsService = async () =>
+  await API.get("/event/my-posted");

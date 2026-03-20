@@ -19,8 +19,8 @@ const EventCreationWizard = ({ onClose }) => {
     shortDescription: '',
     description: '',
     type: 'virtual',
-    startTime: '',
-    endTime: '',
+    startDate: '',
+    endDate: '',
     location: { address: '', city: '' },
     meetingLink: '',
     isPaid: false,
@@ -221,19 +221,21 @@ const EventCreationWizard = ({ onClose }) => {
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="text-[10px] font-black uppercase text-[#3C4044] dark:text-gray-300 mb-2 block">Start Time</label>
+                  <label className="text-[10px] font-black uppercase text-[#3C4044] dark:text-gray-300 mb-2 block">Start Date</label>
                   <input
-                    type="datetime-local"
-                    name="startTime"
+                    type="date"
+                    name="startDate"
+                    value={formData.startDate}
                     onChange={handleChange}
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 text-[#3C4044] dark:text-white rounded-2xl font-bold outline-none border-2 border-transparent dark:border-gray-600 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase text-[#3C4044] dark:text-gray-300 mb-2 block">End Time</label>
+                  <label className="text-[10px] font-black uppercase text-[#3C4044] dark:text-gray-300 mb-2 block">End Date</label>
                   <input
-                    type="datetime-local"
-                    name="endTime"
+                    type="date"
+                    name="endDate"
+                    value={formData.endDate}
                     onChange={handleChange}
                     className="w-full p-4 bg-gray-50 dark:bg-gray-700 text-[#3C4044] dark:text-white rounded-2xl font-bold outline-none border-2 border-transparent dark:border-gray-600 transition-colors"
                   />

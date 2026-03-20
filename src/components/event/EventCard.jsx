@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import ShareModal from "../common/ShareModal";
 import ReportModal from "../common/ReportModal"; // Assume this component exists or create it
 import { likeService } from "../../services/like.service";
+import { useAuthStore } from "../../store/auth.store";
 
 const EventCard = ({ event, callBack }) => {
 
@@ -28,6 +29,7 @@ const EventCard = ({ event, callBack }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const user = useAuthStore((state) => state.user);
 
   const handleLike = async () => {
     try {
@@ -62,17 +64,25 @@ const EventCard = ({ event, callBack }) => {
 
   // Status Logic
   const now = new Date();
-  const startTime = new Date(event.startTime);
-  const endTime = new Date(event.endTime);
+  
+  // Use startDate/endDate if available, otherwise fallback to startTime/endTime
+  const start = event.startDate || event.startTime;
+  const end = event.endDate || event.endTime;
+
+  const startTime = start ? new Date(start) : null;
+  const endTime = end ? new Date(end) : null;
+  
   let status = "upcoming";
   let statusColor = "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
 
-  if (now > endTime) {
-    status = "closed";
-    statusColor = "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
-  } else if (now >= startTime && now <= endTime) {
-    status = "running";
-    statusColor = "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+  if (endTime && !isNaN(endTime.getTime())) {
+    if (now > endTime) {
+      status = "closed";
+      statusColor = "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+    } else if (startTime && !isNaN(startTime.getTime()) && now >= startTime && now <= endTime) {
+      status = "running";
+      statusColor = "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+    }
   }
 
   const isClosed = status === "closed";
@@ -129,7 +139,7 @@ const EventCard = ({ event, callBack }) => {
               icon={faCalendarDays}
               className="text-orange-500"
             />
-            <span>{new Date(event.startTime).toDateString()}</span>
+            <span>{start ? new Date(start).toDateString() : 'TBA'}</span>
           </div>
 
           {event.type === "virtual" ? (
@@ -164,12 +174,21 @@ const EventCard = ({ event, callBack }) => {
         {/* Actions */}
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link
-            to={`/event/${event._id}`}
+            to={`/events/p/${event.slug}`}
             className="inline-flex items-center gap-2 rounded-xl bg-zinc-900 dark:bg-black px-6 py-2 text-sm font-bold text-white hover:bg-zinc-800 dark:hover:bg-zinc-900 transition"
           >
             Read More
             <FontAwesomeIcon icon={faArrowRight} />
           </Link>
+          
+          {user && (user._id === event?.createdBy || user.id === event?.createdBy) && (
+            <Link
+              to={`/events/dashboard/${event._id}`}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#FD7B41] bg-opacity-20 px-6 py-2 text-sm font-bold text-[#FD7B41] hover:bg-opacity-30 border-2 border-[#FD7B41] transition"
+            >
+              Dashboard
+            </Link>
+          )}
 
           <button
             onClick={handleSaveToCalendar}
@@ -237,7 +256,7 @@ const EventCard = ({ event, callBack }) => {
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         title={`Check out this event: ${event?.title}`}
-        url={`${window.location.origin}/event/${event?._id}`}
+        url={`${window.location.origin}/events/p/${event.slug}`}
         content={event?.description}
       />
 

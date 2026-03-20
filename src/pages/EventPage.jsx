@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEventStore } from '../store/event.store';
+import { useAuthStore } from '../store/auth.store';
 import { registerEvent } from '../services/event.service';
 import { toast } from 'react-toastify';
 import ShareModal from '../components/common/ShareModal';
@@ -60,6 +61,7 @@ const EventPage = () => {
     _id: "6979ef9d015892f9ea3c24ae"
   });
   const { id } = useParams()
+  const user = useAuthStore((state) => state.user);
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [registered, setRegistered] = useState(false);
@@ -162,18 +164,18 @@ const EventPage = () => {
 
   return (
     <div
-      className="min-h-screen py-8 px-4 md:px-8"
+      className="min-h-screen py-8 px-4 md:px-8 dark:bg-gray-900"
       style={{ backgroundColor: colors.background }}
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl md:text-4xl font-bold" style={{ color: colors.text }}>
+            <h1 className="text-3xl md:text-4xl font-bold dark:text-gray-100" style={{ color: colors.text }}>
               Event Details
             </h1>
             <span
-              className="px-4 py-2 rounded-full text-sm font-semibold"
+              className="px-4 py-2 rounded-full text-sm font-semibold dark:bg-gray-800 dark:text-gray-200"
               style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
@@ -191,14 +193,14 @@ const EventPage = () => {
             {/* Event Title and Type */}
             <div className="mb-8">
               <h2
-                className="text-2xl md:text-3xl font-bold mb-4"
+                className="text-2xl md:text-3xl font-bold mb-4 dark:text-gray-100"
                 style={{ color: colors.text }}
               >
                 {event?.title}
               </h2>
               <div className="flex items-center gap-4">
                 <span
-                  className="px-3 py-1 rounded-full text-sm"
+                  className="px-3 py-1 rounded-full text-sm dark:bg-gray-800 dark:text-gray-200"
                   style={{
                     backgroundColor: event?.type === 'virtual' ? colors.secondary : colors.primary,
                     color: colors.text
@@ -209,7 +211,7 @@ const EventPage = () => {
                 </span>
                 {event?.isPaid && (
                   <span
-                    className="px-3 py-1 rounded-full text-sm"
+                    className="px-3 py-1 rounded-full text-sm dark:bg-gray-800 dark:text-gray-200"
                     style={{
                       backgroundColor: colors.secondary,
                       color: colors.text
@@ -224,7 +226,7 @@ const EventPage = () => {
 
             {/* Event Date and Time */}
             <div
-              className="rounded-xl p-6 mb-8"
+              className="rounded-xl p-6 mb-8 dark:bg-gray-800 dark:text-gray-200"
               style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
@@ -267,13 +269,13 @@ const EventPage = () => {
             {/* Event Description */}
             <div className="mb-8">
               <h3
-                className="text-xl font-bold mb-4"
+                className="text-xl font-bold mb-4 dark:text-gray-100"
                 style={{ color: colors.text }}
               >
                 Description
               </h3>
               <div
-                className="rounded-lg p-6"
+                className="rounded-lg p-6 dark:bg-gray-800/80 dark:text-gray-300"
                 style={{
                   backgroundColor: colors.secondary + '80',
                   color: colors.text
@@ -287,7 +289,7 @@ const EventPage = () => {
             {event.tags && event.tags.length > 0 && (
               <div className="mb-8">
                 <h3
-                  className="text-xl font-bold mb-4"
+                  className="text-xl font-bold mb-4 dark:text-gray-100"
                   style={{ color: colors.text }}
                 >
                   <FontAwesomeIcon icon={faTag} className="mr-2" />
@@ -314,7 +316,7 @@ const EventPage = () => {
             {event?.meetingLink && (
               <div className="mb-8">
                 <h3
-                  className="text-xl font-bold mb-4"
+                  className="text-xl font-bold mb-4 dark:text-gray-100"
                   style={{ color: colors.text }}
                 >
                   <FontAwesomeIcon icon={faLink} className="mr-2" />
@@ -336,7 +338,7 @@ const EventPage = () => {
           {/* Sidebar */}
           <div className="lg:w-1/3">
             <div
-              className="rounded-xl p-6 sticky top-8"
+              className="rounded-xl p-6 sticky top-8 dark:bg-gray-800 dark:text-gray-200"
               style={{
                 backgroundColor: colors.secondary,
                 color: colors.text
@@ -398,7 +400,7 @@ const EventPage = () => {
               {/* Event Type Details */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3">Event Type</h3>
-                <div className="flex items-center justify-between bg-white bg-opacity-20 p-3 rounded-lg">
+                <div className="flex items-center justify-between bg-white bg-opacity-20 dark:bg-gray-700 p-3 rounded-lg">
                   <div className="flex items-center">
                     <FontAwesomeIcon icon={faGlobe} className="mr-3" />
                     <span>{event?.type?.charAt(0).toUpperCase() + event?.type?.slice(1)}</span>
@@ -415,7 +417,7 @@ const EventPage = () => {
               <div>
                 <h3 className="font-semibold mb-3">Category</h3>
                 <div
-                  className="p-3 rounded-lg text-center"
+                  className="p-3 rounded-lg text-center dark:bg-gray-700"
                   style={{ backgroundColor: colors.primary + '20' }}
                 >
                   <FontAwesomeIcon icon={faNetworkWired} className="mr-2" />
@@ -425,13 +427,28 @@ const EventPage = () => {
             </div>
 
             {/* Created Info */}
-            <div className="mt-6 text-center text-sm" style={{ color: colors.lightText }}>
+            <div className="mt-6 text-center text-sm dark:text-gray-400" style={{ color: colors.lightText }}>
               <p>Event created on {formatDate(event.createdAt)}</p>
               <p>Event ID: {event._id?.slice(-8)}</p>
             </div>
 
-            {/* Share Button */}
+            {/* Share and Report Buttons */}
             <div className="mt-6 flex flex-col gap-3">
+              {user && (user._id === event?.createdBy || user.id === event?.createdBy) && (
+                <button
+                  onClick={() => navigate(`/events/dashboard/${event._id}`)}
+                  className="w-full py-3 rounded-lg font-bold text-lg border-2 transition-all duration-300 hover:bg-opacity-10 mb-2"
+                  style={{
+                    borderColor: colors.primary,
+                    color: colors.primary,
+                    backgroundColor: colors.primary + '10'
+                  }}
+                >
+                  <FontAwesomeIcon icon={faUsers} className="mr-2" />
+                  View Dashboard
+                </button>
+              )}
+
               <button
                 onClick={() => setIsShareModalOpen(true)}
                 className="w-full py-3 rounded-lg font-bold text-lg border-2 transition-all duration-300 hover:bg-opacity-10"
@@ -446,7 +463,7 @@ const EventPage = () => {
 
               <button
                 onClick={() => setIsReportModalOpen(true)}
-                className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:bg-opacity-10 flex items-center justify-center"
+                className="w-full py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:bg-opacity-10 dark:hover:bg-gray-700 flex items-center justify-center dark:text-gray-400"
                 style={{
                   color: colors.lightText
                 }}

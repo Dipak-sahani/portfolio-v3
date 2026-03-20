@@ -85,7 +85,7 @@ const Event = () => {
 
   const navigate = useNavigate()
   const handleEventClick = (event) => {
-    navigate(`/event/${event._id}`)
+    navigate(`/events/p/${event.slug}`)
   };
 
 
@@ -96,17 +96,22 @@ const Event = () => {
 
       <h1 className="text-2xl font-bold text-center">Events</h1>
       {user?.ableToPostEvent && (
-        <div className="text-center">
+        <div className="flex justify-center gap-4 mb-5 mt-4">
           <button
-            onClick={() => setIsCreate(true)}
-            className="bg-orange-700 rounded-2xl hover:scale-110 py-2 px-4 mb-5"
+            onClick={() => navigate('/events/create')}
+            className="bg-orange-700 text-white rounded-2xl hover:scale-105 transition py-2 px-4 shadow-sm"
           >
             <FontAwesomeIcon icon={faAdd} /> Create Event
           </button>
+          
+          <button
+            onClick={() => navigate('/events/manage')}
+            className="bg-white text-orange-700 border-2 border-orange-700 rounded-2xl hover:scale-105 transition py-2 px-4 shadow-sm dark:bg-gray-800"
+          >
+            Manage My Events
+          </button>
         </div>
       )}
-
-      {isCreate && <EventCreationWizard onClose={() => setIsCreate(false)} />}
 
 
 

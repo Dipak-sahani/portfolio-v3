@@ -2,12 +2,14 @@ import { create } from "zustand";
 import {
   getEventService,
   getMyRegisteredEvents,
+  getMyPostedEventsService
 } from "../services/event.service";
 
 export const useEventStore = create((set, get) => ({
   loading: false,
   events: [],
   myRegisteredEvents: [],
+  myPostedEvents: [],
 
   getEvents: async () => {
     try {
@@ -31,6 +33,15 @@ export const useEventStore = create((set, get) => ({
       set({ myRegisteredEvents: res?.data?.events || [] });
     } catch (error) {
 
+    }
+  },
+
+  getMyPostedEvents: async () => {
+    try {
+      const res = await getMyPostedEventsService();
+      set({ myPostedEvents: res?.data?.events || [] });
+    } catch (error) {
+      console.error(error);
     }
   },
 

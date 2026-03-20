@@ -24,8 +24,11 @@ import ProfilePage from "../pages/ProfilePage";
 
 import OtherPersonProfilePage from "../pages/OtherPersonProfilePage";
 import TeamCreationPage from "../pages/Team";
-import EventPage from "../pages/EventPage";
 
+import CreateEventPage from "../pages/events/CreateEventPage";
+import PublicEventPage from "../pages/events/PublicEventPage";
+import EventDashboardPage from "../pages/events/EventDashboardPage";
+import MyEventsPage from "../pages/events/MyEventsPage";
 // startup and business idea 
 import IdeaSelectionPage from "../pages/startupAndBusinessPages/StartupPage";
 import ProjectDashboard from "../pages/ProjectShowCase";
@@ -59,6 +62,9 @@ const AppRoutes = () => {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/news" element={<NewsPage />} />
+        
+        {/* Public Event Registration Route */}
+        <Route path="/events/p/:slug" element={<PublicEventPage />} />
       </Route>
 
       {/* Auth Layout */}
@@ -85,8 +91,13 @@ const AppRoutes = () => {
           <Route path="/profile/:username" element={<OtherPersonProfilePage />} />
           <Route path="/card" element={<ProfessionalCard />} />
           <Route path="/team" element={<TeamCreationPage />} />
+          
+          
+          <Route path="/events/create" element={<CreateEventPage />} />
+          <Route path="/events/manage" element={<MyEventsPage />} />
+          <Route path="/events/dashboard/:eventId" element={<EventDashboardPage />} />
           <Route path="/event" element={<EventCreationForm />} />
-          <Route path="/event/:id" element={<EventPage />} />
+          
           <Route path="/startup-profile" element={<MyStartupProfile />} />
           <Route path="/startup/:id" element={<StartupDetailsPage />} />
           <Route path="/startup-form" element={<StartupForm />} />

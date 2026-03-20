@@ -25,6 +25,9 @@ export const useNewsStore = create((set, get) => ({
             const newsdata = Array.isArray(data.newsdata) ? data.newsdata : [];
             const googleRSS = Array.isArray(data.googleRSS) ? data.googleRSS : [];
 
+            console.log(newsdata);
+
+
             set({
                 newsdata,
                 googleRSS,
