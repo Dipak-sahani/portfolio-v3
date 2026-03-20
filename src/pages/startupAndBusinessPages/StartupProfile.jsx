@@ -403,7 +403,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                   {data?.fundingStage}
                 </p>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 italic">
-                  "{data?.tagline || "Innovating the future, one step at a time."}"
+                  "{data?.tagline || "not specified"}"
                 </p>
               </div>
 
@@ -430,7 +430,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                     href={data?.website}
                     className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    {data?.website || "Website not added"}
+                    {data?.website || "not specified"}
                   </a>
                 </div>
               </div>
@@ -540,7 +540,7 @@ const StartupProfile = ({ isUser = true, startupData }) => {
                 </Link>
               )}
 
-              <h1 className="my-2 font-bold text-gray-900 dark:text-white">Team Name :  <span className="text-[#FD7B41]"> {data.team?.name || "Not Assigned"}</span> </h1>
+              <h1 className="my-2 font-bold text-gray-900 dark:text-white">Team Name :  <span className="text-[#FD7B41]"> {data.team?.name || "not specified"}</span> </h1>
 
 
               <div className="flex my-5 py-2 px-4 gap-4 overflow-x-auto no-scrollbar">

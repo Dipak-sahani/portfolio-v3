@@ -10,13 +10,13 @@ const ModernProfessionalCard = ({ data }) => {
 
 
   const {
-    fullName = "Alina Singh",
-    username = "alina.s",
+    fullName = "Not specified",
+    username = "not_specified",
     avatar = null,
-    city = "Hyderabad, India",
-    skills = ["Python", "UI/UX Design", "Product Strategy"],
-    tagline = "Crafting Intuitive Digital Experiences",
-    experienceLevel = "Senior Level"
+    city = "not specified",
+    skills = [],
+    tagline = "not specified",
+    experienceLevel = "not specified"
   } = data || {};
 
   return (

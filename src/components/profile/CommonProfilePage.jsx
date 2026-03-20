@@ -348,7 +348,7 @@ const CommonProfilePage = ({ isUser, info, projectList, follow }) => {
 
           <div className="flex flex-col items-end gap-3 w-full md:w-auto">
             <div className="text-xs flex items-center gap-1 text-[#EDBF9B] dark:text-[#FD7B41] font-medium w-full md:justify-end justify-center">
-              <FontAwesomeIcon icon={faLocationArrow} /> {info?.city || "Location not set"}
+              <FontAwesomeIcon icon={faLocationArrow} /> {info?.city || "not specified"}
             </div>
             <div className="flex gap-2 w-full justify-center md:justify-end">
               {

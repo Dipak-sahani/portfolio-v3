@@ -36,7 +36,7 @@ export const PeopleList = ({ people }) => {
                     {person.fullName}
                   </h3>
                   <p className="text-lg mb-2 text-[#FD7B41] font-medium">
-                    {person.title}
+                    {person.title || "not specified"}
                   </p>
                 </div>
                 <div className="text-right">
@@ -53,7 +53,7 @@ export const PeopleList = ({ people }) => {
               <div className="flex items-center space-x-4 mb-4 text-[#3C4044] dark:text-gray-300">
                 <div className="flex items-center">
                   <span className="mr-2">📍</span>
-                  <span>{person.location}</span>
+                  <span>{person.location || "not specified"}</span>
                 </div>
                 <div className="flex items-center">
                   <span className="mr-2">📅</span>
