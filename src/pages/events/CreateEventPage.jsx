@@ -7,7 +7,7 @@ import { useAuthStore } from '../../store/auth.store';
 const CreateEventPage = () => {
   const navigate = useNavigate();
   const token = useAuthStore(state => state.token); // Adjust based on auth store
-  
+
   const [formData, setFormData] = useState({
     title: '',
     shortDescription: '',
@@ -46,7 +46,7 @@ const CreateEventPage = () => {
     e.preventDefault();
     try {
       if (!token) throw new Error("Please log in first");
-      
+
       const payload = new FormData();
       Object.keys(formData).forEach(key => {
         if (key === 'location') {
@@ -57,24 +57,24 @@ const CreateEventPage = () => {
           payload.append(key, formData[key]);
         }
       });
-      
+
       payload.append('formSchema', JSON.stringify(formSchema));
-      
+
       if (coverImage) {
         payload.append('coverImage', coverImage);
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/api/event/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },
         body: payload
       });
-      
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to create event');
-      
+
       toast.success('Event created successfully. Note: It is saved as Draft, please Publish it from dashboard.');
       navigate(`/events/dashboard/${data.event._id}`);
     } catch (error) {
@@ -85,11 +85,11 @@ const CreateEventPage = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-8">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Create New Event</h1>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2 dark:text-white">Basic Details</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1 dark:text-gray-300">Event Title *</label>
@@ -114,7 +114,7 @@ const CreateEventPage = () => {
                 <option value="hybrid">Hybrid</option>
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1 dark:text-gray-300">Category</label>
               <select name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-2 border dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded">
@@ -129,7 +129,7 @@ const CreateEventPage = () => {
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-4 border-b dark:border-gray-700 pb-2 dark:text-white">Schedule & Location</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1 dark:text-gray-300">Start Date</label>
@@ -139,7 +139,7 @@ const CreateEventPage = () => {
               <label className="block text-sm font-medium mb-1 dark:text-gray-300">End Date</label>
               <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="w-full px-4 py-2 border dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded" />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1 dark:text-gray-300">Address</label>
               <input type="text" name="location.address" value={formData.location.address} onChange={handleChange} className="w-full px-4 py-2 border dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded" />
@@ -150,10 +150,10 @@ const CreateEventPage = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Dynamic Form Builder */}
         <DynamicFormBuilder value={formSchema} onChange={setFormSchema} />
-        
+
         <div className="pt-6 border-t flex justify-end">
           <button type="submit" className="px-6 py-3 bg-[#FD7B41] text-white font-medium rounded hover:bg-[#E66B3B] transition">
             Save Event & Continue

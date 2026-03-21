@@ -22,7 +22,7 @@ const CertificateDesigner = ({ event, token, onClose, onSave }) => {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${event._id}/certificate-template/upload`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${event._id}/certificate-template/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -62,7 +62,7 @@ const CertificateDesigner = ({ event, token, onClose, onSave }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${event._id}/certificate-template`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${event._id}/certificate-template`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

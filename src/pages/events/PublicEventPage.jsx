@@ -50,13 +50,13 @@ const PublicEventPage = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/slug/${slug}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/slug/${slug}`);
         const data = await res.json();
         if (res.ok) {
           setEvent(data.event);
           // Fire and forget view recording after 3 seconds
           setTimeout(() => {
-            fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/slug/${slug}/view`, { method: 'POST' }).catch(() => {});
+            fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/slug/${slug}/view`, { method: 'POST' }).catch(() => {});
           }, 3000);
         } else {
           toast.error(data.message || 'Event not found');
@@ -88,7 +88,7 @@ const PublicEventPage = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/slug/${slug}/register`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/slug/${slug}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

@@ -29,8 +29,8 @@ const EventDashboardPage = () => {
       try {
         if (!token) return;
         const [eventRes, statsRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${token}` } })
+          fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/dashboard/stats`, { headers: { 'Authorization': `Bearer ${token}` } })
         ]);
 
         const eventData = await eventRes.json();
@@ -50,7 +50,7 @@ const EventDashboardPage = () => {
   const handlePublish = async () => {
     setPublishing(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/publish`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/publish`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -68,7 +68,7 @@ const EventDashboardPage = () => {
 
   const handleTogglePause = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/toggle-pause`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/toggle-pause`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -84,7 +84,7 @@ const EventDashboardPage = () => {
 
   const handleExportCSV = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/dashboard/export`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/dashboard/export`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) {
@@ -108,7 +108,7 @@ const EventDashboardPage = () => {
     if (!newColumnName.trim()) return;
     setAddingColumn(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/columns`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/columns`, {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -150,7 +150,7 @@ const EventDashboardPage = () => {
     });
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/registrations/${registrationId}/custom-data`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/registrations/${registrationId}/custom-data`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -174,7 +174,7 @@ const EventDashboardPage = () => {
   const handleDeleteColumn = async (columnId) => {
     if (!window.confirm('Are you sure you want to delete this column and all its data?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/columns/${columnId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/columns/${columnId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -194,7 +194,7 @@ const EventDashboardPage = () => {
   const handleEditColumn = async (columnId, newName) => {
     if (!newName.trim()) return setEditingColumn(null);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/columns/${columnId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/columns/${columnId}`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -218,7 +218,7 @@ const EventDashboardPage = () => {
   const handleDeleteRegistration = async (registrationId) => {
     if (!window.confirm('Are you sure you want to remove this attendee?')) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/event/${eventId}/registrations/${registrationId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/${eventId}/registrations/${registrationId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
