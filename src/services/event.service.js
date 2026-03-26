@@ -49,9 +49,9 @@ export const updateEvent = async (id, data) => {
 };
 
 // Optional: delete event
-export const deleteEvent = async (id) => {
+export const deleteEventService = async (id) => {
   try {
-    const response = await API.delete(`/${id}`);
+    const response = await API.delete(`/event/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting event ${id}:`, error);

@@ -3,7 +3,7 @@ import { useEventStore } from '../../store/event.store';
 import { useAuthStore } from '../../store/auth.store';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faChartLine, faExternalLinkAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faChartLine, faExternalLinkAlt, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const MyEventsPage = () => {
   const getMyPostedEvents = useEventStore((state) => state.getMyPostedEvents);
@@ -11,7 +11,9 @@ const MyEventsPage = () => {
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
+  const deleteEventAction = useEventStore((state) => state.deleteEvent);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,6 +26,27 @@ const MyEventsPage = () => {
       fetchEvents();
     }
   }, [user, getMyPostedEvents]);
+
+  const handleDeleteEvent = async (eventId, eventTitle) => {
+    const confirmMessage = `Are you sure you want to permanently delete "${eventTitle}"?\n\nThis will remove all registrations and images. Type 'DELETE' to confirm:`;
+    const input = window.prompt(confirmMessage);
+    
+    if (input !== 'DELETE') return;
+
+    setDeletingId(eventId);
+    try {
+      const success = await deleteEventAction(eventId);
+      if (success) {
+        // useEventStore already updates the list
+      } else {
+        alert("Failed to delete event");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (loading) {
     return <div className="p-10 text-center">Loading your events...</div>;
@@ -102,6 +125,16 @@ const MyEventsPage = () => {
                           <FontAwesomeIcon icon={faExternalLinkAlt} /> <span className="hidden sm:inline">View</span>
                         </a>
                       )}
+
+                      <button
+                        onClick={() => handleDeleteEvent(event._id, event.title)}
+                        disabled={deletingId === event._id}
+                        className="text-red-500 hover:text-red-700 dark:hover:text-red-400 font-medium text-sm inline-flex items-center gap-1"
+                        title="Delete Event"
+                      >
+                        <FontAwesomeIcon icon={deletingId === event._id ? null : faTrash} className={deletingId === event._id ? "animate-spin" : ""} />
+                        <span className="hidden sm:inline">{deletingId === event._id ? "Deleting..." : "Delete"}</span>
+                      </button>
                     </td>
                   </tr>
                 ))}

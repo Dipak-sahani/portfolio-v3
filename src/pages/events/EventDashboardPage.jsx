@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '../../store/auth.store';
+import { useEventStore } from '../../store/event.store';
 import { QRCodeCanvas } from 'qrcode.react';
 import CertificateDesigner from '../../components/events/CertificateDesigner';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
@@ -23,6 +24,8 @@ const EventDashboardPage = () => {
   const [selectedAttendees, setSelectedAttendees] = useState([]);
   const [showCertDesigner, setShowCertDesigner] = useState(false);
   const [generatingCerts, setGeneratingCerts] = useState(false);
+  const deleteEventAction = useEventStore(state => state.deleteEvent);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -232,6 +235,31 @@ const EventDashboardPage = () => {
       toast.success('Attendee removed');
     } catch (err) {
       toast.error(err.message);
+    }
+  };
+
+  const handleDeleteEvent = async () => {
+    const confirmMessage = "WARNING: This will permanently delete this event, all registrations, and all associated images from the server. This action CANNOT be undone.\n\nType 'DELETE' to confirm:";
+    const input = window.prompt(confirmMessage);
+    
+    if (input !== 'DELETE') {
+      if (input !== null) toast.info("Deletion cancelled. You must type 'DELETE' to confirm.");
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      const success = await deleteEventAction(eventId);
+      if (success) {
+        toast.success("Event deleted successfully");
+        navigate('/events/my-posted');
+      } else {
+        throw new Error("Failed to delete event");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -669,6 +697,25 @@ const EventDashboardPage = () => {
           </div>
         )}
       </div>
+      <div className="mt-16 pt-8 border-t border-red-100 dark:border-red-900/30">
+        <h2 className="text-xl font-bold text-red-600 dark:text-red-500 mb-4">Danger Zone</h2>
+        <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-xl p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div>
+            <h3 className="text-lg font-semibold text-red-800 dark:text-red-400">Delete this event</h3>
+            <p className="text-red-600 dark:text-red-500/70 text-sm mt-1">
+              Once you delete an event, there is no going back. All registrations and images will be permanently removed.
+            </p>
+          </div>
+          <button 
+            onClick={handleDeleteEvent}
+            disabled={deleting}
+            className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-md transition disabled:opacity-50 whitespace-nowrap"
+          >
+            {deleting ? 'Deleting...' : 'Delete Event'}
+          </button>
+        </div>
+      </div>
+
       {showCertDesigner && (
         <CertificateDesigner 
           event={event} 

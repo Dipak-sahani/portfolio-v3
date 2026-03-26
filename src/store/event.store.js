@@ -2,7 +2,8 @@ import { create } from "zustand";
 import {
   getEventService,
   getMyRegisteredEvents,
-  getMyPostedEventsService
+  getMyPostedEventsService,
+  deleteEventService
 } from "../services/event.service";
 
 export const useEventStore = create((set, get) => ({
@@ -42,6 +43,23 @@ export const useEventStore = create((set, get) => ({
       set({ myPostedEvents: res?.data?.events || [] });
     } catch (error) {
       console.error(error);
+    }
+  },
+
+  deleteEvent: async (eventId) => {
+    try {
+      const res = await deleteEventService(eventId);
+      if (res.success) {
+        set((state) => ({
+          myPostedEvents: state.myPostedEvents.filter((e) => e._id !== eventId),
+          events: state.events.filter((e) => e._id !== eventId)
+        }));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      return false;
     }
   },
 
