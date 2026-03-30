@@ -21,7 +21,9 @@ const CreateEventPage = () => {
     isPaid: false,
     priceAmount: 0,
     maxParticipants: 0,
-    category: 'tech'
+    category: 'tech',
+    isGroupEvent: false,
+    maxGroupSize: 2
   });
   const [coverImage, setCoverImage] = useState(null);
   const [formSchema, setFormSchema] = useState([]);
@@ -124,6 +126,32 @@ const CreateEventPage = () => {
                 <option value="college">College Fest</option>
               </select>
             </div>
+
+            <div className="flex items-center space-x-2 mt-4">
+              <input 
+                type="checkbox" 
+                name="isGroupEvent" 
+                id="isGroupEvent"
+                checked={formData.isGroupEvent} 
+                onChange={handleChange} 
+                className="w-4 h-4 text-[#FD7B41] focus:ring-[#FD7B41] rounded"
+              />
+              <label htmlFor="isGroupEvent" className="text-sm font-medium dark:text-gray-300 cursor-pointer">Allow Group Registration</label>
+            </div>
+
+            {formData.isGroupEvent && (
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-300">Max Group Size</label>
+                <input 
+                  type="number" 
+                  name="maxGroupSize" 
+                  min="2"
+                  value={formData.maxGroupSize || 2} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-2 border dark:border-gray-700 dark:bg-gray-900 dark:text-white rounded" 
+                />
+              </div>
+            )}
           </div>
         </div>
 
