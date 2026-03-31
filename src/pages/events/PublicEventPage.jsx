@@ -54,7 +54,7 @@ const PublicEventPage = () => {
     };
     setFormData({ ...formData, members: newMembers });
   };
-  
+
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -89,7 +89,7 @@ const PublicEventPage = () => {
           setEvent(data.event);
           // Fire and forget view recording after 3 seconds
           setTimeout(() => {
-            fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/slug/${slug}/view`, { method: 'POST' }).catch(() => {});
+            fetch(`${import.meta.env.VITE_API_BACKEND_URL || 'http://localhost:8000'}/api/event/slug/${slug}/view`, { method: 'POST' }).catch(() => { });
           }, 3000);
         } else {
           toast.error(data.message || 'Event not found');
@@ -119,6 +119,7 @@ const PublicEventPage = () => {
 
   const [registeredMembers, setRegisteredMembers] = useState([]);
   const [generatingCertId, setGeneratingCertId] = useState(null);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -157,12 +158,12 @@ const PublicEventPage = () => {
     try {
       const { PDFDocument, rgb, StandardFonts } = await import('pdf-lib');
       const pdfDoc = await PDFDocument.create();
-      
+
       const imageUrl = `${import.meta.env.VITE_IMG_CDN}/${event.certificateTemplate.imageUrl}`;
       const templateImgBytes = await fetch(imageUrl).then(res => res.arrayBuffer());
       const isPng = event.certificateTemplate.imageUrl.includes('.png') || event.certificateTemplate.imageUrl.startsWith('data:image/png');
       const templateImg = isPng ? await pdfDoc.embedPng(templateImgBytes) : await pdfDoc.embedJpg(templateImgBytes);
-      
+
       const { width, height } = templateImg.scale(1);
       const designerWidth = event.certificateTemplate.designerWidth || 800;
       const fontScale = width / designerWidth;
@@ -183,7 +184,7 @@ const PublicEventPage = () => {
       event.certificateTemplate.fields.forEach(field => {
         let text = field.placeholder || '';
         const normalizedPlaceholder = text.toLowerCase().trim();
-        
+
         if (normalizedPlaceholder === '{{name}}') {
           text = attendee.name || attendee.guest_name || 'Participant';
         } else if (normalizedPlaceholder === '{{event}}') {
@@ -231,6 +232,8 @@ const PublicEventPage = () => {
     }
   };
 
+
+
   if (loading) return <div className="text-center py-20 text-gray-500">Loading Event...</div>;
   if (!event) return <div className="text-center py-20 text-red-500">Event not found or not published.</div>;
 
@@ -245,7 +248,7 @@ const PublicEventPage = () => {
           </div>
           <h2 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Registration Successful! 🎉</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-8">Thank you for registering for <strong className="text-gray-900 dark:text-white">{event.title}</strong>.</p>
-          
+
           <div className="space-y-4 mb-10 text-left">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Registered Participants</h3>
             {registeredMembers.map((member) => (
@@ -254,35 +257,25 @@ const PublicEventPage = () => {
                   <div className="font-bold text-gray-900 dark:text-white">{member.name}</div>
                   <div className="text-sm text-gray-500">{member.email}</div>
                 </div>
-                {event.certificateTemplate?.imageUrl && (
-                  <button 
-                    onClick={() => handlePrintCertificate(member)}
-                    disabled={generatingCertId === member.id}
-                    className="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    {generatingCertId === member.id ? 'Generating...' : 'Print Certificate'}
-                  </button>
-                )}
+
+
               </div>
             ))}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
+            <button
               onClick={() => {
                 setSuccess(false);
                 setFormData({ ...formData, members: [{ name: '', email: '', answers: {} }], guest_name: '', guest_email: '', answers: {} });
                 setRegisteredMembers([]);
-              }} 
+              }}
               className="px-8 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition"
             >
               Register Another
             </button>
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="px-8 py-3 bg-[#FD7B41] text-white font-bold rounded-xl hover:bg-[#E66B3B] transition"
             >
               Back to Home
@@ -320,7 +313,7 @@ const PublicEventPage = () => {
                 View Dashboard
               </button>
             )}
-            
+
             <button
               onClick={handleSaveToCalendar}
               disabled={isSaving}
@@ -349,7 +342,7 @@ const PublicEventPage = () => {
 
           <div className="border-t dark:border-gray-700 pt-8">
             <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">Register for this event</h2>
-            
+
             {event.status === 'paused' ? (
               <div className="p-6 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 rounded-lg text-center border border-yellow-200 dark:border-yellow-700/50">
                 <h3 className="text-xl font-medium mb-2">Registrations Paused</h3>
@@ -364,9 +357,9 @@ const PublicEventPage = () => {
                         <div className="flex justify-between items-center mb-4">
                           <h4 className="text-sm font-bold text-[#FD7B41] uppercase tracking-wider">Member {index + 1} {index === 0 && '(Main Registrant)'}</h4>
                           {index > 0 && (
-                            <button 
-                              type="button" 
-                              onClick={() => removeMember(index)} 
+                            <button
+                              type="button"
+                              onClick={() => removeMember(index)}
                               className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-tight"
                             >
                               Remove
@@ -376,24 +369,24 @@ const PublicEventPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Full Name *</label>
-                            <input 
-                              required 
-                              type="text" 
+                            <input
+                              required
+                              type="text"
                               placeholder="John Doe"
-                              value={member.name} 
-                              onChange={(e) => handleMemberChange(index, 'name', e.target.value)} 
-                              className="w-full px-4 py-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:ring-2 focus:ring-[#FD7B41]" 
+                              value={member.name}
+                              onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
+                              className="w-full px-4 py-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:ring-2 focus:ring-[#FD7B41]"
                             />
                           </div>
                           <div>
                             <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Email Address *</label>
-                            <input 
-                              required 
-                              type="email" 
+                            <input
+                              required
+                              type="email"
                               placeholder="john@example.com"
-                              value={member.email} 
-                              onChange={(e) => handleMemberChange(index, 'email', e.target.value)} 
-                              className="w-full px-4 py-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:ring-2 focus:ring-[#FD7B41]" 
+                              value={member.email}
+                              onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
+                              className="w-full px-4 py-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded focus:ring-2 focus:ring-[#FD7B41]"
                             />
                           </div>
                         </div>
@@ -460,9 +453,9 @@ const PublicEventPage = () => {
                       </div>
                     ))}
                     {formData.members.length < (event.maxGroupSize || 5) && (
-                      <button 
-                        type="button" 
-                        onClick={addMember} 
+                      <button
+                        type="button"
+                        onClick={addMember}
                         className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-[#FD7B41] hover:text-[#FD7B41] rounded-xl transition font-medium text-sm"
                       >
                         + Add Another Member (Max {event.maxGroupSize || 5})
