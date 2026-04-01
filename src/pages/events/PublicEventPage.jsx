@@ -103,6 +103,25 @@ const PublicEventPage = () => {
     fetchEvent();
   }, [slug]);
 
+
+  useEffect(() => {
+    const container = document.getElementById("hilltop-banner-container");
+
+    if (!container) return;
+
+    const script = document.createElement("script");
+
+    script.src = "https://selfassured-celebration.com/bmXvVYs/d.G/ln0GYvW-cU/eeMmZ9/uwZpUplukAPOT/Y/5cMSTcgX2NN/DAUCtXNfjhkQxSOBD/Y/0aOgQP";
+    script.async = true;
+    script.referrerPolicy = "no-referrer-when-downgrade";
+
+    container.appendChild(script);
+
+    return () => {
+      container.innerHTML = "";
+    };
+  }, []);
+
   const handleBasicChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -136,6 +155,10 @@ const PublicEventPage = () => {
       setRegisteredMembers(data.registrations || []);
       setSuccess(true);
       toast.success(data.message || 'Registered Successfully!');
+      window.open(
+        "https://surefootedimplement.com/b.3hVT0/P/3/p-vmbfmHVNJ/ZPDm0p2iO/T/Ew4wNmTXAixGLxTtYT5xMDT/gr1CMYDXUZ",
+        "_blank"
+      );
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -538,9 +561,14 @@ const PublicEventPage = () => {
                 </button>
               </form>
             )}
+
           </div>
+
         </div>
+
       </div>
+
+      <div id="hilltop-banner-container" style={{ marginTop: "100px" }} />
       <ShareModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
