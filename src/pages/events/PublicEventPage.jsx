@@ -60,6 +60,7 @@ const PublicEventPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(true);
 
   const handleSaveToCalendar = async () => {
     if (!event) return;
@@ -105,20 +106,16 @@ const PublicEventPage = () => {
 
 
   useEffect(() => {
-    const container = document.getElementById("hilltop-banner-container");
-
-    if (!container) return;
-
     const script = document.createElement("script");
 
     script.src = "https://selfassured-celebration.com/bmXvVYs/d.G/ln0GYvW-cU/eeMmZ9/uwZpUplukAPOT/Y/5cMSTcgX2NN/DAUCtXNfjhkQxSOBD/Y/0aOgQP";
     script.async = true;
     script.referrerPolicy = "no-referrer-when-downgrade";
 
-    container.appendChild(script);
+    document.body.appendChild(script);
 
     return () => {
-      container.innerHTML = "";
+      document.body.removeChild(script);
     };
   }, []);
 
@@ -140,6 +137,14 @@ const PublicEventPage = () => {
   const [generatingCertId, setGeneratingCertId] = useState(null);
 
 
+  const handleAdClick = () => {
+    window.open(
+      "https://surefootedimplement.com/b.3hVT0/P/3/p-vmbfmHVNJ/ZPDm0p2iO/T/Ew4wNmTXAixGLxTtYT5xMDT/gr1CMYDXUZ",
+      "_blank"
+    );
+    setShowPopup(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -155,10 +160,8 @@ const PublicEventPage = () => {
       setRegisteredMembers(data.registrations || []);
       setSuccess(true);
       toast.success(data.message || 'Registered Successfully!');
-      window.open(
-        "https://surefootedimplement.com/b.3hVT0/P/3/p-vmbfmHVNJ/ZPDm0p2iO/T/Ew4wNmTXAixGLxTtYT5xMDT/gr1CMYDXUZ",
-        "_blank"
-      );
+      setShowPopup(true);
+
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -285,6 +288,29 @@ const PublicEventPage = () => {
               </div>
             ))}
           </div>
+
+          {showPopup && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-sm text-center">
+
+                <h2 className="text-xl font-semibold mb-3 text-gray-950">
+                  Registration Completed ✅
+                </h2>
+
+                <p className="text-gray-600 mb-5">
+                  Click OK to continue
+                </p>
+
+                <button
+                  onClick={handleAdClick}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition duration-200"
+                >
+                  OK
+                </button>
+
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -569,6 +595,10 @@ const PublicEventPage = () => {
       </div>
 
       <div id="hilltop-banner-container" style={{ marginTop: "100px" }} />
+
+
+
+
       <ShareModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
