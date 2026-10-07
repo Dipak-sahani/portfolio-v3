@@ -100,7 +100,7 @@ export default function HeroSection({ onExploreClick }) {
               className="inline-flex items-center gap-2 px-5 py-3.5 border border-neutral-300 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 hover:border-emerald-500 text-neutral-800 dark:text-neutral-200 text-xs transition-colors"
             >
               <Download className="w-4 h-4 text-emerald-500" />
-              <span>DOWNLOAD RESUME</span>
+              <span>DOWNLOAD RESUME</span>         
             </a>
           </motion.div>
 
