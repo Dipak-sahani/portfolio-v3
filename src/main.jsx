@@ -3,13 +3,16 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import ErrorBoundary from "./components/ErrorBoundary";
 import 'react-toastify/dist/ReactToastify.css';
+import { ThemeProvider } from "./hooks/useThem.jsx";
+import { MotionConfig } from "motion/react";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <ErrorBoundary>
+    <ThemeProvider>
+      <MotionConfig transition={{duration:0.4 , ease:"easeInOut"}} >
       <App />
-    </ErrorBoundary>
+      </MotionConfig>
+    </ThemeProvider>
   </BrowserRouter>
 );

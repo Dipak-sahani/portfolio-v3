@@ -1,58 +1,69 @@
+import React, { useRef, useState, useEffect } from 'react';
+import Navbar from './Header/navbar';
+import HeroSection from './components/HeroSection';
+import AboutSection from './components/AboutSection';
+import SkillsSection from './components/SkillSection';
+import ProjectsSection from './components/ProjectSection';
+import ContactSection from './components/ContactSection';
 
+export default function App() {
+  const [darkMode, setDarkMode] = useState(true);
+  const [activeSection, setActiveSection] = useState('hero');
 
-import AppRoutes from "./routes/route";
-import { ToastContainer, toast } from 'react-toastify';
-import { useAuthStore } from "./store/auth.store";
-import { useEffect } from "react";
-import socket from "./app/socket";
-function App() {
+  const refs = {
+    hero: useRef(null),
+    about: useRef(null),
+    skills: useRef(null),
+    projects: useRef(null),
+    contact: useRef(null),
+  };
 
-
-
-  const user = useAuthStore((state) => state.user);
-
-
+  const handleNavigate = (id) => {
+    setActiveSection(id);
+    const ref = refs[id];
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   useEffect(() => {
-    if (!user?._id) return;
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
-    // connect once
-    socket.connect();
+  return (
+    <div className={darkMode ? 'dark' : ''}>
+      <main className="bg-white dark:bg-[#08080a] text-neutral-900 dark:text-neutral-100 min-h-screen transition-colors duration-300 selection:bg-emerald-500 selection:text-black">
+        
+        {/* Navbar Command Bar */}
+        <Navbar 
+          activeSection={activeSection} 
+          onNavigate={handleNavigate} 
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
 
+        {/* Hero Section */}
+        <div ref={refs.hero}>
+          <HeroSection onExploreClick={() => handleNavigate('projects')} />
+        </div>
 
-    socket.on("connect", () => {
-      console.log("✅ Global socket connected:", socket.id);
+        {/* About & Experience Section */}
+        <AboutSection sectionRef={refs.about} />
 
-      // Register user to backend
-      socket.emit("register_user", {
-        userId: user._id,
-      });
-    });
+        {/* Skills Section */}
+        <SkillsSection sectionRef={refs.skills} />
 
-    socket.on("disconnect", () => {
-      console.log("❌ Global socket disconnected");
-    });
+        {/* Projects & Hackathons Section */}
+        <ProjectsSection sectionRef={refs.projects} />
 
-    return () => {
-      // only disconnect if user logs out
-      socket.disconnect();
-    };
-  }, [user?._id]);
+        {/* Contact Section */}
+        <ContactSection sectionRef={refs.contact} />
 
-
-  return <>
-
-    <AppRoutes />
-    <ToastContainer
-      position="top-center"
-      autoClose={3000}
-      limit={1}
-      newestOnTop={true}
-      preventDuplicates={true}
-    />
-
-
-  </>;
+      </main>
+    </div>
+  );
 }
-
-export default App;

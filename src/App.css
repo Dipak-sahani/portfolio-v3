@@ -11,6 +11,16 @@
   src: url('/frontend/public/fonts/IrishGrover-Regular.woff2') format('woff2');
 }
 
+
+@font-face {
+  font-family: 'Handwritten';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/frontend/public/fonts/MagicCrush.otf') format('opentype');
+}
+
+
 @theme {
   --font-display: "MyIrish", sans-serif;
   --font-display--font-feature-settings: "cv02", "cv03", "cv04", "cv11"; 

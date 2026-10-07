@@ -2,15 +2,32 @@
 @config "../tailwind.config.js";
 
 
-@font-face {
-  font-family: 'MyIrish';
-  /* font-style: normal;
-  font-weight: 400;
-  font-display: swap; */
-  src: url('/fonts/IrishGrover-Regular.woff2') format('woff2');
 
+
+@custom-variant dark (&:where(.dark, .dark * ));
+
+
+
+
+@keyframes marquee{
+  0% { transform: translate(0%);}
+  100% { transform: translate(-33.33%); }
 }
 
+.animate-marquee{
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite ;
+}
+
+.animate-marquee:hover{
+  animation-play-state: paused;
+}
+
+
+/* body{
+  background: #000;
+} */
 
 /* index.css or globals.css */
 .no-scrollbar::-webkit-scrollbar {
